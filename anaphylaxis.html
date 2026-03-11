@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Anaphylaxis Protocol — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--purple); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* STEP BOXES */
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .step-purple .step-num { background: var(--purple); }
+  .step-gray { background: white; border-left: 4px solid var(--gray-400); }
+  .step-gray .step-num { background: var(--gray-600); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  /* CONNECTOR */
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  /* DIAMOND DECISION */
+  .diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+  .diamond {
+    background: var(--red);
+    color: white;
+    padding: 20px 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    clip-path: polygon(28px 0%, calc(100% - 28px) 0%, 100% 50%, calc(100% - 28px) 100%, 28px 100%, 0% 50%);
+    min-width: 280px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+  }
+  .diamond-purple { background: var(--purple); }
+  .diamond-orange { background: var(--orange); }
+
+  /* BRANCH */
+  .branches { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .branch { flex: 1; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; }
+  .branch-yes { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .branch-no { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .branch-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 800; }
+  .branch-text { font-size: 13px; line-height: 1.3; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* TABLE */
+  .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin-top: 8px; }
+  .info-table th { background: var(--gray-800); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .info-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* INTERACTIVE */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); }
+  .selector-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 8px; display: block; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; color: var(--gray-800); transition: all 0.15s; }
+  .chip:active { transform: scale(0.96); }
+  .chip.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple); }
+
+  /* SEVERITY RESULT */
+  .severity-result { display: none; border-radius: 10px; padding: 14px; margin-top: 8px; animation: fadeIn 0.25s ease; }
+  .severity-result.show { display: block; }
+  .sev-allergic { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .sev-anaphylaxis { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .sev-critical { background: var(--red-light); border-left: 4px solid var(--red); }
+  .sev-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .sev-allergic .sev-title { color: var(--yellow); }
+  .sev-anaphylaxis .sev-title { color: var(--orange); }
+  .sev-critical .sev-title { color: var(--red); }
+  .sev-note { font-size: 13px; line-height: 1.4; }
+
+  /* EPI BOX */
+  .epi-box { background: var(--red); color: white; border-radius: 10px; padding: 14px; margin: 10px 0; }
+  .epi-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
+  .epi-row { display: flex; gap: 10px; margin-bottom: 8px; }
+  .epi-card { flex: 1; background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; }
+  .epi-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 4px; }
+  .epi-card-dose { font-size: 18px; font-weight: 800; }
+  .epi-card-note { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  .epi-instruction { font-size: 13px; line-height: 1.5; opacity: 0.95; }
+  .epi-repeat { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 13px; font-weight: 600; }
+
+  /* POSITION BOX */
+  .position-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .pos-card { border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+  .pos-shock { background: var(--red-light); border: 2px solid var(--red); }
+  .pos-resp { background: var(--blue-light); border: 2px solid var(--blue); }
+  .pos-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .pos-shock .pos-label { color: var(--red); }
+  .pos-resp .pos-label { color: var(--blue); }
+  .pos-text { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
+  .pos-when { font-size: 12px; color: var(--gray-600); }
+
+  /* BIPHASIC WARNING */
+  .biphasic-box { background: var(--purple-light); border: 2px solid var(--purple); border-radius: 10px; padding: 12px 14px; margin: 10px 0; }
+  .biphasic-title { font-weight: 700; color: var(--purple); font-size: 14px; margin-bottom: 4px; }
+  .biphasic-text { font-size: 13px; line-height: 1.4; }
+
+  /* ALERT BOX */
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* BADGE */
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  /* MANAGEMENT */
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ALS trigger */
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1F6A8; Anaphylaxis</div>
+      <div class="header-sub">Allergic Emergency &bull; Time-Critical &bull; Epinephrine First</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; BSI <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>Gloves, eye protection — BSI before contact</li>
+        <li>Scene safety — bees/wasps still present? Food allergen in environment?</li>
+        <li>Determine # patients, mechanism (food, medication, sting, unknown)</li>
+        <li>Request ALS early — anaphylaxis can deteriorate rapidly</li>
+        <li>Note any epi-pen or medications at scene</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2 -->
+  <div class="step step-orange">
+    <div class="step-num">2</div>
+    <div class="step-title">Initial Assessment — ABCs</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Airway:</strong> Stridor, hoarseness, throat tightness, swelling of lips/tongue/uvula?</li>
+        <li><strong>Breathing:</strong> Wheezing, work of breathing, SpO2 — respiratory failure can develop fast</li>
+        <li><strong>Circulation:</strong> Radial pulse, BP, skin signs — hypotension = distributive shock</li>
+        <li><strong>Skin:</strong> Urticaria (hives), flushing, pruritus, angioedema — present in ~90% of anaphylaxis</li>
+        <li><strong>Neuro:</strong> Anxiety, altered mentation, syncope, sense of impending doom</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- DECISION: ANAPHYLAXIS? -->
+  <div class="diamond-wrap">
+    <div class="diamond diamond-purple">Anaphylaxis Criteria Met?<br><small style="font-weight:400;font-size:11px;">Allergen exposure + multi-system involvement OR BP drop</small></div>
+  </div>
+  <div class="branches">
+    <div class="branch branch-yes">
+      <div class="branch-label">YES &mdash; Anaphylaxis</div>
+      <div class="branch-text">Epinephrine IM immediately &mdash; do not delay for IV access or history</div>
+    </div>
+    <div class="branch branch-no">
+      <div class="branch-label">NO &mdash; Allergic Rxn</div>
+      <div class="branch-text">Monitor closely, prepare epi, full assessment below — can progress to anaphylaxis</div>
+    </div>
+  </div>
+
+  <!-- RECOGNITION CRITERIA -->
+  <div class="section-divider"><h2>&#x26A0; Recognition Criteria</h2></div>
+  <div class="step step-purple">
+    <div class="step-num" style="font-size:10px;">Dx</div>
+    <div class="step-title">Anaphylaxis is Likely if ANY of the Following:</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Criterion 1:</strong> Acute onset + skin/mucosal changes (hives, flushing, swelling) + EITHER respiratory compromise OR BP drop / collapse</li>
+        <li><strong>Criterion 2:</strong> Rapid onset of 2+ organ systems after likely allergen: skin, respiratory, cardiovascular, GI</li>
+        <li><strong>Criterion 3:</strong> BP drop after known allergen exposure — even without skin signs</li>
+      </ul>
+      <div style="margin-top:8px;padding:8px;background:rgba(125,60,152,0.1);border-radius:6px;font-size:13px;">
+        <strong>&#9888; Absence of skin findings does NOT rule out anaphylaxis</strong> — up to 10% present without hives or flushing. If in doubt, treat.
+      </div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 3: SAMPLE -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">3</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">SAMPLE History <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>S</strong>igns &amp; Symptoms — onset time, progression, systems affected</li>
+        <li><strong>A</strong>llergies — known allergens, prior reactions, severity of past reactions</li>
+        <li><strong>M</strong>edications — epi-pen prescribed? Beta-blockers? ACE inhibitors? (both complicate treatment)</li>
+        <li><strong>P</strong>ertinent hx — prior anaphylaxis, asthma, mastocytosis (higher risk of severe reaction)</li>
+        <li><strong>L</strong>ast oral intake — what and when; foods, medications, supplements</li>
+        <li><strong>E</strong>vents — what was the exposure? When? How much? Sting site? New medication?</li>
+      </ul>
+      <div style="margin-top:8px;font-size:13px;padding:8px;background:rgba(26,109,168,0.1);border-radius:6px;">
+        <strong>&#9888; Beta-blockers</strong> blunt response to epinephrine and can cause refractory anaphylaxis. Flag for ALS — glucagon may be needed.
+      </div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 4: SEVERITY CLASSIFICATION -->
+  <div class="section-divider"><h2>&#x1F4CA; Symptom Classification</h2></div>
+  <div class="interactive-section">
+    <div class="interactive-title">&#x2460; Select All Systems Involved</div>
+    <span class="selector-label">Tap every system showing symptoms:</span>
+    <div class="chip-group" id="sysChips">
+      <button class="chip" data-sys="skin" onclick="toggleSys(this)">&#x1F538; Skin / Hives / Flushing</button>
+      <button class="chip" data-sys="mucosal" onclick="toggleSys(this)">&#x1F48B; Lip / Tongue / Throat Swelling</button>
+      <button class="chip" data-sys="airway" onclick="toggleSys(this)">&#x1F4A8; Stridor / Hoarseness</button>
+      <button class="chip" data-sys="resp" onclick="toggleSys(this)">&#x1FAB5; Wheezing / SOB</button>
+      <button class="chip" data-sys="cardio" onclick="toggleSys(this)">&#x2764; Hypotension / Tachycardia</button>
+      <button class="chip" data-sys="syncope" onclick="toggleSys(this)">&#x1F4AB; Syncope / Near-Syncope</button>
+      <button class="chip" data-sys="gi" onclick="toggleSys(this)">&#x1F912; Nausea / Vomiting / Cramping</button>
+      <button class="chip" data-sys="neuro" onclick="toggleSys(this)">&#x1F9E0; Altered Mental Status / Confusion</button>
+    </div>
+
+    <div class="severity-result sev-allergic" id="res-allergic">
+      <div class="sev-title">Allergic Reaction — Monitor Closely</div>
+      <div class="sev-note">Skin involvement only. Not yet anaphylaxis — but <strong>can progress rapidly</strong>. Keep epi ready. Reassess every 2–3 minutes. Any progression to a second system = anaphylaxis, give epi.</div>
+    </div>
+    <div class="severity-result sev-anaphylaxis" id="res-anaphylaxis">
+      <div class="sev-title">&#x26A1; Anaphylaxis — Epinephrine Now</div>
+      <div class="sev-note">Multi-system involvement confirmed. Do not wait — administer epinephrine IM immediately. Position patient, O2 15L NRB, ALS intercept.</div>
+    </div>
+    <div class="severity-result sev-critical" id="res-critical">
+      <div class="sev-title">&#x1F6A8; Critical Anaphylaxis — Airway / Vascular Collapse</div>
+      <div class="sev-note">Airway compromise, hemodynamic collapse, or altered LOC. Epinephrine IM NOW. ALS immediately. Prepare BVM. Load and go.</div>
+    </div>
+  </div>
+
+  <!-- STEP 5: EPINEPHRINE -->
+  <div class="connector">&#8595;</div>
+  <div class="step step-red">
+    <div class="step-num">5</div>
+    <div class="step-title">&#x1F489; Epinephrine — First-Line Treatment</div>
+    <div class="step-content">
+      <div class="epi-box">
+        <div class="epi-title">&#x1F489; Epinephrine 1:1,000 IM</div>
+        <div class="epi-row">
+          <div class="epi-card">
+            <div class="epi-card-label">Adult (&gt; 30 kg)</div>
+            <div class="epi-card-dose">0.3 mg</div>
+            <div class="epi-card-note">Auto-injector (EpiPen)</div>
+          </div>
+          <div class="epi-card">
+            <div class="epi-card-label">Pediatric (&lt; 30 kg)</div>
+            <div class="epi-card-dose">0.15 mg</div>
+            <div class="epi-card-note">EpiPen Jr / auto-injector</div>
+          </div>
+        </div>
+        <div class="epi-instruction">
+          <strong>Site:</strong> Anterolateral mid-thigh — can administer through clothing<br>
+          <strong>Do NOT use:</strong> Deltoid, buttocks (unpredictable gluteal absorption)<br>
+          <strong>Hold:</strong> 10 seconds after injection to ensure full dose delivery
+        </div>
+        <div class="epi-repeat">
+          &#x21BA; <strong>Repeat dose in 5–15 minutes</strong> if no improvement or symptoms return. A second dose is safe and appropriate.
+        </div>
+      </div>
+
+      <div class="alert-box alert-orange" style="margin-top:10px;">
+        <span class="alert-icon">&#9888;</span>
+        <div><strong>Epi is the ONLY first-line treatment.</strong> Antihistamines (diphenhydramine) and steroids are secondary — they do not reverse airway compromise or vascular collapse and should never delay epinephrine.</div>
+      </div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 6: POSITIONING & AIRWAY -->
+  <div class="step step-orange">
+    <div class="step-num">6</div>
+    <div class="step-title">Positioning &amp; Airway</div>
+    <div class="step-content">
+      <div class="position-grid">
+        <div class="pos-card pos-shock">
+          <div class="pos-label">Hypotension / Shock</div>
+          <div class="pos-text">Supine + Legs Elevated</div>
+          <div class="pos-when">No respiratory distress &bull; BP drop &bull; Syncope</div>
+        </div>
+        <div class="pos-card pos-resp">
+          <div class="pos-label">Respiratory Distress</div>
+          <div class="pos-text">Semi-Recumbent / Upright</div>
+          <div class="pos-when">Wheezing &bull; Stridor &bull; SOB &bull; Sat low</div>
+        </div>
+      </div>
+
+      <div class="alert-box alert-red" style="margin-top:10px;">
+        <span class="alert-icon">&#x1F6AB;</span>
+        <div><strong>Do NOT allow patient to stand or sit upright if hypotensive.</strong> Fatal positional cardiac arrest has been documented — keep supine until hemodynamically stable.</div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="mgmt-item">
+          <span class="mgmt-icon">&#x1FA78;</span>
+          <div><span class="badge-bls">BLS</span> &nbsp;O&#x2082; 15L via NRB mask — all anaphylaxis patients regardless of SpO2</div>
+        </div>
+        <div class="mgmt-item">
+          <span class="mgmt-icon">&#x1F4A8;</span>
+          <div><span class="badge-bls">BLS</span> &nbsp;Suction if vomiting — high aspiration risk with altered LOC</div>
+        </div>
+        <div class="mgmt-item">
+          <span class="mgmt-icon">&#x1F6A8;</span>
+          <div><span class="badge-bls">BLS</span> &nbsp;BVM ready — upper airway edema can progress to complete obstruction</div>
+        </div>
+        <div class="mgmt-item">
+          <span class="mgmt-icon">&#x1F4F1;</span>
+          <div><span class="badge-bls">BLS</span> &nbsp;Continuous reassessment q2 min — response to epi typically within 5–10 minutes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 7: SECONDARY INTERVENTIONS -->
+  <div class="step step-blue">
+    <div class="step-num">7</div>
+    <div class="step-title">Secondary Interventions</div>
+    <div class="step-content">
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x1F48A;</span>
+        <div><span class="badge-als">ALS</span> &nbsp;<strong>Diphenhydramine</strong> 25–50 mg IV/IM — antihistamine; secondary only, does not reverse anaphylaxis</div>
+      </div>
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x1F4A8;</span>
+        <div><span class="badge-als">ALS</span> &nbsp;<strong>Albuterol</strong> 2.5 mg nebulized — for bronchospasm component not resolved by epi</div>
+      </div>
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x1F4A7;</span>
+        <div><span class="badge-als">ALS</span> &nbsp;<strong>Normal Saline</strong> 1–2L IV bolus — for persistent hypotension after epi</div>
+      </div>
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x1F9EA;</span>
+        <div><span class="badge-als">ALS</span> &nbsp;<strong>Glucagon</strong> 1–2 mg IV/IM — for patients on beta-blockers refractory to epinephrine</div>
+      </div>
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x1F489;</span>
+        <div><span class="badge-als">ALS</span> &nbsp;<strong>IV Epinephrine</strong> — only if IM epi and fluids fail; requires ALS administration</div>
+      </div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- BIPHASIC WARNING -->
+  <div class="biphasic-box">
+    <div class="biphasic-title">&#x26A0; Biphasic Anaphylaxis Warning</div>
+    <div class="biphasic-text">Symptoms can <strong>return 1–8 hours after initial resolution</strong> — even without re-exposure to the allergen. All anaphylaxis patients require hospital evaluation and observation regardless of apparent recovery in the field. Document symptom resolution time and inform receiving facility.</div>
+  </div>
+
+  <!-- STEP 8: TRANSPORT -->
+  <div class="connector">&#8595;</div>
+  <div class="step step-green">
+    <div class="step-num">8</div>
+    <div class="step-title">Transport &amp; ALS Intercept</div>
+    <div class="step-content">
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x1F691;</span>
+        <div><strong>All anaphylaxis patients transport to ED</strong> — even if fully resolved after epi. Biphasic reaction risk requires minimum 4–6 hour observation.</div>
+      </div>
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x1F4DE;</span>
+        <div>Pre-notify receiving facility — epi given, dose, time, current status, ALS en route or needed</div>
+      </div>
+      <div class="mgmt-item">
+        <span class="mgmt-icon">&#x23F1;</span>
+        <div>Document: allergen exposure, onset time, epi dose + time given, response to treatment, repeat dose if given</div>
+      </div>
+
+      <div class="als-triggers" style="margin-top:10px;">
+        <div class="als-triggers-title">&#x1F6A8; ALS Intercept Indicated</div>
+        <ul>
+          <li>Airway compromise — stridor, hoarseness, poor air movement</li>
+          <li>Persistent hypotension after epinephrine</li>
+          <li>Altered mental status / loss of consciousness</li>
+          <li>Patient on beta-blockers (refractory to epi — needs glucagon)</li>
+          <li>Second epi dose required</li>
+          <li>SpO2 not improving with O2 and epi</li>
+          <li>Pediatric anaphylaxis — strongly consider ALS for all</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMON TRIGGERS -->
+  <div class="section-divider"><h2>&#x1F4CB; Common Triggers Reference</h2></div>
+  <table class="info-table">
+    <thead><tr><th>Category</th><th>Common Triggers</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Food</strong></td><td>Peanuts, tree nuts, shellfish, fish, milk, eggs, wheat, soy, sesame</td></tr>
+      <tr><td><strong>Medications</strong></td><td>Penicillin / beta-lactam antibiotics, NSAIDs, aspirin, contrast dye, chemotherapy agents</td></tr>
+      <tr><td><strong>Insect Venom</strong></td><td>Honeybees, yellow jackets, hornets, wasps, fire ants</td></tr>
+      <tr><td><strong>Latex</strong></td><td>Gloves, balloons, medical equipment — cross-reactive with banana, avocado, kiwi</td></tr>
+      <tr><td><strong>Exercise-Induced</strong></td><td>Rare — often requires cofactor (food + exercise). Can occur without allergen.</td></tr>
+      <tr><td><strong>Idiopathic</strong></td><td>15–20% of cases — no identifiable trigger found. Prior episodes increase risk.</td></tr>
+    </tbody>
+  </table>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong> — Always follow local medical direction and agency protocols.<br>
+  NREMT / ACAAI / WAO Anaphylaxis Standards &bull; Epinephrine dosing per ACLS/PALS guidelines
+</footer>
+
+<script>
+function toggleStep(el) {
+  el.closest('.step').classList.toggle('collapsed');
+}
+
+const selected = new Set();
+
+function toggleSys(chip) {
+  const sys = chip.dataset.sys;
+  if (selected.has(sys)) {
+    selected.delete(sys);
+    chip.classList.remove('selected');
+  } else {
+    selected.add(sys);
+    chip.classList.add('selected');
+  }
+  updateSeverity();
+}
+
+function updateSeverity() {
+  const hasSkin     = selected.has('skin') || selected.has('mucosal');
+  const hasAirway   = selected.has('airway') || selected.has('resp');
+  const hasCardio   = selected.has('cardio') || selected.has('syncope');
+  const hasNeuro    = selected.has('neuro');
+  const hasGI       = selected.has('gi');
+  const systemCount = [hasSkin, hasAirway, hasCardio, hasNeuro || hasGI].filter(Boolean).length;
+
+  const rAllergic    = document.getElementById('res-allergic');
+  const rAnaph       = document.getElementById('res-anaphylaxis');
+  const rCritical    = document.getElementById('res-critical');
+
+  rAllergic.classList.remove('show');
+  rAnaph.classList.remove('show');
+  rCritical.classList.remove('show');
+
+  if (selected.size === 0) return;
+
+  if (hasAirway || hasCardio || hasNeuro) {
+    rCritical.classList.add('show');
+  } else if (systemCount >= 2) {
+    rAnaph.classList.add('show');
+  } else if (hasSkin) {
+    rAllergic.classList.add('show');
+  } else {
+    rAnaph.classList.add('show');
+  }
+}
+</script>
+
+</body>
+</html>
