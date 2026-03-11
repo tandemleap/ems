@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Respiratory Distress — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--blue); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-gray { background: white; border-left: 4px solid var(--gray-400); }
+  .step-gray .step-num { background: var(--gray-600); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  .diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+  .diamond { background: var(--red); color: white; padding: 20px 50px; font-weight: 700; font-size: 14px; text-align: center; clip-path: polygon(28px 0%, calc(100% - 28px) 0%, 100% 50%, calc(100% - 28px) 100%, 28px 100%, 0% 50%); min-width: 280px; min-height: 100px; display: flex; align-items: center; justify-content: center; line-height: 1.4; }
+  .diamond-blue { background: var(--blue); }
+
+  .branches { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .branch { flex: 1; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; }
+  .branch-yes { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .branch-no { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .branch-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 800; }
+  .branch-text { font-size: 13px; line-height: 1.3; }
+
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin: 8px 0; }
+  .info-table th { background: var(--blue); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .info-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* BREATH SOUND SELECTOR */
+  .sound-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .sound-card { border: 3px solid var(--gray-200); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; background: white; transition: all 0.15s; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  .sound-card:active { transform: scale(0.97); }
+  .sound-card.selected { border-color: var(--blue); background: var(--blue-light); }
+  .sound-icon { font-size: 22px; }
+  .sound-label { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+  .sound-sub { font-size: 11px; color: var(--gray-600); }
+
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); display: flex; align-items: center; gap: 6px; }
+
+  .selector-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 8px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; color: var(--gray-800); transition: all 0.15s; }
+  .chip:active { transform: scale(0.96); }
+  .chip.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+  .diff-results { margin-top: 12px; }
+  .diff-card { border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .diff-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .diff-name { font-weight: 700; font-size: 15px; }
+  .diff-priority { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .diff-notes { font-size: 13px; line-height: 1.4; color: var(--gray-600); }
+  .diff-critical { background: var(--red-light); border-left: 4px solid var(--red); }
+  .diff-critical .diff-name { color: var(--red); }
+  .diff-critical .diff-priority { background: var(--red); color: white; }
+  .diff-high { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .diff-high .diff-name { color: var(--orange); }
+  .diff-high .diff-priority { background: var(--orange); color: white; }
+  .diff-moderate { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .diff-moderate .diff-name { color: var(--yellow); }
+  .diff-moderate .diff-priority { background: var(--yellow); color: white; }
+  .diff-low { background: var(--gray-50); border-left: 4px solid var(--gray-400); }
+  .diff-low .diff-name { color: var(--gray-800); }
+  .diff-low .diff-priority { background: var(--gray-400); color: white; }
+
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-blue { background: var(--blue-light); border: 2px solid var(--blue); color: var(--blue); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* O2 device table */
+  .o2-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin: 8px 0; }
+  .o2-table th { background: var(--blue); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; }
+  .o2-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .o2-table tr:last-child td { border-bottom: none; }
+  .o2-table tr:nth-child(even) td { background: var(--blue-light); }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1F4A8; Respiratory Distress</div>
+      <div class="header-sub">Asthma &bull; COPD &bull; CHF &bull; PE &bull; Airway</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; BSI <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>Gloves, eye protection (respiratory secretions)</li>
+        <li>Scene safety — assess environment, hazards, exposures</li>
+        <li>Note patient position (tripod position = severe distress)</li>
+        <li>Look for inhalers, home O2, nebulizer, CPAP equipment</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2 -->
+  <div class="step step-orange">
+    <div class="step-num">2</div>
+    <div class="step-title">Initial Assessment — Work of Breathing</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>General impression:</strong> Ability to speak in full sentences?</li>
+        <li><strong>Accessory muscle use:</strong> Neck, intercostal, subcostal retractions</li>
+        <li><strong>Respiratory rate:</strong> Normal 12-20. &lt;8 or &gt;30 = critical</li>
+        <li><strong>SpO2:</strong> Target ≥ 94% (≥ 88-92% for known COPD)</li>
+        <li><strong>Nasal flaring, pursed-lip breathing, paradoxical chest movement</strong></li>
+        <li><strong>Mental status:</strong> Agitation/confusion = impending failure</li>
+        <li><strong>Skin:</strong> Cyanosis (central = severe), pallor, diaphoresis</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- DECISION -->
+  <div class="diamond-wrap">
+    <div class="diamond">Impending Respiratory Failure?<br><small style="font-weight:400;font-size:12px">Silent chest, RR &lt;8 or &gt;30, SpO2 &lt;85%, altered LOC, unable to speak</small></div>
+  </div>
+  <div class="branches">
+    <div class="branch branch-yes">
+      <div class="branch-label">YES — IMMEDIATE</div>
+      <div class="branch-text">BVM ventilation. Jaw thrust/OPA/NPA. ALS NOW. Consider supine if collapses.</div>
+    </div>
+    <div class="branch branch-no">
+      <div class="branch-label">NO — Continue</div>
+      <div class="branch-text">Administer O2, assess breath sounds, continue systematic evaluation</div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="section-divider"><h2>&#x1F3B5; Step 3 — Breath Sound Assessment</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">Select Predominant Breath Sound</div>
+    <div class="sound-selector" id="sound-selector">
+      <div class="sound-card" data-sound="wheeze">
+        <div class="sound-icon">&#x1F300;</div>
+        <div class="sound-label">Wheezing</div>
+        <div class="sound-sub">Bilateral</div>
+      </div>
+      <div class="sound-card" data-sound="crackles">
+        <div class="sound-icon">&#x1F4A7;</div>
+        <div class="sound-label">Crackles</div>
+        <div class="sound-sub">Bilateral / Basilar</div>
+      </div>
+      <div class="sound-card" data-sound="absent">
+        <div class="sound-icon">&#x274C;</div>
+        <div class="sound-label">Absent / Diminished</div>
+        <div class="sound-sub">Unilateral</div>
+      </div>
+      <div class="sound-card" data-sound="stridor">
+        <div class="sound-icon">&#x26A0;&#xFE0F;</div>
+        <div class="sound-label">Stridor</div>
+        <div class="sound-sub">Upper airway</div>
+      </div>
+      <div class="sound-card" data-sound="normal">
+        <div class="sound-icon">&#x2714;&#xFE0F;</div>
+        <div class="sound-label">Clear / Normal</div>
+        <div class="sound-sub">Consider other cause</div>
+      </div>
+    </div>
+
+    <div id="sound-finding" style="display:none; margin-top:10px; padding:12px; border-radius:8px; background:var(--blue-light); border-left:4px solid var(--blue); font-size:14px;"></div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">4</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">SAMPLE History &amp; Risk Factors <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Hx of asthma/COPD?</strong> — how often intubated/ER visit?</li>
+        <li><strong>Cardiac hx?</strong> — CHF, prior pulmonary edema, CABG</li>
+        <li><strong>Medications:</strong> Inhalers (albuterol, steroids), diuretics, ACE inhibitors</li>
+        <li><strong>Allergies / exposures:</strong> Anaphylaxis trigger?</li>
+        <li><strong>Trauma:</strong> Rib fractures, penetrating chest?</li>
+        <li><strong>DVT risk:</strong> Recent surgery, immobility, pregnancy, cancer → PE</li>
+        <li><strong>Pregnancy:</strong> Altered physiology — lower reserve</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 5 -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">5</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">OPQRST — Respiratory Focus <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Onset:</strong> Sudden (PE, PTX, anaphylaxis) vs gradual (CHF, COPD exac)</li>
+        <li><strong>Position:</strong> Orthopnea (worse lying flat) → CHF; improved upright</li>
+        <li><strong>Provocation:</strong> Exertion → cardiac/PE; allergen → anaphylaxis/asthma</li>
+        <li><strong>Quality:</strong> Chest tightness (asthma), inability to get air (COPD), air hunger</li>
+        <li><strong>Severity:</strong> Able to speak? Single words only = severe</li>
+        <li><strong>Radiation:</strong> Associated chest pain character (pleuritic? crushing?)</li>
+        <li><strong>Time:</strong> Duration, prior episodes, last ER visit for this problem</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 6: Interactive Differential -->
+  <div class="section-divider"><h2>&#x1F4CA; Step 6 — Interactive Differential</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F9ED; Refine Differential</div>
+
+    <div class="selector-label">Additional Findings (select all that apply)</div>
+    <div class="chip-group" id="resp-symptom-chips">
+      <button class="chip" data-rsym="hx-asthma">Hx of Asthma</button>
+      <button class="chip" data-rsym="hx-copd">Hx of COPD</button>
+      <button class="chip" data-rsym="hx-chf">Hx of CHF</button>
+      <button class="chip" data-rsym="hx-dvt">DVT / PE Risk</button>
+      <button class="chip" data-rsym="fever">Fever / Infection</button>
+      <button class="chip" data-rsym="trauma">Trauma to chest</button>
+      <button class="chip" data-rsym="allergen">Known allergen exposure</button>
+      <button class="chip" data-rsym="pediatric">Pediatric patient</button>
+      <button class="chip" data-rsym="jvd">JVD present</button>
+      <button class="chip" data-rsym="edema">Pedal edema</button>
+      <button class="chip" data-rsym="tachycardia">Tachycardia</button>
+      <button class="chip" data-rsym="hypotension">Hypotension</button>
+    </div>
+
+    <div class="diff-results" id="resp-diff-results">
+      <div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select breath sound type above to generate differential</div>
+    </div>
+  </div>
+
+  <!-- STEP 7: Management -->
+  <div class="section-divider"><h2>&#x1FA7A; Step 7 — Management</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">Positioning &amp; O2 Delivery</div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1FA91;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Position:</strong> Sitting upright / tripod. Never force supine unless unconscious. Semi-recumbent for COPD.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F4A8;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Oxygen Delivery — titrate to SpO2 ≥ 94% (≥ 88% COPD):</strong></div>
+    </div>
+    <table class="o2-table">
+      <tr><th>Device</th><th>Flow Rate</th><th>FiO2</th><th>Indication</th></tr>
+      <tr><td>Nasal Cannula</td><td>2–6 L/min</td><td>28–44%</td><td>Mild hypoxia, COPD</td></tr>
+      <tr><td>Simple Mask</td><td>6–10 L/min</td><td>35–55%</td><td>Moderate hypoxia</td></tr>
+      <tr><td>Non-Rebreather</td><td>10–15 L/min</td><td>60–95%</td><td>Severe hypoxia</td></tr>
+      <tr><td>BVM (ventilate)</td><td>15 L/min</td><td>~100%</td><td>Apnea / near-apnea</td></tr>
+      <tr><td>CPAP/BiPAP</td><td>Per device</td><td>Variable</td><td>CHF, COPD — ALS</td></tr>
+    </table>
+  </div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F4A8; Bronchodilator — Albuterol</div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F489;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Assist patient's own albuterol inhaler</strong> if prescribed and in their possession (scope varies by state/agency). 2 puffs via spacer.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F321;&#xFE0F;</div>
+      <div><span class="badge-als">ALS</span> <strong>Nebulized albuterol</strong> 2.5mg in 3mL NS (may repeat × 2), ipratropium 0.5mg for COPD, IV/IM epinephrine for anaphylaxis.</div>
+    </div>
+    <div class="alert-box alert-orange">
+      <span class="alert-icon">&#9888;</span>
+      <div><strong>COPD:</strong> Avoid excess O2. Target SpO2 88–92%. High-flow O2 may suppress hypoxic drive and cause respiratory depression. Use NC or controlled flow.</div>
+    </div>
+  </div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F6A8; ALS Intercept Criteria</div>
+    <div class="als-triggers">
+      <div class="als-triggers-title">&#x1F534; ALS Request — Any of the following:</div>
+      <ul>
+        <li>RR &lt; 8 or &gt; 30, SpO2 &lt; 90% on O2</li>
+        <li>Silent chest (no air movement = immediate failure)</li>
+        <li>Altered mental status / unable to maintain airway</li>
+        <li>Suspected tension pneumothorax (needle decompression)</li>
+        <li>Anaphylaxis with airway compromise (epinephrine)</li>
+        <li>Acute pulmonary edema / CHF (CPAP, nitrates, furosemide)</li>
+        <li>Foreign body airway obstruction unrelieved by BLS</li>
+        <li>Hemodynamic instability (BP &lt; 90)</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  NREMT / AHA Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  // Breath sound findings
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  const soundFindings = {
+    wheeze: { color: 'var(--orange)', text: '&#x1F300; <strong>Bilateral Wheezing:</strong> Bronchospasm — suspect Asthma exacerbation, COPD exacerbation, Anaphylaxis, or Cardiac Asthma (CHF with wheezing). Administer bronchodilator therapy per protocol.' },
+    crackles: { color: 'var(--blue)', text: '&#x1F4A7; <strong>Bilateral Crackles:</strong> Fluid in alveoli — suspect Acute Pulmonary Edema / CHF, Pneumonia, ARDS. Look for JVD, edema, orthopnea. Sit upright, O2, ALS for CPAP.' },
+    absent: { color: 'var(--red)', text: '&#x274C; <strong>Absent/Diminished Unilateral:</strong> CRITICAL — suspect Tension Pneumothorax (with JVD, hypotension, tracheal deviation) or simple pneumothorax, hemothorax, or consolidation (pneumonia). ALS immediately for tension PTX.' },
+    stridor: { color: 'var(--red)', text: '&#x26A0;&#xFE0F; <strong>Stridor (Upper Airway):</strong> CRITICAL — partial upper airway obstruction. Suspect Anaphylaxis, Foreign Body, Croup (pediatric), Epiglottitis. BVM ready. ALS NOW. Position of comfort.' },
+    normal: { color: 'var(--green)', text: '&#x2714;&#xFE0F; <strong>Clear Breath Sounds:</strong> Respiratory symptoms without pulmonary finding. Consider PE (no lung sounds), Anxiety/panic attack, Non-respiratory cause, early presentation, or examine further.' }
+  };
+
+  let selectedSound = null;
+  let selectedRespSymptoms = new Set();
+
+  document.querySelectorAll('[data-sound]').forEach(card => {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('[data-sound]').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedSound = this.dataset.sound;
+
+      const finding = document.getElementById('sound-finding');
+      const sf = soundFindings[selectedSound];
+      finding.style.display = 'block';
+      finding.style.borderColor = sf.color;
+      finding.innerHTML = sf.text;
+      renderRespDiff();
+    });
+  });
+
+  document.querySelectorAll('[data-rsym]').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const sym = this.dataset.rsym;
+      if (selectedRespSymptoms.has(sym)) {
+        selectedRespSymptoms.delete(sym);
+        this.classList.remove('selected');
+      } else {
+        selectedRespSymptoms.add(sym);
+        this.classList.add('selected');
+      }
+      renderRespDiff();
+    });
+  });
+
+  const respConditions = [
+    {
+      id: 'asthma',
+      name: 'Asthma Exacerbation',
+      level: 'high',
+      sounds: ['wheeze'],
+      symptoms: ['hx-asthma', 'allergen'],
+      notes: 'Bilateral wheeze, prolonged expiration, tachycardia. History of asthma. Trigger: allergen, cold air, exercise. Assist inhaler or neb albuterol. ALS for severe/silent chest.'
+    },
+    {
+      id: 'copd',
+      name: 'COPD Exacerbation',
+      level: 'high',
+      sounds: ['wheeze'],
+      symptoms: ['hx-copd', 'fever'],
+      notes: 'Pursed-lip breathing, barrel chest, prolonged expiration. Chronic smoker. May have infection trigger. Controlled O2 (88-92% target). Bronchodilators.'
+    },
+    {
+      id: 'chf',
+      name: 'Acute Pulmonary Edema / CHF',
+      level: 'critical',
+      sounds: ['crackles'],
+      symptoms: ['hx-chf', 'jvd', 'edema'],
+      notes: 'Bilateral crackles, orthopnea, JVD, pedal edema. May wheeze ("cardiac asthma"). Pink frothy sputum in severe cases. Sit upright, O2, ALS for CPAP/nitrates/furosemide.'
+    },
+    {
+      id: 'tension-ptx',
+      name: 'Tension Pneumothorax',
+      level: 'critical',
+      sounds: ['absent'],
+      symptoms: ['trauma', 'jvd', 'hypotension'],
+      notes: '⚠ CRITICAL — Absent unilateral breath sounds + JVD + hypotension + tracheal deviation (late). ALS NOW for needle decompression. Rapid transport. Do NOT delay for assessment.'
+    },
+    {
+      id: 'pneumothorax',
+      name: 'Spontaneous Pneumothorax',
+      level: 'high',
+      sounds: ['absent'],
+      symptoms: ['tachycardia'],
+      notes: 'Sudden unilateral chest pain + dyspnea. Tall, thin young males. No JVD/hypotension (distinguishes from tension). O2 high-flow, ALS transport.'
+    },
+    {
+      id: 'anaphylaxis',
+      name: 'Anaphylaxis — Airway',
+      level: 'critical',
+      sounds: ['wheeze', 'stridor'],
+      symptoms: ['allergen', 'hypotension', 'tachycardia'],
+      notes: '⚠ CRITICAL — Urticaria, angioedema, stridor, wheeze after allergen exposure. Epinephrine 0.3mg IM (ALS/authorized BLS). O2 NRB. Supine unless dyspnea. ALS immediately.'
+    },
+    {
+      id: 'croup',
+      name: 'Croup (Pediatric)',
+      level: 'moderate',
+      sounds: ['stridor'],
+      symptoms: ['pediatric', 'fever'],
+      notes: 'Barking cough, stridor, low-grade fever in child under 5. Cool mist helps. Position of comfort. ALS for severe. Do NOT agitate child — worsens stridor.'
+    },
+    {
+      id: 'pe',
+      name: 'Pulmonary Embolism (PE)',
+      level: 'high',
+      sounds: ['normal'],
+      symptoms: ['hx-dvt', 'tachycardia'],
+      notes: 'Sudden dyspnea, tachycardia, pleuritic chest pain. Risk: immobility, surgery, pregnancy, cancer. Breath sounds often CLEAR despite severe distress. O2, ALS, rapid transport.'
+    },
+    {
+      id: 'pneumonia',
+      name: 'Pneumonia',
+      level: 'moderate',
+      sounds: ['crackles', 'absent'],
+      symptoms: ['fever', 'tachycardia'],
+      notes: 'Productive cough, fever, localized crackles/decreased sounds. May be severe (sepsis risk). O2 to maintain SpO2. Transport.'
+    }
+  ];
+
+  function renderRespDiff() {
+    const results = document.getElementById('resp-diff-results');
+    if (!selectedSound) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select breath sound type above to generate differential</div>';
+      return;
+    }
+
+    const scored = respConditions.map(c => {
+      let score = 0;
+      if (c.sounds.includes(selectedSound)) score += 3;
+      selectedRespSymptoms.forEach(sym => {
+        if (c.symptoms.includes(sym)) score += 1;
+      });
+      return { ...c, score };
+    }).filter(c => c.score > 0).sort((a, b) => {
+      const lo = { critical: 3, high: 2, moderate: 1, low: 0 };
+      if (b.score !== a.score) return b.score - a.score;
+      return lo[b.level] - lo[a.level];
+    });
+
+    if (scored.length === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">No strong matches for selected findings</div>';
+      return;
+    }
+
+    results.innerHTML = '<div style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Ranked by likelihood &amp; severity:</div>';
+    scored.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'diff-card diff-' + c.level;
+      div.style.animation = 'fadeIn 0.25s ease';
+      div.innerHTML = '<div class="diff-card-header"><span class="diff-name">' + c.name + '</span><span class="diff-priority">' + c.level.toUpperCase() + '</span></div><div class="diff-notes">' + c.notes + '</div>';
+      results.appendChild(div);
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Altered Mental Status — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--orange); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .step-purple .step-num { background: var(--purple); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* AVPU SCALE */
+  .avpu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
+  .avpu-card { background: white; border-radius: 8px; padding: 12px; border-left: 5px solid var(--gray-400); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .avpu-letter { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+  .avpu-word { font-size: 13px; font-weight: 700; color: var(--gray-800); margin-bottom: 2px; }
+  .avpu-desc { font-size: 12px; color: var(--gray-600); }
+  .avpu-a { border-color: var(--green); }
+  .avpu-a .avpu-letter { color: var(--green); }
+  .avpu-v { border-color: var(--yellow); }
+  .avpu-v .avpu-letter { color: var(--yellow); }
+  .avpu-p { border-color: var(--orange); }
+  .avpu-p .avpu-letter { color: var(--orange); }
+  .avpu-u { border-color: var(--red); }
+  .avpu-u .avpu-letter { color: var(--red); }
+
+  /* GLUCOSE BANNER */
+  .glucose-banner { background: var(--red); color: white; border-radius: 10px; padding: 14px; margin: 10px 0; display: flex; gap: 12px; align-items: center; }
+  .glucose-icon { font-size: 28px; flex-shrink: 0; }
+  .glucose-text h3 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .glucose-text p { font-size: 13px; opacity: 0.95; line-height: 1.4; }
+
+  /* AEIOU-TIPS */
+  .tips-grid { display: grid; gap: 8px; }
+  .tips-item { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .tips-header { display: flex; align-items: center; gap: 0; cursor: pointer; min-height: 54px; }
+  .tips-letter { width: 48px; height: 100%; min-height: 54px; display: flex; align-items: center; justify-content: center; font-family: 'Arial Narrow','Arial',sans-serif; font-size: 24px; font-weight: 700; color: white; flex-shrink: 0; }
+  .tips-label { flex: 1; padding: 12px 12px 12px 10px; }
+  .tips-name { font-weight: 700; font-size: 15px; color: var(--gray-800); }
+  .tips-sub { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+  .tips-check { padding-right: 12px; }
+  .tips-checkbox { width: 28px; height: 28px; border: 2px solid var(--gray-200); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.15s; cursor: pointer; background: white; }
+  .tips-checkbox.checked { border-color: var(--orange); background: var(--orange); color: white; }
+  .tips-detail { padding: 0 12px 12px 48px; font-size: 13px; color: var(--gray-600); line-height: 1.4; display: none; }
+  .tips-detail.open { display: block; animation: fadeIn 0.2s ease; }
+
+  /* DIFFERENTIAL RESULTS */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--gray-800); }
+
+  .diff-results { margin-top: 10px; }
+  .diff-card { border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .diff-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .diff-name { font-weight: 700; font-size: 15px; }
+  .diff-priority { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .diff-notes { font-size: 13px; line-height: 1.4; color: var(--gray-600); }
+  .diff-critical { background: var(--red-light); border-left: 4px solid var(--red); }
+  .diff-critical .diff-name { color: var(--red); }
+  .diff-critical .diff-priority { background: var(--red); color: white; }
+  .diff-high { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .diff-high .diff-name { color: var(--orange); }
+  .diff-high .diff-priority { background: var(--orange); color: white; }
+  .diff-moderate { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .diff-moderate .diff-name { color: var(--yellow); }
+  .diff-moderate .diff-priority { background: var(--yellow); color: white; }
+
+  /* PHYSICAL FINDINGS */
+  .findings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+  .finding-card { background: white; border-radius: 8px; padding: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .finding-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-600); margin-bottom: 6px; }
+  .finding-items { font-size: 12px; color: var(--gray-800); line-height: 1.5; }
+
+  /* MANAGEMENT */
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1F9D0; Altered Mental Status</div>
+      <div class="header-sub">AEIOU-TIPS &bull; Glucose &bull; AVPU</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up — Clue Gathering <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>BSI: Gloves (altered patients unpredictable — blood, emesis, secretions)</li>
+        <li><strong>Safety:</strong> AMS patients may be combative — request law enforcement if needed</li>
+        <li><strong>Environment clues:</strong> Pill bottles (overdose?), drug paraphernalia, alcohol, insulin/glucose meter, medical ID bracelet</li>
+        <li><strong>Bystanders:</strong> Witness to collapse? Seizure activity? Time of onset?</li>
+        <li><strong>Trauma mechanism?</strong> — blood, fall, head injury signs</li>
+        <li><strong>Living conditions:</strong> Extreme heat/cold → environmental emergency</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2 -->
+  <div class="step step-orange">
+    <div class="step-num">2</div>
+    <div class="step-title">Initial Assessment — ABCs + C-Spine</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Airway:</strong> Maintain — jaw thrust, OPA/NPA if not responsive. Suction if needed (vomit, blood).</li>
+        <li><strong>Breathing:</strong> Rate, depth, effort. Agonal or absent → BVM immediately.</li>
+        <li><strong>Circulation:</strong> Pulse quality, skin signs, BP.</li>
+        <li><strong>C-spine:</strong> If trauma mechanism present (fall, MVA, unknown) — manual inline stabilization until cleared.</li>
+        <li><strong>Position:</strong> Recovery position if breathing and no C-spine concern.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 3: AVPU -->
+  <div class="section-divider"><h2>&#x1F4CA; Step 3 — AVPU Scale</h2></div>
+
+  <div class="avpu-grid">
+    <div class="avpu-card avpu-a">
+      <div class="avpu-letter">A</div>
+      <div class="avpu-word">Alert</div>
+      <div class="avpu-desc">Awake, aware, responds normally</div>
+    </div>
+    <div class="avpu-card avpu-v">
+      <div class="avpu-letter">V</div>
+      <div class="avpu-word">Verbal</div>
+      <div class="avpu-desc">Responds to verbal stimuli only</div>
+    </div>
+    <div class="avpu-card avpu-p">
+      <div class="avpu-letter">P</div>
+      <div class="avpu-word">Pain</div>
+      <div class="avpu-desc">Responds to painful stimuli only</div>
+    </div>
+    <div class="avpu-card avpu-u">
+      <div class="avpu-letter">U</div>
+      <div class="avpu-word">Unresponsive</div>
+      <div class="avpu-desc">No response to any stimulus</div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 4: GLUCOSE -->
+  <div class="glucose-banner">
+    <div class="glucose-icon">&#x1F4C9;</div>
+    <div class="glucose-text">
+      <h3>STEP 4 — GLUCOSE CHECK: IMMEDIATE PRIORITY</h3>
+      <p>BGL &lt; 60 mg/dL → Treat before continuing. Hypoglycemia is the most reversible and dangerous AMS cause. Do not skip this step.</p>
+    </div>
+  </div>
+
+  <div style="background:var(--green-light);border:2px solid var(--green);border-radius:10px;padding:14px;margin:8px 0 16px;">
+    <div style="font-family:'Arial Narrow','Arial',sans-serif;font-size:15px;font-weight:700;color:var(--green);margin-bottom:6px;">Hypoglycemia Treatment</div>
+    <ul style="padding-left:18px;font-size:14px;color:var(--gray-800);">
+      <li><strong>BGL &lt; 60 + conscious + able to swallow:</strong> Oral glucose gel 15-24g (BLS)</li>
+      <li><strong>BGL &lt; 60 + unconscious / cannot protect airway:</strong> D50 25g IV or D10 per ALS protocol (ALS)</li>
+      <li><strong>Reassess BGL 15 minutes after treatment</strong></li>
+      <li><strong>Glucagon 1mg IM</strong> if no IV access and unconscious (ALS / family-administered)</li>
+    </ul>
+  </div>
+
+  <!-- STEP 5: AEIOU-TIPS -->
+  <div class="section-divider"><h2>&#x1F9E9; Step 5 — AEIOU-TIPS Differential</h2></div>
+  <div style="font-size:13px;color:var(--gray-600);margin-bottom:10px;">Tap any category to expand. Check applicable causes to prioritize differential.</div>
+
+  <div class="tips-grid" id="tips-grid">
+    <!-- A -->
+    <div class="tips-item" data-category="A">
+      <div class="tips-header" onclick="toggleTips('A')">
+        <div class="tips-letter" style="background:var(--red);">A</div>
+        <div class="tips-label">
+          <div class="tips-name">Alcohol / Drugs</div>
+          <div class="tips-sub">Intoxication, withdrawal, CNS depressants</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-A" onclick="event.stopPropagation();toggleCheck('A')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-A">
+        Alcohol breath, pinpoint pupils (opioids), dilated pupils (stimulants), drug paraphernalia. Check: ETOH level, Narcan trial for opioid OD (ALS or authorized BLS). Alcohol withdrawal: seizures, delirium tremens — high risk.
+      </div>
+    </div>
+    <!-- E -->
+    <div class="tips-item" data-category="E">
+      <div class="tips-header" onclick="toggleTips('E')">
+        <div class="tips-letter" style="background:var(--orange);">E</div>
+        <div class="tips-label">
+          <div class="tips-name">Epilepsy / Endocrine</div>
+          <div class="tips-sub">Seizure, postictal, thyroid storm, Addisonian</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-E" onclick="event.stopPropagation();toggleCheck('E')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-E">
+        Post-seizure: Todd's paralysis (focal weakness), incontinence, tongue biting, postictal confusion (minutes to hours). Thyroid storm: fever, tachycardia, diaphoresis, AMS. Addisonian crisis: hypotension, weakness, electrolyte derangement.
+      </div>
+    </div>
+    <!-- I (Insulin) -->
+    <div class="tips-item" data-category="I1">
+      <div class="tips-header" onclick="toggleTips('I1')">
+        <div class="tips-letter" style="background:var(--blue);">I</div>
+        <div class="tips-label">
+          <div class="tips-name">Insulin (Glucose)</div>
+          <div class="tips-sub">Hypoglycemia, DKA, HHNS</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-I1" onclick="event.stopPropagation();toggleCheck('I1')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-I1">
+        Hypoglycemia: &lt;60 mg/dL — diaphoresis, tremor, confusion, seizure. DKA: fruity breath, Kussmaul breathing, dehydration, BGL &gt;250. HHNS (Type 2): extreme hyperglycemia, no fruity breath, profound dehydration.
+      </div>
+    </div>
+    <!-- O -->
+    <div class="tips-item" data-category="O">
+      <div class="tips-header" onclick="toggleTips('O')">
+        <div class="tips-letter" style="background:var(--purple);">O</div>
+        <div class="tips-label">
+          <div class="tips-name">Overdose / Oxygen</div>
+          <div class="tips-sub">Drug OD, hypoxia, CO poisoning</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-O" onclick="event.stopPropagation();toggleCheck('O')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-O">
+        Opioid OD: pinpoint pupils, respiratory depression, bradycardia. Hypoxia: cyanosis, SpO2 low, work of breathing. CO poisoning: cherry red skin, headache, nausea — SpO2 falsely normal (use CO-oximeter or clinical suspicion). High-flow O2 for CO.
+      </div>
+    </div>
+    <!-- U -->
+    <div class="tips-item" data-category="U">
+      <div class="tips-header" onclick="toggleTips('U')">
+        <div class="tips-letter" style="background:var(--yellow);">U</div>
+        <div class="tips-label">
+          <div class="tips-name">Uremia</div>
+          <div class="tips-sub">Renal failure, electrolyte disorders</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-U" onclick="event.stopPropagation();toggleCheck('U')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-U">
+        Uremia from acute or chronic renal failure. Uremic frost (white crystals on skin — severe). Electrolyte derangements: hyponatremia (seizures), hyperkalemia (cardiac arrhythmias). Dialysis patient who missed treatment.
+      </div>
+    </div>
+    <!-- T -->
+    <div class="tips-item" data-category="T">
+      <div class="tips-header" onclick="toggleTips('T')">
+        <div class="tips-letter" style="background:var(--gray-800);">T</div>
+        <div class="tips-label">
+          <div class="tips-name">Trauma</div>
+          <div class="tips-sub">Head injury, intracranial bleed</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-T" onclick="event.stopPropagation();toggleCheck('T')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-T">
+        TBI: contusion, epidural/subdural hematoma. Signs: lucid interval then deterioration (epidural), Battle's sign (mastoid bruising), raccoon eyes, CSF rhinorrhea/otorrhea. C-spine protection. Rapid transport to trauma center.
+      </div>
+    </div>
+    <!-- I (Infection) -->
+    <div class="tips-item" data-category="I2">
+      <div class="tips-header" onclick="toggleTips('I2')">
+        <div class="tips-letter" style="background:var(--red);">I</div>
+        <div class="tips-label">
+          <div class="tips-name">Infection</div>
+          <div class="tips-sub">Sepsis, meningitis, encephalitis</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-I2" onclick="event.stopPropagation();toggleCheck('I2')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-I2">
+        Sepsis: fever/hypothermia, tachycardia, hypotension, altered LOC, infection source. Meningitis: fever + severe headache + neck stiffness (meningismus) + photophobia — use droplet PPE. Encephalitis: fever + AMS + seizures.
+      </div>
+    </div>
+    <!-- P -->
+    <div class="tips-item" data-category="P">
+      <div class="tips-header" onclick="toggleTips('P')">
+        <div class="tips-letter" style="background:var(--blue);">P</div>
+        <div class="tips-label">
+          <div class="tips-name">Psychiatric / Poisoning</div>
+          <div class="tips-sub">Psych emergency, toxins, medications</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-P" onclick="event.stopPropagation();toggleCheck('P')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-P">
+        Psych emergency: diagnosis of exclusion. Always rule out organic cause first. Toxicology: toxic syndromes (cholinergic — SLUDGE, anticholinergic — dry/flushed/tachycardia, sympathomimetic). Document all medications found.
+      </div>
+    </div>
+    <!-- S -->
+    <div class="tips-item" data-category="S">
+      <div class="tips-header" onclick="toggleTips('S')">
+        <div class="tips-letter" style="background:var(--purple);">S</div>
+        <div class="tips-label">
+          <div class="tips-name">Stroke / Shock / Structural</div>
+          <div class="tips-sub">CVA, hemorrhagic shock, mass lesion</div>
+        </div>
+        <div class="tips-check"><div class="tips-checkbox" id="chk-S" onclick="event.stopPropagation();toggleCheck('S')">&#x25CB;</div></div>
+      </div>
+      <div class="tips-detail" id="detail-S">
+        Stroke: focal deficits, Cincinnati positive → Stroke Alert protocol. Shock: any type (distributive, hypovolemic, cardiogenic, obstructive) → hypoperfusion → AMS. Brain tumor/mass: focal deficits, headache, papilledema.
+      </div>
+    </div>
+  </div>
+
+  <!-- Differential Results -->
+  <div class="interactive-section" style="margin-top:16px;">
+    <div class="interactive-title">&#x1F4CB; Priority Differentials Based on Selection</div>
+    <div class="diff-results" id="ams-diff-results">
+      <div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Check applicable AEIOU-TIPS categories above to see prioritized differential</div>
+    </div>
+  </div>
+
+  <!-- STEP 6: Physical Findings -->
+  <div class="section-divider"><h2>&#x1F50D; Step 6 — Physical Findings Panel</h2></div>
+
+  <div class="findings-grid">
+    <div class="finding-card">
+      <div class="finding-title">&#x1F441; Pupils</div>
+      <div class="finding-items">
+        Pinpoint → opioid OD<br>
+        Dilated → stimulants/anoxia<br>
+        Unequal (anisocoria) → herniation<br>
+        Fixed &amp; dilated → severe brain injury
+      </div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-title">&#x1F9BE; Motor</div>
+      <div class="finding-items">
+        Focal weakness → stroke/TBI<br>
+        Decorticate posturing → cortical<br>
+        Decerebrate posturing → brainstem<br>
+        Flaccid → severe injury
+      </div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-title">&#x1F9B4; Meningismus</div>
+      <div class="finding-items">
+        Neck stiffness<br>
+        Kernig's sign<br>
+        Brudzinski's sign<br>
+        → Meningitis / SAH
+      </div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-title">&#x1FA77; Skin</div>
+      <div class="finding-items">
+        Diaphoresis → shock/hypoglycemia<br>
+        Flushed/dry → anticholinergic<br>
+        Petechiae/purpura → meningococcemia<br>
+        Cherry red → CO poisoning
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7: Management -->
+  <div class="section-divider"><h2>&#x1FA7A; Step 7 — Management by Etiology</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">General AMS Management</div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F6E1;&#xFE0F;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Airway protection first</strong> — position, jaw thrust, OPA/NPA. Suction. Recovery position if spontaneous breathing.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F4A8;</div>
+      <div><span class="badge-bls">BLS</span> <strong>O2</strong> — apply per SpO2. 100% NRB if suspected CO poisoning (do not wait for O2 sat).</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F4C9;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Glucose:</strong> BGL &lt; 60 + conscious → oral glucose gel. Document pre- and post-treatment BGL.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1FA78;</div>
+      <div><span class="badge-als">ALS</span> <strong>IV access, D50/D10 for hypoglycemia, Narcan 0.4-2mg IV/IM/IN</strong> for suspected opioid OD (respiratory depression + pinpoint pupils).</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F321;&#xFE0F;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Temperature management:</strong> Hypothermia → warm blankets, remove wet clothing. Hyperthermia → cool with wet cloths, fan.</div>
+    </div>
+  </div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F6A8; ALS Intercept Criteria</div>
+    <div class="als-triggers">
+      <div class="als-triggers-title">&#x1F534; ALS Request — Any of the following:</div>
+      <ul>
+        <li>AVPU below Alert — V, P, or U</li>
+        <li>BGL &lt; 60 with unconscious patient (IV dextrose needed)</li>
+        <li>Suspected opioid overdose (Narcan)</li>
+        <li>Active seizure or postictal &gt; 10 minutes</li>
+        <li>Signs of shock (hypotension, poor perfusion)</li>
+        <li>Suspected meningitis (droplet precautions)</li>
+        <li>Focal neurological deficits (stroke protocol)</li>
+        <li>Suspected CO poisoning (high-flow O2 only; hyperbaric consult)</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  NREMT / AHA Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  const tipsDetails = {
+    A: { name: 'Alcohol / Drugs', level: 'high', notes: 'Check pupils, ETOH breath, paraphernalia. Trial Narcan for pinpoint pupils + respiratory depression (ALS). Alcohol withdrawal can cause life-threatening seizures.' },
+    E: { name: 'Epilepsy / Endocrine', level: 'high', notes: 'Check for postictal state, tongue biting, incontinence. Thyroid storm: fever + tachycardia + AMS. Protect airway during/after seizure.' },
+    I1: { name: 'Insulin / Glucose Problem', level: 'critical', notes: 'BGL FIRST. Hypoglycemia &lt;60 = immediate treatment. DKA: Kussmaul breathing, fruity breath, dehydration — ALS, fluids.' },
+    O: { name: 'Overdose / Hypoxia', level: 'critical', notes: 'Hypoxia: O2 immediately. CO: 100% NRB, keep patient away from source. Opioid OD: Narcan (ALS). Document all substances found on scene.' },
+    U: { name: 'Uremia / Renal Failure', level: 'moderate', notes: 'Dialysis patient who missed treatment. Electrolyte disturbances. May have cardiac dysrhythmias (hyperkalemia). ALS for cardiac monitoring.' },
+    T: { name: 'Trauma / Head Injury', level: 'critical', notes: 'C-spine protection for unknown mechanism. Signs of skull fracture (Battle\'s sign, raccoon eyes, CSF leak). Rapid transport to trauma center. Avoid hyperventilation unless herniation signs.' },
+    I2: { name: 'Infection / Sepsis', level: 'critical', notes: 'Sepsis triad: fever, tachycardia, hypotension + infection source. Meningitis: droplet precautions (N95), fever + neck stiffness + photophobia. Early recognition and transport.' },
+    P: { name: 'Psychiatric / Poisoning', level: 'moderate', notes: 'Psychiatric emergency is diagnosis of exclusion. Always rule out organic cause. Toxidromes: SLUDGE (cholinergic) vs dry/flushed (anticholinergic). Bring all pill bottles to hospital.' },
+    S: { name: 'Stroke / Shock / Structural', level: 'critical', notes: 'Focal deficits → Stroke Alert protocol. Any shock type causes AMS from hypoperfusion. Note BP trends. ALS for IV fluids and cardiac monitoring.' }
+  };
+
+  const checkedItems = new Set();
+
+  function toggleTips(cat) {
+    const detail = document.getElementById('detail-' + cat);
+    if (detail) detail.classList.toggle('open');
+  }
+
+  function toggleCheck(cat) {
+    const chk = document.getElementById('chk-' + cat);
+    if (checkedItems.has(cat)) {
+      checkedItems.delete(cat);
+      chk.classList.remove('checked');
+      chk.textContent = '○';
+    } else {
+      checkedItems.add(cat);
+      chk.classList.add('checked');
+      chk.textContent = '✓';
+    }
+    renderAmsDiff();
+  }
+
+  function renderAmsDiff() {
+    const results = document.getElementById('ams-diff-results');
+    if (checkedItems.size === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Check applicable AEIOU-TIPS categories above to see prioritized differential</div>';
+      return;
+    }
+
+    const levelOrder = { critical: 3, high: 2, moderate: 1, low: 0 };
+    const items = Array.from(checkedItems)
+      .map(cat => tipsDetails[cat])
+      .filter(Boolean)
+      .sort((a, b) => levelOrder[b.level] - levelOrder[a.level]);
+
+    results.innerHTML = '<div style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Prioritized by severity:</div>';
+    items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'diff-card diff-' + item.level;
+      div.style.animation = 'fadeIn 0.2s ease';
+      div.innerHTML = '<div class="diff-card-header"><span class="diff-name">' + item.name + '</span><span class="diff-priority">' + item.level.toUpperCase() + '</span></div><div class="diff-notes">' + item.notes + '</div>';
+      results.appendChild(div);
+    });
+  }
+</script>
+</body>
+</html>

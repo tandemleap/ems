@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Trauma Assessment — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--gray-800); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.25); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-dark { background: white; border-left: 4px solid var(--gray-800); }
+  .step-dark .step-num { background: var(--gray-800); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* MARCH HEADER */
+  .march-banner { background: var(--gray-800); color: white; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+  .march-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 2px; color: rgba(255,255,255,0.6); margin-bottom: 10px; text-transform: uppercase; }
+  .march-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .march-item { text-align: center; padding: 8px 4px; border-radius: 8px; background: rgba(255,255,255,0.08); }
+  .march-letter { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 20px; font-weight: 700; color: #ff6b6b; }
+  .march-word { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; line-height: 1.2; }
+
+  /* MOI SELECTOR */
+  .moi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+  .moi-card { border: 3px solid var(--gray-200); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; background: white; transition: all 0.15s; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  .moi-card:active { transform: scale(0.97); }
+  .moi-card.selected-blunt { border-color: var(--orange); background: var(--orange-light); }
+  .moi-card.selected-penetrate { border-color: var(--red); background: var(--red-light); }
+  .moi-card.selected-low { border-color: var(--green); background: var(--green-light); }
+  .moi-card.selected-high { border-color: var(--red); background: var(--red-light); }
+  .moi-icon { font-size: 22px; }
+  .moi-label { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+  .moi-sub { font-size: 11px; color: var(--gray-600); }
+
+  /* ABCDE */
+  .abcde-item { background: white; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; border-left: 5px solid var(--gray-400); box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+  .abcde-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .abcde-letter { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 22px; font-weight: 700; width: 32px; }
+  .abcde-name { font-weight: 700; font-size: 15px; color: var(--gray-800); }
+  .abcde-content { font-size: 13px; color: var(--gray-600); padding-left: 42px; line-height: 1.5; }
+  .abcde-content ul { padding-left: 16px; }
+  .abcde-content li { margin-bottom: 2px; }
+
+  /* LIFE THREAT PANEL */
+  .threat-grid { display: grid; gap: 8px; margin: 10px 0; }
+  .threat-card { background: white; border-radius: 10px; padding: 12px 14px; border-left: 5px solid var(--red); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+  .threat-card.critical { background: var(--red-light); }
+  .threat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .threat-name { font-weight: 700; font-size: 15px; color: var(--red); }
+  .threat-badge { font-size: 10px; font-weight: 700; background: var(--red); color: white; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .threat-signs { font-size: 13px; color: var(--gray-600); margin-bottom: 4px; }
+  .threat-action { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+
+  /* SHOCK TABLE */
+  .shock-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 12px; margin: 10px 0; }
+  .shock-table th { background: var(--gray-800); color: white; padding: 8px 8px; text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+  .shock-table td { padding: 7px 8px; border-bottom: 1px solid var(--gray-200); text-align: center; vertical-align: top; }
+  .shock-table tr:last-child td { border-bottom: none; }
+  .class1 { background: var(--green-light); }
+  .class2 { background: var(--yellow-light); }
+  .class3 { background: var(--orange-light); }
+  .class4 { background: var(--red-light); }
+  .class-badge { font-weight: 700; font-size: 13px; }
+
+  /* NEXUS */
+  .nexus-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; cursor: pointer; }
+  .nexus-item:last-child { border-bottom: none; }
+  .nexus-check { width: 28px; height: 28px; border: 2px solid var(--gray-200); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: white; transition: all 0.15s; }
+  .nexus-check.checked { border-color: var(--red); background: var(--red); color: white; }
+  .nexus-text { flex: 1; }
+  .nexus-name { font-weight: 700; }
+  .nexus-sub { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+
+  .nexus-result { padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: 600; font-size: 14px; display: none; }
+  .nexus-restrict { background: var(--red-light); color: var(--red); border: 2px solid var(--red); }
+  .nexus-clear { background: var(--green-light); color: var(--green); border: 2px solid var(--green); }
+
+  /* TOURNIQUET */
+  .tq-section { background: var(--red); color: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .tq-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .tq-steps { font-size: 13px; line-height: 1.6; }
+  .tq-time { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 12px; margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+  .tq-time-label { font-size: 12px; opacity: 0.8; }
+  .tq-time-input { background: rgba(255,255,255,0.9); border: none; border-radius: 6px; padding: 8px 10px; font-size: 16px; font-weight: 700; color: var(--gray-800); font-family: inherit; width: 120px; }
+
+  /* MANAGEMENT */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--gray-800); }
+
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-blue { background: var(--blue-light); border: 2px solid var(--blue); color: var(--blue); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  .transport-decision { border-radius: 12px; padding: 14px; margin: 10px 0; }
+  .load-go { background: var(--red); color: white; }
+  .stay-play { background: var(--blue-light); border: 2px solid var(--blue); color: var(--blue); }
+  .transport-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .transport-list { font-size: 13px; line-height: 1.5; }
+  .transport-list ul { padding-left: 16px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1FA79; Trauma Assessment</div>
+      <div class="header-sub">MARCH &bull; ABCDE &bull; NEXUS &bull; Load &amp; Go</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- MARCH BANNER -->
+  <div class="march-banner">
+    <div class="march-title">MARCH Protocol — Priority Order</div>
+    <div class="march-grid">
+      <div class="march-item">
+        <div class="march-letter">M</div>
+        <div class="march-word">Massive Hemorrhage</div>
+      </div>
+      <div class="march-item">
+        <div class="march-letter">A</div>
+        <div class="march-word">Airway</div>
+      </div>
+      <div class="march-item">
+        <div class="march-letter">R</div>
+        <div class="march-word">Respiration</div>
+      </div>
+      <div class="march-item">
+        <div class="march-letter">C</div>
+        <div class="march-word">Circulation</div>
+      </div>
+      <div class="march-item">
+        <div class="march-letter">H</div>
+        <div class="march-word">Hypothermia</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: SCENE SIZE UP + MOI -->
+  <div class="section-divider"><h2>&#x26A0; Step 1 — Scene Size-Up &amp; MOI</h2></div>
+
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Safety &amp; Resources <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>BSI: Gloves, eye protection (anticipate blood)</li>
+        <li>Scene safety: hazards, traffic, fire, power lines, structural instability</li>
+        <li>Count patients — MCI activation if multiple</li>
+        <li>Request ALS, fire, extrication, air transport early if indicated</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="background:white;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+    <div style="font-family:'Arial Narrow','Arial',sans-serif;font-size:15px;font-weight:700;margin-bottom:10px;">MOI Selector</div>
+    <div style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Select mechanism type:</div>
+    <div class="moi-grid">
+      <div class="moi-card" id="moi-blunt" onclick="selectMOI('blunt')">
+        <div class="moi-icon">&#x1F697;</div>
+        <div class="moi-label">Blunt Trauma</div>
+        <div class="moi-sub">MVA, fall, assault</div>
+      </div>
+      <div class="moi-card" id="moi-penetrate" onclick="selectMOI('penetrate')">
+        <div class="moi-icon">&#x1FA78;</div>
+        <div class="moi-label">Penetrating</div>
+        <div class="moi-sub">GSW, stabbing, impalement</div>
+      </div>
+      <div class="moi-card" id="moi-low" onclick="selectMOI('low')">
+        <div class="moi-icon">&#x2B07;&#xFE0F;</div>
+        <div class="moi-label">Low Energy</div>
+        <div class="moi-sub">Ground-level fall, slow speed</div>
+      </div>
+      <div class="moi-card" id="moi-high" onclick="selectMOI('high')">
+        <div class="moi-icon">&#x26A1;</div>
+        <div class="moi-label">High Energy</div>
+        <div class="moi-sub">High speed, rollover, ejection</div>
+      </div>
+    </div>
+    <div id="moi-note" style="display:none; margin-top:8px; padding:10px; border-radius:8px; font-size:13px;"></div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2: PRIMARY SURVEY ABCDE -->
+  <div class="section-divider"><h2>&#x1F9A0; Step 2 — Primary Survey (ABCDE)</h2></div>
+
+  <!-- A: Airway -->
+  <div class="abcde-item" style="border-color:var(--red);">
+    <div class="abcde-header">
+      <div class="abcde-letter" style="color:var(--red);">A</div>
+      <div class="abcde-name">Airway + C-Spine</div>
+    </div>
+    <div class="abcde-content">
+      <ul>
+        <li>Manual inline stabilization for unknown/trauma mechanism</li>
+        <li>Open with jaw thrust (NOT head-tilt in trauma)</li>
+        <li>Suction blood/vomit — clear and maintain</li>
+        <li>OPA if unconscious with absent gag; NPA if gag intact</li>
+        <li>Assess: phonation, stridor, gurgling</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- B: Breathing -->
+  <div class="abcde-item" style="border-color:var(--orange);">
+    <div class="abcde-header">
+      <div class="abcde-letter" style="color:var(--orange);">B</div>
+      <div class="abcde-name">Breathing</div>
+    </div>
+    <div class="abcde-content">
+      <ul>
+        <li>Rate, depth, effort, symmetry of chest rise</li>
+        <li>Paradoxical movement → flail chest</li>
+        <li>Absent unilateral sounds → tension PTX / hemothorax</li>
+        <li>Open chest wound → seal 3-sided (occlusive dressing)</li>
+        <li>SpO2 — O2 if &lt; 94%; BVM if inadequate respirations</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- C: Circulation + Hemorrhage Control -->
+  <div class="abcde-item" style="border-color:var(--red);">
+    <div class="abcde-header">
+      <div class="abcde-letter" style="color:var(--red);">C</div>
+      <div class="abcde-name">Circulation &amp; Hemorrhage Control</div>
+    </div>
+    <div class="abcde-content">
+      <ul>
+        <li><strong>External hemorrhage:</strong> Direct pressure immediately → wound packing → tourniquet</li>
+        <li>Pulse: rate, rhythm, quality (radial present = SBP ~80+)</li>
+        <li>Skin: pale/cool/diaphoretic = shock</li>
+        <li>Estimate blood loss — class per shock table below</li>
+        <li>Pelvic instability (gentle compression once) — pelvic binder if available</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- D: Disability -->
+  <div class="abcde-item" style="border-color:var(--purple);">
+    <div class="abcde-header">
+      <div class="abcde-letter" style="color:var(--purple);">D</div>
+      <div class="abcde-name">Disability (Neuro)</div>
+    </div>
+    <div class="abcde-content">
+      <ul>
+        <li>AVPU: Alert / Verbal / Pain / Unresponsive</li>
+        <li>Pupils: equal, reactive to light?</li>
+        <li>Motor: move all extremities? Focal deficit?</li>
+        <li>GCS if time permits (Eyes 1-4, Verbal 1-5, Motor 1-6)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- E: Expose/Environment -->
+  <div class="abcde-item" style="border-color:var(--blue);">
+    <div class="abcde-header">
+      <div class="abcde-letter" style="color:var(--blue);">E</div>
+      <div class="abcde-name">Expose &amp; Environment</div>
+    </div>
+    <div class="abcde-content">
+      <ul>
+        <li>Expose to assess injuries — cut away clothing if necessary</li>
+        <li>Look for hidden wounds: axilla, groin, back</li>
+        <li><strong>Hypothermia prevention:</strong> Cover immediately after exposure — Lethal Triad (hypothermia + acidosis + coagulopathy)</li>
+        <li>Warm blankets, warm IV fluids (ALS), heated compartment</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 3: LIFE THREATS -->
+  <div class="section-divider"><h2>&#x1F6A8; Step 3 — Life Threat Recognition</h2></div>
+
+  <div class="threat-grid">
+    <div class="threat-card critical">
+      <div class="threat-header">
+        <div class="threat-name">&#x26A0; Tension Pneumothorax</div>
+        <div class="threat-badge">CRITICAL</div>
+      </div>
+      <div class="threat-signs">Absent unilateral BS + JVD + hypotension + tracheal deviation (late)</div>
+      <div class="threat-action">&#x1F534; ALS — Needle decompression 2nd ICS MCL. Seal open wounds. Rapid transport.</div>
+    </div>
+
+    <div class="threat-card critical">
+      <div class="threat-header">
+        <div class="threat-name">&#x1FA78; Massive Hemorrhage</div>
+        <div class="threat-badge">CRITICAL</div>
+      </div>
+      <div class="threat-signs">Active uncontrolled external bleeding, hemorrhagic shock signs</div>
+      <div class="threat-action">&#x1F535; BLS — Direct pressure, wound packing, tourniquet for extremity. Pelvic binder.</div>
+    </div>
+
+    <div class="threat-card critical">
+      <div class="threat-header">
+        <div class="threat-name">&#x1F4A8; Open Pneumothorax</div>
+        <div class="threat-badge">CRITICAL</div>
+      </div>
+      <div class="threat-signs">Sucking chest wound — air moving through wound with respirations</div>
+      <div class="threat-action">&#x1F535; BLS — 3-sided occlusive dressing (vented preferred). Seal 3 sides, leave 1 open to vent. Monitor for tension PTX development.</div>
+    </div>
+
+    <div class="threat-card critical">
+      <div class="threat-header">
+        <div class="threat-name">&#x1F9B4; Flail Chest</div>
+        <div class="threat-badge">CRITICAL</div>
+      </div>
+      <div class="threat-signs">Paradoxical chest movement — segment moves opposite to rest of chest. Multiple rib fractures.</div>
+      <div class="threat-action">&#x1F534; Positive pressure ventilation (ALS). Minimize splinting (may worsen). O2 high-flow. ALS intercept.</div>
+    </div>
+
+    <div class="threat-card critical">
+      <div class="threat-header">
+        <div class="threat-name">&#x2764;&#xFE0F; Cardiac Tamponade</div>
+        <div class="threat-badge">CRITICAL</div>
+      </div>
+      <div class="threat-signs">Beck's Triad: JVD + muffled heart sounds + hypotension. Penetrating chest trauma.</div>
+      <div class="threat-action">&#x1F534; ALS — Pericardiocentesis (hospital). BLS: rapid transport, IV access, fluid if hypotensive (ALS).</div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- SHOCK TABLE -->
+  <div class="section-divider"><h2>&#x1F4C9; Hemorrhagic Shock Classification</h2></div>
+
+  <table class="shock-table">
+    <tr>
+      <th>Class</th>
+      <th>Blood Loss</th>
+      <th>HR</th>
+      <th>BP</th>
+      <th>RR</th>
+      <th>Mental Status</th>
+    </tr>
+    <tr class="class1">
+      <td class="class-badge" style="color:var(--green);">I</td>
+      <td>&lt;750mL<br>&lt;15%</td>
+      <td>&lt;100</td>
+      <td>Normal</td>
+      <td>14-20</td>
+      <td>Normal/Anxious</td>
+    </tr>
+    <tr class="class2">
+      <td class="class-badge" style="color:var(--yellow);">II</td>
+      <td>750-1500mL<br>15-30%</td>
+      <td>100-120</td>
+      <td>Normal/↓</td>
+      <td>20-30</td>
+      <td>Anxious</td>
+    </tr>
+    <tr class="class3">
+      <td class="class-badge" style="color:var(--orange);">III</td>
+      <td>1500-2000mL<br>30-40%</td>
+      <td>120-140</td>
+      <td>↓</td>
+      <td>30-40</td>
+      <td>Confused</td>
+    </tr>
+    <tr class="class4">
+      <td class="class-badge" style="color:var(--red);">IV</td>
+      <td>&gt;2000mL<br>&gt;40%</td>
+      <td>&gt;140</td>
+      <td>Critically ↓</td>
+      <td>&gt;35</td>
+      <td>Lethargic/Unresponsive</td>
+    </tr>
+  </table>
+  <div style="font-size:12px;color:var(--gray-600);margin-bottom:16px;">Class III-IV = aggressive hemorrhage control + ALS intercept + rapid transport</div>
+
+  <!-- TOURNIQUET -->
+  <div class="section-divider"><h2>&#x1FA79; Tourniquet Application</h2></div>
+
+  <div class="tq-section">
+    <div class="tq-title">&#x1F534; Tourniquet — Extremity Life-Threatening Hemorrhage</div>
+    <div class="tq-steps">
+      1. Apply 2-3 inches above wound (not over joint)<br>
+      2. Pull tight, secure, twist windlass until bleeding stops<br>
+      3. Lock windlass, secure with keeper strap<br>
+      4. Write time on patient with marker/tape<br>
+      5. Do NOT remove once applied<br>
+      6. Notify receiving hospital of time and location
+    </div>
+    <div class="tq-time">
+      <div class="tq-time-label">Tourniquet Time Applied:</div>
+      <input type="time" id="tq-time-input" class="tq-time-input">
+    </div>
+  </div>
+
+  <!-- STEP 4: SPINAL MOTION RESTRICTION (NEXUS) -->
+  <div class="section-divider"><h2>&#x1F9B4; Step 4 — Spinal Motion Restriction (NEXUS)</h2></div>
+
+  <div style="background:white;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+    <div style="font-family:'Arial Narrow','Arial',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px;">NEXUS Low-Risk Criteria</div>
+    <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px;">If ANY criteria present → full spinal motion restriction required. Check ALL that apply:</div>
+
+    <div id="nexus-list">
+      <div class="nexus-item" onclick="toggleNEXUS(this)">
+        <div class="nexus-check">&#x25CB;</div>
+        <div class="nexus-text">
+          <div class="nexus-name">Midline cervical tenderness</div>
+          <div class="nexus-sub">Palpation along C-spine midline elicits pain</div>
+        </div>
+      </div>
+      <div class="nexus-item" onclick="toggleNEXUS(this)">
+        <div class="nexus-check">&#x25CB;</div>
+        <div class="nexus-text">
+          <div class="nexus-name">Focal neurological deficit</div>
+          <div class="nexus-sub">Weakness, numbness, tingling in extremities</div>
+        </div>
+      </div>
+      <div class="nexus-item" onclick="toggleNEXUS(this)">
+        <div class="nexus-check">&#x25CB;</div>
+        <div class="nexus-text">
+          <div class="nexus-name">Altered level of consciousness</div>
+          <div class="nexus-sub">GCS &lt; 15, AVPU below Alert</div>
+        </div>
+      </div>
+      <div class="nexus-item" onclick="toggleNEXUS(this)">
+        <div class="nexus-check">&#x25CB;</div>
+        <div class="nexus-text">
+          <div class="nexus-name">Intoxication</div>
+          <div class="nexus-sub">Alcohol, drugs — unreliable examination</div>
+        </div>
+      </div>
+      <div class="nexus-item" onclick="toggleNEXUS(this)">
+        <div class="nexus-check">&#x25CB;</div>
+        <div class="nexus-text">
+          <div class="nexus-name">Distracting injury</div>
+          <div class="nexus-sub">Painful injury elsewhere distracting from C-spine assessment</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nexus-result" id="nexus-result">
+      <div id="nexus-message"></div>
+    </div>
+  </div>
+
+  <!-- STEP 5: SECONDARY SURVEY -->
+  <div class="step step-blue">
+    <div class="step-num">5</div>
+    <div class="step-title">Secondary Survey — DCAP-BTLS Head-to-Toe</div>
+    <div class="step-content">
+      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px;">DCAP-BTLS: Deformity &bull; Contusion &bull; Abrasion &bull; Penetration &bull; Burns &bull; Tenderness &bull; Lacerations &bull; Swelling</div>
+      <ul>
+        <li><strong>Head/Skull:</strong> Deformity, lacerations, Battle's sign, raccoon eyes, CSF</li>
+        <li><strong>Face/Neck:</strong> Tracheal deviation, JVD, subcutaneous emphysema</li>
+        <li><strong>Chest:</strong> Stability, breath sounds, crepitus, paradoxical movement</li>
+        <li><strong>Abdomen:</strong> Rigidity, guarding, distension, evisceration</li>
+        <li><strong>Pelvis:</strong> Gentle compression (once) — instability = binder</li>
+        <li><strong>Extremities:</strong> PMS distal to each injury (Pulse, Motor, Sensation)</li>
+        <li><strong>Back:</strong> Logroll to assess posterior — if time permits</li>
+      </ul>
+      <div style="margin-top:8px;font-size:13px;font-weight:600;color:var(--gray-600);">&#x26A0; Only if time permits en route or scene time allows — don't delay transport for secondary survey</div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 6: TRANSPORT DECISION -->
+  <div class="section-divider"><h2>&#x1F691; Step 6 — Transport Decision</h2></div>
+
+  <div class="transport-decision load-go">
+    <div class="transport-title">&#x1F3C3; Load &amp; Go — Immediate Transport</div>
+    <div class="transport-list">
+      Unstable vitals, hemodynamic compromise, penetrating trunk trauma, uncontrolled hemorrhage, airway compromise, Glasgow &lt; 14, any life threat identified
+    </div>
+  </div>
+
+  <div class="transport-decision stay-play">
+    <div class="transport-title">&#x1F3E5; Stay &amp; Play — Stabilize on Scene</div>
+    <div class="transport-list">
+      Stable vitals, isolated extremity injury, no life threats identified, extended transport where ALS interventions will improve outcome
+    </div>
+  </div>
+
+  <div class="alert-box alert-orange">
+    <span class="alert-icon">&#x23F1;</span>
+    <div><strong>Golden Hour Concept:</strong> Trauma patient survival improves dramatically with definitive surgical care within 60 minutes of injury. Do not delay transport for extended field stabilization.</div>
+  </div>
+
+  <!-- SPLINTING -->
+  <div class="interactive-section">
+    <div class="interactive-title">Splinting &amp; Special Considerations</div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F9B5;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Traction splint:</strong> Isolated mid-shaft femur fracture with NO hip, knee, ankle injury. Apply to relieve pain and reduce blood loss (femur fracture = 1-1.5L loss).</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1FA79;</div>
+      <div><span class="badge-bls">BLS</span> <strong>General splinting:</strong> Immobilize joint above and below fracture. Check PMS before and after. Padded, firm. No traction for joint injuries.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F9CA;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Hypothermia prevention:</strong> Cover with blankets. Warm environment. Wet clothing = remove. Lethal trauma triad: hypothermia + coagulopathy + acidosis.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1FA78;</div>
+      <div><span class="badge-als">ALS</span> <strong>IV access</strong> en route (2 large bore IVs). Judicious fluid resuscitation — permissive hypotension for penetrating trauma (SBP ~80-90 target until surgical control).</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  PHTLS / NREMT / ATLS Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  const moiNotes = {
+    blunt: { cls: 'selected-blunt', color: 'var(--orange)', text: '&#x1F697; <strong>Blunt Trauma:</strong> High index of suspicion for internal injuries not visible externally. MVA with airbag deployment, rollover, ejection = high energy. Assess spinal motion restriction. Solid organ injury risk.' },
+    penetrate: { cls: 'selected-penetrate', color: 'var(--red)', text: '&#x1FA78; <strong>Penetrating Trauma:</strong> Trajectory matters. GSW — consider entrance + exit wounds, cavitation. Stab — wound depth unpredictable. Any penetrating torso trauma = Load &amp; Go. Do NOT remove impaled objects.' },
+    low: { cls: 'selected-low', color: 'var(--green)', text: '&#x2B07;&#xFE0F; <strong>Low Energy Mechanism:</strong> Ground-level fall, minor. Consider patient age and comorbidities — elderly have increased fragility. Anti-coagulated patients bleed more. Still assess for occult injury.' },
+    high: { cls: 'selected-high', color: 'var(--red)', text: '&#x26A1; <strong>High Energy Mechanism:</strong> High index of suspicion. Rollover, ejection, intrusion &gt; 12 inches, death in same vehicle, pedestrian/cyclist struck, fall &gt; 20 feet. Full spinal motion restriction consideration.' }
+  };
+
+  let currentMOI = null;
+  function selectMOI(type) {
+    if (currentMOI) {
+      const prev = document.getElementById('moi-' + currentMOI);
+      if (prev) prev.className = 'moi-card';
+    }
+    currentMOI = type;
+    const card = document.getElementById('moi-' + type);
+    if (card) card.className = 'moi-card ' + moiNotes[type].cls;
+    const note = document.getElementById('moi-note');
+    note.style.display = 'block';
+    note.style.background = type === 'low' ? 'var(--green-light)' : (type === 'high' || type === 'penetrate' ? 'var(--red-light)' : 'var(--orange-light)');
+    note.style.borderLeft = '4px solid ' + moiNotes[type].color;
+    note.innerHTML = moiNotes[type].text;
+  }
+
+  // NEXUS
+  let nexusChecked = 0;
+  function toggleNEXUS(item) {
+    const chk = item.querySelector('.nexus-check');
+    if (chk.classList.contains('checked')) {
+      chk.classList.remove('checked');
+      chk.textContent = '○';
+      nexusChecked--;
+    } else {
+      chk.classList.add('checked');
+      chk.textContent = '✓';
+      nexusChecked++;
+    }
+    updateNEXUS();
+  }
+
+  function updateNEXUS() {
+    const result = document.getElementById('nexus-result');
+    const msg = document.getElementById('nexus-message');
+    result.style.display = 'block';
+    result.className = 'nexus-result';
+
+    if (nexusChecked > 0) {
+      result.classList.add('nexus-restrict');
+      msg.innerHTML = '<strong>&#x26A0; Spinal Motion Restriction REQUIRED</strong> — ' + nexusChecked + ' NEXUS criterion/criteria positive. Apply cervical collar and full SMR per protocol.';
+    } else {
+      result.classList.add('nexus-clear');
+      msg.innerHTML = '<strong>&#x2714; NEXUS Criteria Negative</strong> — All criteria cleared. Selective SMR may be appropriate per local protocol and clinical judgment. Document assessment.';
+    }
+  }
+
+  // Set current time for TQ
+  window.addEventListener('load', function() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('tq-time-input').value = h + ':' + m;
+  });
+</script>
+</body>
+</html>

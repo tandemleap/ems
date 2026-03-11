@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pediatric Emergency Assessment — EMT Field Protocols</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --teal:#0D7377;--teal-light:#14A5A9;--teal-pale:#E0F5F5;
+  --navy:#0A2342;--navy-mid:#1B3A5C;--navy-light:#2563A8;
+  --coral:#E8522A;--coral-light:#F07048;--coral-pale:#FDEAE3;
+  --amber:#D97706;--amber-pale:#FEF3C7;
+  --green:#166534;--green-light:#16A34A;--green-pale:#DCFCE7;
+  --slate:#334155;--slate-mid:#475569;--slate-light:#94A3B8;
+  --bg:#F1F5F9;--white:#FFFFFF;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--slate);padding:0 0 24px;min-height:100vh;}
+.page{max-width:1000px;margin:0 auto;background:var(--white);box-shadow:0 8px 40px rgba(10,35,66,.13);overflow:hidden;}
+
+/* BACK NAV */
+.back-nav{background:var(--navy);padding:8px 16px;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,0.1);}
+.back-btn{background:rgba(255,255,255,0.15);border:none;color:white;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;min-height:44px;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+.back-btn:active{background:rgba(255,255,255,0.25);}
+
+/* HEADER */
+.header{background:var(--navy);padding:0;display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;border-bottom:4px solid var(--teal-light);}
+.header-badge{background:var(--teal);display:flex;align-items:center;justify-content:center;padding:0 20px;font-size:28px;}
+.header-text{padding:14px 18px;}
+.header-text h1{font-size:22px;font-weight:900;color:var(--white);letter-spacing:.5px;text-transform:uppercase;line-height:1.1;}
+.header-text p{font-size:12px;color:var(--slate-light);margin-top:4px;font-weight:500;letter-spacing:.5px;}
+.header-tag{background:var(--coral);color:white;display:flex;align-items:center;justify-content:center;padding:0 16px;font-family:'Courier New',monospace;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);}
+
+/* FLOW LAYOUT */
+.flow{padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:0;}
+
+/* ARROW */
+.arrow{width:2px;height:24px;background:var(--slate-light);position:relative;flex-shrink:0;}
+.arrow::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--slate-light);}
+
+/* BASE BOX */
+.box{width:100%;max-width:800px;border-radius:8px;padding:16px 18px;border:2px solid transparent;position:relative;}
+.box-step{position:absolute;top:-12px;left:18px;font-family:'Courier New',monospace;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:2px 12px;border-radius:10px;color:white;}
+.box-label{font-size:10.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:5px;}
+.box-title{font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
+
+/* BOX THEMES */
+.b-coral{background:var(--coral-pale);border-color:var(--coral-light);}
+.b-coral .box-step{background:var(--coral);}
+.b-coral .box-label{color:var(--coral);}
+.b-coral .box-title{color:var(--coral);}
+.b-coral .dot{background:var(--coral);}
+
+.b-teal{background:var(--teal-pale);border-color:var(--teal-light);}
+.b-teal .box-step{background:var(--teal);}
+.b-teal .box-label{color:var(--teal);}
+.b-teal .box-title{color:var(--teal);}
+.b-teal .dot{background:var(--teal-light);}
+
+.b-navy{background:#EEF2FF;border-color:var(--navy-light);}
+.b-navy .box-step{background:var(--navy);}
+.b-navy .box-label{color:var(--navy-light);}
+.b-navy .box-title{color:var(--navy);}
+.b-navy .dot{background:var(--navy-light);}
+
+.b-amber{background:var(--amber-pale);border-color:var(--amber);}
+.b-amber .box-step{background:var(--amber);}
+.b-amber .box-label{color:var(--amber);}
+.b-amber .box-title{color:var(--amber);}
+.b-amber .dot{background:var(--amber);}
+
+.b-green{background:var(--green-pale);border-color:var(--green-light);}
+.b-green .box-step{background:var(--green);}
+.b-green .box-label{color:var(--green);}
+.b-green .box-title{color:var(--green);}
+.b-green .dot{background:var(--green-light);}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:10px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+.row{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.45;}
+.dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+
+/* START PILL */
+.start-pill{background:var(--navy);color:white;border-radius:50px;padding:12px 32px;font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+
+/* DIAMOND */
+.diamond-wrap{width:100%;max-width:800px;display:flex;justify-content:center;}
+.diamond{color:white;padding:14px 36px;clip-path:polygon(22px 0%,calc(100% - 22px) 0%,100% 50%,calc(100% - 22px) 100%,22px 100%,0% 50%);text-align:center;font-size:14px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;min-width:260px;}
+.d-coral{background:var(--coral);}
+.d-teal{background:var(--teal);}
+.d-navy{background:var(--navy);}
+
+/* BRANCH */
+.branch{display:flex;width:100%;max-width:800px;gap:14px;align-items:flex-start;margin-top:10px;}
+.branch-col{flex:1;display:flex;flex-direction:column;align-items:center;}
+.branch-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 14px;border-radius:20px;margin-bottom:8px;}
+.bt-yes{background:var(--coral);color:white;}
+.bt-no{background:var(--green-light);color:white;}
+.branch-arrow{width:2px;height:28px;background:var(--slate-light);position:relative;}
+.branch-arrow::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--slate-light);}
+
+/* PAT - Pediatric Assessment Triangle */
+.pat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+.pat-card{border-radius:6px;padding:11px 13px;}
+.pc-appear{background:#FFF7ED;border-left:4px solid #EA580C;}
+.pc-appear .pc-title{color:#C2410C;}
+.pc-breath{background:#EFF6FF;border-left:4px solid #2563EB;}
+.pc-breath .pc-title{color:#1D4ED8;}
+.pc-circ{background:#F0FDF4;border-left:4px solid #16A34A;}
+.pc-circ .pc-title{color:#15803D;}
+.pc-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.pc-sub{font-size:12px;font-weight:700;color:var(--slate-mid);margin-bottom:3px;}
+.pc-items{font-size:12px;line-height:1.5;color:var(--slate-mid);}
+
+/* AGE GROUPS */
+.age-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px;}
+.age-table th{background:var(--navy);color:white;padding:7px 10px;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;text-align:left;}
+.age-table td{padding:7px 10px;border-bottom:1px solid #E2E8F0;vertical-align:top;}
+.age-table tr:last-child td{border-bottom:none;}
+.age-table tr:nth-child(even) td{background:#F8FAFC;}
+.age-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px;}
+.ag-infant{background:#FEE2E2;color:#991B1B;}
+.ag-toddler{background:#FEF3C7;color:#92400E;}
+.ag-pre{background:#EDE9FE;color:#5B21B6;}
+.ag-school{background:#DBEAFE;color:#1E40AF;}
+.ag-teen{background:#D1FAE5;color:#065F46;}
+
+/* VITAL SIGNS TABLE */
+.vitals-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px;}
+.vital-card{background:white;border:1.5px solid #E2E8F0;border-radius:6px;padding:8px;text-align:center;}
+.vital-age{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--slate-mid);margin-bottom:4px;}
+.vital-hr{font-size:15px;font-weight:800;color:var(--coral);}
+.vital-rr{font-size:13px;font-weight:700;color:var(--teal);}
+.vital-bp{font-size:11.5px;font-weight:600;color:var(--navy-mid);margin-top:2px;}
+.vital-label{font-size:9px;color:var(--slate-light);letter-spacing:.5px;text-transform:uppercase;}
+
+/* RED FLAGS */
+.flags-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;}
+.flag{background:white;border:2px solid var(--coral-light);border-radius:6px;padding:9px 12px;border-left:5px solid var(--coral);}
+.flag-title{font-size:13px;font-weight:800;color:var(--coral);}
+.flag-desc{font-size:12px;color:var(--slate-mid);margin-top:3px;line-height:1.4;}
+
+/* INTERACTIVE AGE SELECTOR */
+.interactive-wrap{width:100%;max-width:800px;}
+.interactive-box{background:#F8FAFC;border:2px solid var(--navy-light);border-radius:8px;padding:18px 18px;position:relative;}
+.interactive-box .box-step{background:var(--navy);}
+.int-label{font-size:10.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--navy-light);margin-bottom:5px;}
+.int-title{font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--navy);}
+.int-instruction{font-size:13px;color:var(--slate-mid);margin-top:6px;}
+
+.age-btn-row{display:flex;flex-wrap:nowrap;gap:5px;margin-top:12px;}
+.age-btn{flex:1;min-width:0;border:2px solid #CBD5E1;border-radius:8px;background:white;padding:8px 4px;cursor:pointer;transition:all .18s;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:54px;-webkit-tap-highlight-color:transparent;}
+.age-btn:hover{border-color:var(--teal-light);background:var(--teal-pale);}
+.age-btn.active{border-color:var(--teal);background:var(--teal);color:white;}
+.age-btn .ab-range{font-size:13px;font-weight:800;display:block;white-space:nowrap;}
+.age-btn .ab-name{font-size:10px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;opacity:.8;margin-top:1px;white-space:nowrap;}
+
+/* SYMPTOM CHIPS */
+.sym-section{display:none;margin-top:14px;}
+.sym-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;display:block;}
+.sym-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{background:white;border:2px solid #CBD5E1;border-radius:20px;padding:7px 14px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--slate-mid);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:44px;display:inline-flex;align-items:center;-webkit-tap-highlight-color:transparent;}
+.chip:hover{border-color:var(--teal-light);color:var(--teal);}
+.chip.active{background:var(--teal-light);border-color:var(--teal);color:white;}
+.chip.showall{border-color:var(--navy-light);color:var(--navy);}
+
+/* FINDINGS PANEL */
+.findings-section{display:none;margin-top:14px;}
+.findings-header{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--coral);margin-bottom:10px;}
+.findings-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fcard{background:white;border:2px solid #E2E8F0;border-radius:7px;padding:11px 14px;cursor:pointer;transition:all .18s;border-left:5px solid #94A3B8;min-height:44px;-webkit-tap-highlight-color:transparent;}
+.fcard:active{opacity:0.85;}
+.fcard:hover{background:var(--coral-pale);border-color:var(--coral-light);}
+.fcard.selected{background:var(--coral-pale);border-color:var(--coral);}
+.fcard.critical{border-left-color:#7F1D1D;}
+.fcard-name{font-size:14px;font-weight:800;color:var(--coral);}
+.fcard-clues{font-size:12px;color:var(--slate-mid);margin-top:3px;line-height:1.4;}
+.fcard-urgency{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 8px;border-radius:10px;margin-top:5px;text-transform:uppercase;}
+.fu-critical{background:#7F1D1D;color:white;}
+.fu-high{background:var(--coral);color:white;}
+.fu-moderate{background:var(--amber);color:white;}
+.match-badge{font-size:11px;color:var(--green-light);font-weight:700;margin-bottom:3px;}
+
+/* MGMT PANEL */
+.mgmt-section{display:none;margin-top:14px;}
+.mgmt-connector{width:2px;height:16px;background:var(--teal-light);margin:0 auto;position:relative;}
+.mgmt-connector::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--teal-light);}
+.mgmt-box{background:var(--navy);color:white;border-radius:8px;padding:16px 18px;margin-top:8px;}
+.mgmt-title{font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:white;margin-bottom:3px;}
+.mgmt-sub{font-size:12px;color:var(--slate-light);font-style:italic;margin-bottom:12px;}
+.mgmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mc{border-radius:6px;padding:11px 14px;}
+.mc-coral{background:rgba(232,82,42,.3);border:1px solid var(--coral-light);}
+.mc-teal{background:rgba(13,115,119,.3);border:1px solid var(--teal-light);}
+.mc-amber{background:rgba(217,119,6,.3);border:1px solid var(--amber);}
+.mc-green{background:rgba(22,101,52,.3);border:1px solid var(--green-light);}
+.mc h4{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.mc-coral h4{color:#FCA5A5;}
+.mc-teal h4{color:#99F6E4;}
+.mc-amber h4{color:#FCD34D;}
+.mc-green h4{color:#86EFAC;}
+.mc ul{list-style:none;padding:0;}
+.mc li{font-size:12px;color:#CBD5E1;padding:2px 0;}
+.mc li::before{content:'→ ';color:var(--slate-light);}
+
+.reset-btn{margin-top:12px;background:none;border:1.5px solid var(--teal-light);border-radius:20px;padding:8px 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--teal);cursor:pointer;transition:all .15s;display:none;min-height:44px;}
+.reset-btn:hover{background:var(--teal-pale);}
+
+/* ALERT */
+.alert-bar{background:var(--coral);color:white;text-align:center;padding:11px 18px;font-size:13.5px;font-weight:700;letter-spacing:.5px;width:100%;max-width:800px;border-radius:7px;}
+
+/* TRANSPORT */
+.transport-box{background:var(--navy);color:white;border-radius:8px;padding:18px 18px;width:100%;max-width:800px;}
+.transport-box h3{font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:white;text-align:center;}
+.transport-box p{font-size:13px;color:var(--slate-light);margin-top:4px;text-align:center;}
+.tr-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;}
+.tr-card{border-radius:6px;padding:11px 14px;}
+.tr-c1{background:rgba(232,82,42,.25);border:1px solid var(--coral-light);}
+.tr-c2{background:rgba(13,115,119,.25);border:1px solid var(--teal-light);}
+.tr-c3{background:rgba(27,58,92,.5);border:1px solid #3B82F6;}
+.tr-card h4{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.tr-c1 h4{color:#FCA5A5;}
+.tr-c2 h4{color:#99F6E4;}
+.tr-c3 h4{color:#93C5FD;}
+.tr-card ul{list-style:none;padding:0;}
+.tr-card li{font-size:12px;color:#CBD5E1;padding:2px 0;}
+.tr-card li::before{content:'→ ';color:var(--slate-light);}
+
+/* FOOTER */
+.footer{background:var(--navy);color:var(--slate-light);text-align:center;padding:12px;font-size:11px;letter-spacing:.5px;border-top:3px solid var(--teal-light);}
+.footer strong{color:#FCA5A5;}
+
+/* ABUSE FLAG BAR */
+.abuse-bar{background:#7F1D1D;color:white;border-radius:6px;padding:10px 14px;margin-top:10px;font-size:12.5px;}
+.abuse-bar strong{font-weight:800;letter-spacing:.5px;}
+
+/* BLS/ALS badges */
+.badge-bls{background:#D6EAF8;color:#1a6da8;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:700;}
+.badge-als{background:#FADBD8;color:#c0392b;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:700;}
+
+/* AGE FILTER WIDGET */
+.age-filter-card{background:var(--teal-pale);border:2px solid var(--teal-light);border-radius:10px;padding:14px 16px;margin-bottom:12px;width:100%;max-width:800px;}
+.afc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.afc-label{font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);}
+.afc-title{font-size:13px;font-weight:700;color:var(--navy);margin-top:2px;}
+.afc-badge{background:var(--teal);color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:.5px;display:none;white-space:nowrap;margin-top:2px;}
+.afc-inputs{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
+.afc-field{display:flex;flex-direction:column;gap:4px;}
+.afc-sublabel{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--slate-mid);}
+.afc-pair{display:flex;gap:6px;align-items:flex-start;}
+.afc-input-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.afc-input{width:54px;padding:9px 4px;border:2px solid #CBD5E1;border-radius:7px;font-size:17px;font-weight:800;text-align:center;font-family:inherit;color:var(--navy);-webkit-appearance:none;appearance:none;}
+.afc-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.15);}
+.afc-unit{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--slate-light);}
+.afc-divider{width:1px;background:#CBD5E1;height:44px;align-self:center;margin-bottom:14px;}
+.afc-clear{background:none;border:1.5px solid var(--teal);border-radius:20px;padding:8px 16px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--teal);cursor:pointer;font-family:inherit;min-height:44px;display:none;align-self:flex-end;margin-bottom:14px;}
+.afc-clear:active{background:var(--teal-pale);}
+.vital-card.filtered-active{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.15);transform:scale(1.02);}
+
+@media(max-width:620px){
+  .g2,.g3,.pat-grid,.vitals-grid,.flags-grid,.findings-cards,.mgmt-grid,.tr-grid{grid-template-columns:1fr;}
+  .branch{flex-direction:column;align-items:center;}
+  .age-btn-row{flex-wrap:wrap;justify-content:center;}
+  .age-btn{flex:0 0 calc(25% - 5px);}
+  .box-title{font-size:16px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- BACK NAV -->
+<div class="back-nav">
+  <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">&#x1F476;</div>
+  <div class="header-text">
+    <h1>Pediatric Emergency Assessment</h1>
+    <p>EMT Field Reference &mdash; Interactive Evaluation Protocol &nbsp;|&nbsp; ~20% of EMS calls are pediatric</p>
+  </div>
+  <div class="header-tag">Field Ready</div>
+</div>
+
+<div class="flow">
+
+  <!-- PATIENT AGE / SIZE FILTER (optional) -->
+  <div class="age-filter-card" id="ageFilterCard">
+    <div class="afc-header">
+      <div>
+        <div class="afc-label">Patient Info <span style="opacity:.6;font-weight:400;">(optional)</span></div>
+        <div class="afc-title">Enter age or weight to filter page content</div>
+      </div>
+      <div class="afc-badge" id="afcBadge"></div>
+    </div>
+    <div class="afc-inputs">
+      <div class="afc-field">
+        <div class="afc-sublabel">Age</div>
+        <div class="afc-pair">
+          <div class="afc-input-wrap">
+            <input class="afc-input" type="number" id="ageYears" placeholder="0" min="0" max="18" oninput="debounceFilter()">
+            <span class="afc-unit">Yrs</span>
+          </div>
+          <div style="font-size:18px;font-weight:300;color:var(--slate-light);padding-top:8px;">:</div>
+          <div class="afc-input-wrap">
+            <input class="afc-input" type="number" id="ageMonths" placeholder="0" min="0" max="11" oninput="debounceFilter()">
+            <span class="afc-unit">Mo</span>
+          </div>
+        </div>
+      </div>
+      <div class="afc-divider"></div>
+      <div class="afc-field">
+        <div class="afc-sublabel">Weight <span style="font-weight:400;opacity:.7;">(if no age)</span></div>
+        <div class="afc-pair">
+          <div class="afc-input-wrap">
+            <input class="afc-input" type="number" id="weightKg" placeholder="—" min="0.5" max="100" step="0.5" oninput="debounceFilter()" style="width:62px;">
+            <span class="afc-unit">Kg</span>
+          </div>
+        </div>
+      </div>
+      <button class="afc-clear" id="afcClear" onclick="clearAgeFilter()">&#x2715; Clear</button>
+    </div>
+  </div>
+
+  <!-- START -->
+  <div class="start-pill">SCENE SIZE-UP &amp; BSI</div>
+  <div class="arrow"></div>
+
+  <!-- STEP 1: PAT -->
+  <div class="box b-coral" style="position:relative;">
+    <div class="box-step">Step 1</div>
+    <div class="box-label">First 15&ndash;30 Seconds</div>
+    <div class="box-title">Pediatric Assessment Triangle (PAT)</div>
+    <div style="font-size:13px;color:var(--slate-mid);margin-top:6px;">Observe from across the room BEFORE touching &mdash; all three corners simultaneously.</div>
+    <div class="pat-grid">
+      <div class="pat-card pc-appear">
+        <div class="pc-title">&#x1F441; Appearance</div>
+        <div class="pc-sub">TICLS Mnemonic</div>
+        <div class="pc-items">
+          <strong>T</strong>one &mdash; muscle tone, flaccid?<br>
+          <strong>I</strong>nteractiveness &mdash; alert, engaged?<br>
+          <strong>C</strong>onsolability &mdash; settles with parent?<br>
+          <strong>L</strong>ook / Gaze &mdash; tracking, eye contact?<br>
+          <strong>S</strong>peech / Cry &mdash; strong, weak, absent?
+        </div>
+      </div>
+      <div class="pat-card pc-breath">
+        <div class="pc-title">&#x1FAB5; Work of Breathing</div>
+        <div class="pc-sub">Listen &amp; Look</div>
+        <div class="pc-items">
+          Abnormal sounds &mdash; grunting, stridor, wheezing<br>
+          Retractions &mdash; subcostal, intercostal, suprasternal<br>
+          Tracheal tugging (late, serious sign)<br>
+          Nasal flaring<br>
+          Abnormal positioning (tripod, sniffing)
+        </div>
+      </div>
+      <div class="pat-card pc-circ">
+        <div class="pc-title">&#x1FA78; Circulation to Skin</div>
+        <div class="pc-sub">Visible from distance</div>
+        <div class="pc-items">
+          <strong>Pale</strong> &mdash; shock, blood loss, fear<br>
+          <strong>Mottled</strong> &mdash; poor perfusion<br>
+          <strong>Cyanotic</strong> &mdash; respiratory failure<br>
+          <strong>Flushed/Red</strong> &mdash; fever, heat exposure<br>
+          Cap refill &gt; 2 sec = concerning
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:9px 13px;background:rgba(232,82,42,.1);border-radius:5px;font-size:12.5px;">
+      <strong>&#x26A0; If child is crying/screaming:</strong> Airway is open. If infant is <em>inconsolable</em> &mdash; that itself is a significant red flag.
+    </div>
+  </div>
+  <div class="arrow"></div>
+
+  <!-- DECISION 1 -->
+  <div class="diamond-wrap">
+    <div class="diamond d-coral">&#x26A0; IMMEDIATE LIFE THREAT IDENTIFIED?<br><span style="font-size:12px;font-weight:500;opacity:.9;">Airway failure / Respiratory collapse / Shock / Unresponsive</span></div>
+  </div>
+  <div class="branch">
+    <div class="branch-col">
+      <div class="branch-tag bt-yes">YES &mdash; Critical</div>
+      <div class="branch-arrow"></div>
+      <div class="box b-coral" style="text-align:left;">
+        <div class="box-title" style="font-size:16px;">&#x26A1; Manage &amp; Transport NOW</div>
+        <div class="g2" style="margin-top:8px;font-size:13px;">
+          <div class="row"><div class="dot"></div><span><span class="badge-bls">BLS</span> Open &amp; position airway &mdash; padding under shoulders, neutral position</span></div>
+          <div class="row"><div class="dot"></div><span><span class="badge-bls">BLS</span> Suction nasal passages &mdash; bulb syringe if &lt; 6 months</span></div>
+          <div class="row"><div class="dot"></div><span><span class="badge-bls">BLS</span> BVM if apneic or inadequate &mdash; avoid hyperextension</span></div>
+          <div class="row"><div class="dot"></div><span><span class="badge-als">ALS</span> Activate ALS immediately</span></div>
+          <div class="row"><div class="dot"></div><span><span class="badge-bls">BLS</span> O&#x2082; for SpO&#x2082; &lt; 94%</span></div>
+          <div class="row"><div class="dot"></div><span><span class="badge-bls">BLS</span> Rapid transport &mdash; assess en route, parent in front if critical</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;padding-top:28px;"><div style="width:2px;height:55px;background:#CBD5E1;"></div></div>
+    <div class="branch-col">
+      <div class="branch-tag bt-no">NO &mdash; Continue</div>
+      <div class="branch-arrow"></div>
+      <div class="box b-green">
+        <div class="box-title" style="font-size:15px;">Proceed with Full Assessment</div>
+        <div style="font-size:12.5px;margin-top:6px;">Patient stable &mdash; build rapport, continue systematic evaluation. Keep parent close. Start toe-to-head for young children.</div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow" style="margin-top:8px;"></div>
+
+  <!-- STEP 2: AGE & DEVELOPMENTAL -->
+  <div class="box b-teal" style="position:relative;">
+    <div class="box-step">Step 2</div>
+    <div class="box-label">Know Your Patient</div>
+    <div class="box-title">Age Group &amp; Developmental Norms</div>
+    <div style="font-size:13px;color:var(--slate-mid);margin-top:6px;">Ask parent/caregiver: <em>"Is this normal behavior for them?"</em> &mdash; they are your best resource.</div>
+    <table class="age-table">
+      <thead><tr><th>Age Group</th><th>Expected Behavior</th><th>Key Risks</th><th>Assessment Tip</th></tr></thead>
+      <tbody id="ageTableBody">
+        <tr data-age-group="neonate">
+          <td><span class="age-badge ag-infant">0&ndash;2 mo</span><br><span style="font-size:11px;">Neonate</span></td>
+          <td>Eats, sleeps, cries. Recognizes voice &amp; smell. Cannot distinguish faces. Consolable by caregiver.</td>
+          <td>Inconsolability is a major red flag. SIDS risk. Sepsis presents subtly.</td>
+          <td>Should calm with familiar voice/smell. Not consolable &rarr; investigate urgently.</td>
+        </tr>
+        <tr data-age-group="infant_mid">
+          <td><span class="age-badge ag-infant">2&ndash;6 mo</span><br><span style="font-size:11px;">Infant</span></td>
+          <td>Recognizes caregivers visually. Smiles. Aware of surroundings. Explores with mouth.</td>
+          <td>Choking. Rolling off surfaces. RSV season respiratory risk.</td>
+          <td>Distract with toy or shiny object. Avoid balloons (choking hazard).</td>
+        </tr>
+        <tr data-age-group="infant_late">
+          <td><span class="age-badge ag-infant">6&ndash;12 mo</span><br><span style="font-size:11px;">Older Infant</span></td>
+          <td>Mobile &mdash; rolling, crawling. Puts everything in mouth. Stranger anxiety developing.</td>
+          <td>Falls (head-heavy, top-heavy balance). Choking. Head injury.</td>
+          <td>No stranger anxiety at this age = red flag. Keep parent in view.</td>
+        </tr>
+        <tr data-age-group="toddler">
+          <td><span class="age-badge ag-toddler">1&ndash;3 yr</span><br><span style="font-size:11px;">Toddler</span></td>
+          <td>Mobile and fearless. Basic speech. Beginning to walk. Curious about everything.</td>
+          <td>Poisoning. Falls. Choking on food (can't fully chew). Burns.</td>
+          <td>Assess toe-to-head. Don't corner them. Let them hold equipment if possible.</td>
+        </tr>
+        <tr data-age-group="preschool">
+          <td><span class="age-badge ag-pre">3&ndash;6 yr</span><br><span style="font-size:11px;">Preschool</span></td>
+          <td>Imaginative. Magical thinking. Understands cause/effect. Responsive to praise.</td>
+          <td>Pedestrian trauma. Falls from heights. Foreign body ingestion.</td>
+          <td>Talk them through every step. Oversell courage, underdeliver pain. Use play.</td>
+        </tr>
+        <tr data-age-group="school">
+          <td><span class="age-badge ag-school">6&ndash;12 yr</span><br><span style="font-size:11px;">School Age</span></td>
+          <td>Logical thinking. Modesty developing. Can describe symptoms accurately.</td>
+          <td>Sports injuries. Bicycle trauma. Beginning risk-taking behavior.</td>
+          <td>Respect modesty. Ask them directly &mdash; they can provide good history. Head-to-toe OK.</td>
+        </tr>
+        <tr data-age-group="teen">
+          <td><span class="age-badge ag-teen">13&ndash;18 yr</span><br><span style="font-size:11px;">Adolescent</span></td>
+          <td>Adult-like. Privacy concerns. May minimize symptoms. Peer influence.</td>
+          <td>High-risk trauma. Substance use. Mental health. Sexual health issues.</td>
+          <td>Consider speaking to teen privately. Treat like adult for history.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="arrow"></div>
+
+  <!-- STEP 3: VITALS -->
+  <div class="box b-navy" style="position:relative;">
+    <div class="box-step">Step 3</div>
+    <div class="box-label">Age-Referenced Vitals</div>
+    <div class="box-title">Vital Signs by Age</div>
+    <div style="font-size:13px;color:var(--slate-mid);margin-top:6px;">Use a reference card or Broselow tape &mdash; do not rely on memory. BP often not taken in &lt; 2&ndash;3 yrs; use skin signs + cap refill instead.</div>
+    <div class="vitals-grid" id="vitalsGrid">
+      <div class="vital-card" data-age-group="newborn"><div class="vital-age">Newborn</div><div class="vital-label">Heart Rate</div><div class="vital-hr">100&ndash;160</div><div class="vital-label">Resp Rate</div><div class="vital-rr">30&ndash;60</div><div class="vital-label">Sys BP</div><div class="vital-bp">60&ndash;90</div></div>
+      <div class="vital-card" data-age-group="infant"><div class="vital-age">1&ndash;12 mo</div><div class="vital-label">Heart Rate</div><div class="vital-hr">100&ndash;160</div><div class="vital-label">Resp Rate</div><div class="vital-rr">25&ndash;50</div><div class="vital-label">Sys BP</div><div class="vital-bp">70&ndash;100</div></div>
+      <div class="vital-card" data-age-group="toddler"><div class="vital-age">1&ndash;3 yr</div><div class="vital-label">Heart Rate</div><div class="vital-hr">90&ndash;150</div><div class="vital-label">Resp Rate</div><div class="vital-rr">20&ndash;30</div><div class="vital-label">Sys BP</div><div class="vital-bp">80&ndash;110</div></div>
+      <div class="vital-card" data-age-group="preschool"><div class="vital-age">3&ndash;6 yr</div><div class="vital-label">Heart Rate</div><div class="vital-hr">80&ndash;140</div><div class="vital-label">Resp Rate</div><div class="vital-rr">20&ndash;25</div><div class="vital-label">Sys BP</div><div class="vital-bp">80&ndash;110</div></div>
+      <div class="vital-card" data-age-group="school"><div class="vital-age">6&ndash;12 yr</div><div class="vital-label">Heart Rate</div><div class="vital-hr">70&ndash;120</div><div class="vital-label">Resp Rate</div><div class="vital-rr">15&ndash;20</div><div class="vital-label">Sys BP</div><div class="vital-bp">85&ndash;120</div></div>
+    </div>
+    <div style="margin-top:10px;padding:8px 12px;background:rgba(27,58,92,.08);border-radius:5px;font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+      <div><strong>Min Sys BP formula:</strong> 70 + (2 &times; age in years)</div>
+      <div><strong>Weight estimate:</strong> Use Broselow tape &mdash; color-coded dosing</div>
+      <div><strong>Pulse location:</strong> Brachial (&lt;1yr) &bull; Femoral &bull; Carotid</div>
+      <div><strong>Lung sounds:</strong> Listen anterior, armpit level &mdash; not posterior</div>
+    </div>
+  </div>
+  <div class="arrow"></div>
+
+  <!-- STEP 4: PHYSICAL EXAM -->
+  <div class="box b-teal" style="position:relative;">
+    <div class="box-step">Step 4</div>
+    <div class="box-label">Hands-On Evaluation</div>
+    <div class="box-title">Physical Assessment</div>
+    <div class="g2" style="margin-top:10px;">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:6px;">Airway &amp; Breathing</div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Position &mdash; neutral head, pad under shoulders for infants</span></div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Suction nose first (obligate nose breathers &lt; 6mo)</span></div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Count RR &mdash; light hand on abdomen (diaphragmatic breathers)</span></div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Expose chest &mdash; look for retractions, tracheal tug</span></div>
+        <div class="row"><div class="dot"></div><span>Never place straps over stomach &mdash; blocks breathing</span></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:6px;">Circulation &amp; Neuro</div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Cap refill &mdash; forehead or chest (&lt;2 sec = OK)</span></div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Skin: pale/mottled/cyanotic/flushed &mdash; all meaningful</span></div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Blood glucose &mdash; heel poke in young children; check if lethargic</span></div>
+        <div class="row" style="margin-bottom:5px;"><div class="dot"></div><span>Fontanelle &mdash; bulging (&uarr;ICP) or sunken (dehydration)</span></div>
+        <div class="row"><div class="dot"></div><span>AVPU &mdash; Alert / Voice / Pain / Unresponsive</span></div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:8px 12px;background:rgba(13,115,119,.08);border-radius:5px;font-size:12px;">
+      <strong>&#x1F4CC; Exam order:</strong> Toe-to-head for infants/toddlers/preschool (less threatening). Head-to-toe for school age+. Do painful procedures (glucose check, IV) <em>last</em> after primary assessment.
+    </div>
+  </div>
+  <div class="arrow"></div>
+
+  <!-- STEP 5 INTERACTIVE -->
+  <div class="interactive-wrap">
+    <div class="interactive-box">
+      <div class="box-step" style="background:var(--navy);">Step 5</div>
+      <div class="int-label">Interactive Differential</div>
+      <div class="int-title">Find the Problem &mdash; Age + Symptoms</div>
+      <div class="int-instruction">Select the <strong>patient&rsquo;s age group</strong>, then filter by <strong>presenting symptoms</strong> to identify likely conditions and jump to management.</div>
+
+      <span class="sym-label" style="margin-top:14px;">&#x2460; Select age group</span>
+      <div class="age-btn-row" id="ageBtns">
+        <button class="age-btn" onclick="selAge('infant_early',this)"><span class="ab-range">0&ndash;2 mo</span><span class="ab-name">Neonate</span></button>
+        <button class="age-btn" onclick="selAge('infant_mid',this)"><span class="ab-range">2&ndash;6 mo</span><span class="ab-name">Infant</span></button>
+        <button class="age-btn" onclick="selAge('infant_late',this)"><span class="ab-range">6&ndash;12 mo</span><span class="ab-name">Older Infant</span></button>
+        <button class="age-btn" onclick="selAge('toddler',this)"><span class="ab-range">1&ndash;3 yr</span><span class="ab-name">Toddler</span></button>
+        <button class="age-btn" onclick="selAge('preschool',this)"><span class="ab-range">3&ndash;6 yr</span><span class="ab-name">Preschool</span></button>
+        <button class="age-btn" onclick="selAge('school',this)"><span class="ab-range">6&ndash;12 yr</span><span class="ab-name">School Age</span></button>
+        <button class="age-btn" onclick="selAge('teen',this)"><span class="ab-range">13&ndash;18 yr</span><span class="ab-name">Adolescent</span></button>
+      </div>
+
+      <div class="sym-section" id="symSection">
+        <span class="sym-label">&#x2461; Filter by symptoms <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;">(select all that apply)</span></span>
+        <div class="sym-chips" id="symChips"></div>
+      </div>
+
+      <div class="findings-section" id="findingsSection">
+        <div class="findings-header" id="findingsHeader"></div>
+        <div class="findings-cards" id="findingsCards"></div>
+        <div id="abuseFlag" style="display:none;" class="abuse-bar">
+          &#x26A0;&#xFE0F; <strong>ABUSE CONSIDERATION:</strong> Mechanism inconsistent with injury? Unusual fracture pattern? Unexplained bruising? Document carefully, report to receiving physician, notify law enforcement if warranted.
+        </div>
+      </div>
+
+      <div class="mgmt-section" id="mgmtSection">
+        <div class="mgmt-connector"></div>
+        <div class="mgmt-box" id="mgmtBox"></div>
+      </div>
+
+      <button class="reset-btn" id="resetBtn" onclick="resetAll()">&#x21BA; Reset Step 5</button>
+    </div>
+  </div>
+
+  <div class="arrow"></div>
+
+  <!-- RED FLAGS -->
+  <div class="box b-coral" style="position:relative;">
+    <div class="box-step">&#x26A0; Red Flags</div>
+    <div class="box-label">Always Investigate</div>
+    <div class="box-title">Pediatric Red Flags &amp; Abuse Indicators</div>
+    <div class="flags-grid">
+      <div class="flag"><div class="flag-title">Inconsolable Infant</div><div class="flag-desc">Infant not consoled by caregiver voice/touch &mdash; always significant regardless of age. Suspect pain, sepsis, or intracranial injury.</div></div>
+      <div class="flag"><div class="flag-title">No Stranger Anxiety (6&ndash;12 mo)</div><div class="flag-desc">By 6 months, infants should react to strangers. Absent fear in this age group can indicate altered mental status or neglect.</div></div>
+      <div class="flag"><div class="flag-title">Femur Fracture in Young Child</div><div class="flag-desc">A broken femur requires significant force &mdash; extremely rare from normal play. Always consider non-accidental trauma.</div></div>
+      <div class="flag"><div class="flag-title">Bruising on Pre-Mobile Infant</div><div class="flag-desc">"Those who don't cruise, don't bruise." Any bruising on a non-mobile infant should raise suspicion.</div></div>
+      <div class="flag"><div class="flag-title">Story Doesn't Match Injury</div><div class="flag-desc">Mechanism inconsistent with developmental stage or injury pattern. Changing story between providers. Talk to parents separately.</div></div>
+      <div class="flag"><div class="flag-title">Bulging Fontanelle</div><div class="flag-desc">In a calm, upright infant &mdash; indicates increased intracranial pressure. Consider meningitis, hemorrhage, or hydrocephalus.</div></div>
+    </div>
+  </div>
+  <div class="arrow"></div>
+
+  <div class="alert-bar">&#x1F6A8; CHILDREN COMPENSATE WELL &mdash; THEN DECOMPENSATE RAPIDLY. Trust your gut. When in doubt, transport.</div>
+  <div class="arrow"></div>
+
+  <!-- TRANSPORT -->
+  <div class="transport-box">
+    <h3>&#x1F691; Transport Decisions &amp; Safety</h3>
+    <p>Consider patient condition, facility capabilities, and transport device &mdash; not just nearest hospital</p>
+    <div class="tr-grid">
+      <div class="tr-card tr-c1">
+        <h4>&#x26A1; Critical Patient</h4>
+        <ul>
+          <li>Activate ALS immediately</li>
+          <li>Consider pediatric trauma center</li>
+          <li>Parent in front seat</li>
+          <li>Pre-notify receiving facility</li>
+          <li>PDMate / NeoMate on stretcher</li>
+          <li>Bypass local ER if needed</li>
+        </ul>
+      </div>
+      <div class="tr-card tr-c2">
+        <h4>&#x1F4CB; Stable Patient</h4>
+        <ul>
+          <li>Parent in back &mdash; reassures child</li>
+          <li>Car seat on gurney if appropriate</li>
+          <li>Captain's chair (5-pt harness &gt; 6yr)</li>
+          <li>PDMate for 10&ndash;45 lbs</li>
+          <li>NeoMate for &lt; 10 lbs (neonates)</li>
+          <li>Never transport prone</li>
+        </ul>
+      </div>
+      <div class="tr-card tr-c3">
+        <h4>&#x1F3E5; Facility Selection</h4>
+        <ul>
+          <li>Pediatric ER if available nearby</li>
+          <li>Trauma center for multi-system injury</li>
+          <li>Call medical control if unsure</li>
+          <li>Stabilize first if needed</li>
+          <li>Reassess q5 min (critical) q15 (stable)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end flow -->
+
+<div class="footer">
+  <strong>&#9888; Clinical Decision Support Only</strong> &mdash; Always follow local medical direction and agency protocols.<br>
+  NREMT / PEPP / AHA Pediatric Standards &bull; Version 2025.1
+</div>
+</div>
+
+<script>
+/* ── AGE / SIZE FILTER ── */
+let _filterTimer = null;
+function debounceFilter() {
+  clearTimeout(_filterTimer);
+  _filterTimer = setTimeout(applyAgeFilter, 500);
+}
+
+function applyAgeFilter() {
+  const yrs = parseInt(document.getElementById('ageYears').value)  || 0;
+  const mo  = parseInt(document.getElementById('ageMonths').value) || 0;
+  const kg  = parseFloat(document.getElementById('weightKg').value) || 0;
+
+  if (!yrs && !mo && !kg) { clearAgeFilter(); return; }
+
+  const totalMo = yrs * 12 + mo;
+  let tableKey, vitalsKey, ageKey, label;
+
+  if (totalMo > 0) {
+    if      (totalMo <= 2)   { tableKey='neonate';     vitalsKey='newborn';   ageKey='infant_early'; label='0\u20132 mo \u00B7 Neonate'; }
+    else if (totalMo <= 6)   { tableKey='infant_mid';  vitalsKey='infant';    ageKey='infant_mid';   label='2\u20136 mo \u00B7 Infant'; }
+    else if (totalMo <= 12)  { tableKey='infant_late'; vitalsKey='infant';    ageKey='infant_late';  label='6\u201312 mo \u00B7 Older Infant'; }
+    else if (totalMo <= 36)  { tableKey='toddler';     vitalsKey='toddler';   ageKey='toddler';      label='1\u20133 yr \u00B7 Toddler'; }
+    else if (totalMo <= 72)  { tableKey='preschool';   vitalsKey='preschool'; ageKey='preschool';    label='3\u20136 yr \u00B7 Preschool'; }
+    else if (totalMo <= 144) { tableKey='school';      vitalsKey='school';    ageKey='school';       label='6\u201312 yr \u00B7 School Age'; }
+    else                     { tableKey='teen';        vitalsKey='school';    ageKey='teen';         label='13\u201318 yr \u00B7 Adolescent'; }
+  } else {
+    if      (kg < 4)  { tableKey='neonate';     vitalsKey='newborn';   ageKey='infant_early'; label='<4 kg \u00B7 Est. Neonate'; }
+    else if (kg < 9)  { tableKey='infant_mid';  vitalsKey='infant';    ageKey='infant_mid';   label='4\u20139 kg \u00B7 Est. Infant'; }
+    else if (kg < 14) { tableKey='toddler';     vitalsKey='toddler';   ageKey='toddler';      label='9\u201314 kg \u00B7 Est. Toddler'; }
+    else if (kg < 22) { tableKey='preschool';   vitalsKey='preschool'; ageKey='preschool';    label='14\u201322 kg \u00B7 Est. Preschool'; }
+    else if (kg < 36) { tableKey='school';      vitalsKey='school';    ageKey='school';       label='22\u201336 kg \u00B7 Est. School Age'; }
+    else              { tableKey='teen';        vitalsKey='school';    ageKey='teen';         label='>36 kg \u00B7 Est. Adolescent'; }
+  }
+
+  // Filter developmental norms table
+  document.querySelectorAll('#ageTableBody tr').forEach(function(r) {
+    r.style.display = r.dataset.ageGroup === tableKey ? '' : 'none';
+  });
+
+  // Filter vitals grid to matching card only
+  const vGrid = document.getElementById('vitalsGrid');
+  vGrid.style.gridTemplateColumns = '1fr 1fr';
+  document.querySelectorAll('.vital-card').forEach(function(c) {
+    const show = c.dataset.ageGroup === vitalsKey;
+    c.style.display = show ? '' : 'none';
+    c.classList.toggle('filtered-active', show);
+  });
+
+  // Auto-select matching age group in Step 5 interactive differential
+  document.querySelectorAll('.age-btn').forEach(function(btn) {
+    if ((btn.getAttribute('onclick') || '').indexOf("'" + ageKey + "'") !== -1) btn.click();
+  });
+
+  // Show badge and clear button
+  var badge = document.getElementById('afcBadge');
+  badge.textContent = '\u2713 ' + label;
+  badge.style.display = '';
+  document.getElementById('afcClear').style.display = '';
+}
+
+function clearAgeFilter() {
+  document.getElementById('ageYears').value  = '';
+  document.getElementById('ageMonths').value = '';
+  document.getElementById('weightKg').value  = '';
+  document.querySelectorAll('#ageTableBody tr').forEach(function(r) { r.style.display = ''; });
+  document.querySelectorAll('.vital-card').forEach(function(c) {
+    c.style.display = '';
+    c.classList.remove('filtered-active');
+  });
+  document.getElementById('vitalsGrid').style.gridTemplateColumns = '';
+  document.getElementById('afcBadge').style.display = 'none';
+  document.getElementById('afcClear').style.display = 'none';
+}
+
+const PEDS_DB = {
+  infant_early:{
+    symptoms:['Inconsolable Crying','Fever','Lethargy / Won\'t Wake','Poor Feeding','Vomiting','Apnea / Pauses in Breathing','Cyanosis','Bulging Fontanelle','Seizure','Rash'],
+    conditions:[
+      {name:'Sepsis / Serious Bacterial Infection',clues:'Fever or hypothermia, lethargy, poor feeding, inconsolable — subtle presentation. High-risk in neonates.',urgency:'critical',tags:['Fever','Lethargy / Won\'t Wake','Poor Feeding','Inconsolable Crying'],abuse:false},
+      {name:'Meningitis',clues:'Fever, bulging fontanelle, irritability, photophobia, seizures — can be subtle in young infants.',urgency:'critical',tags:['Fever','Bulging Fontanelle','Seizure','Inconsolable Crying'],abuse:false},
+      {name:'Non-Accidental Trauma (NAT)',clues:'Inconsolable infant, altered mental status, no explainable cause, retinal hemorrhage — consider shaken baby.',urgency:'critical',tags:['Inconsolable Crying','Lethargy / Won\'t Wake','Seizure'],abuse:true},
+      {name:'RSV / Bronchiolitis',clues:'Respiratory distress, cough, wheezing, poor feeding — especially Oct–April. Young infants decompensate fast.',urgency:'high',tags:['Poor Feeding','Apnea / Pauses in Breathing','Cyanosis'],abuse:false},
+      {name:'ALTE / Apnea Event',clues:'Apparent life-threatening event — apnea, color change, limpness, choking during feeding.',urgency:'critical',tags:['Apnea / Pauses in Breathing','Cyanosis','Lethargy / Won\'t Wake'],abuse:false},
+    ]
+  },
+  infant_mid:{
+    symptoms:['Fever','Inconsolable Crying','Respiratory Distress','Vomiting','Lethargy','Poor Feeding','Cyanosis','Seizure','Rash','Diarrhea'],
+    conditions:[
+      {name:'Febrile Illness / Sepsis',clues:'Fever + lethargy or irritability — always work up seriously in this age group. Sepsis can be rapidly fatal.',urgency:'critical',tags:['Fever','Lethargy','Inconsolable Crying'],abuse:false},
+      {name:'RSV / Bronchiolitis',clues:'Wheezing, tachypnea, retractions, poor feeding — peak 2–6 months. Nasal suction can make significant improvement.',urgency:'high',tags:['Respiratory Distress','Poor Feeding','Cyanosis'],abuse:false},
+      {name:'Intussusception',clues:'Episodic severe crying, drawing up legs, vomiting, current-jelly stool — colicky abdominal pain.',urgency:'high',tags:['Inconsolable Crying','Vomiting','Diarrhea'],abuse:false},
+      {name:'Febrile Seizure',clues:'Seizure associated with rapid temperature rise — post-ictal lethargy is expected. Assess carefully after.',urgency:'high',tags:['Fever','Seizure','Lethargy'],abuse:false},
+      {name:'Choking / Foreign Body Airway',clues:'Sudden onset respiratory distress, stridor, cyanosis — object in airway. Act immediately.',urgency:'critical',tags:['Respiratory Distress','Cyanosis'],abuse:false},
+    ]
+  },
+  infant_late:{
+    symptoms:['Fever','Difficulty Breathing','Choking / Stridor','Vomiting','Lethargy','Rash','Inconsolable Crying','Seizure','Injury / Fall','Won\'t Bear Weight'],
+    conditions:[
+      {name:'Foreign Body Airway Obstruction',clues:'Sudden onset stridor or complete airway obstruction — child was playing/eating, now silent or cyanotic.',urgency:'critical',tags:['Choking / Stridor','Difficulty Breathing'],abuse:false},
+      {name:'Head Injury from Fall',clues:'Falls common at this age (mobile but unsteady, large head). Assess LOC, fontanelle, vomiting after fall.',urgency:'high',tags:['Injury / Fall','Vomiting','Lethargy'],abuse:false},
+      {name:'Non-Accidental Trauma',clues:'Femur fracture, unexplained bruising, story inconsistent — fractures require significant force at this age.',urgency:'critical',tags:['Injury / Fall','Won\'t Bear Weight','Inconsolable Crying'],abuse:true},
+      {name:'Febrile Seizure',clues:'Seizure with rapid fever spike — common 6 months–5 years. Reassure parents, treat fever, assess carefully.',urgency:'high',tags:['Fever','Seizure'],abuse:false},
+      {name:'Croup',clues:'Barky seal-like cough, stridor at rest, low-grade fever — worse at night. Humidified O₂ may help.',urgency:'high',tags:['Choking / Stridor','Difficulty Breathing','Fever'],abuse:false},
+    ]
+  },
+  toddler:{
+    symptoms:['Fever','Respiratory Distress','Choking','Seizure','Ingestion / Poisoning','Altered Mental Status','Injury / Trauma','Rash','Vomiting','Inconsolable'],
+    conditions:[
+      {name:'Poisoning / Ingestion',clues:'Found near medications or household chemicals. Altered mental status, drooling, vomiting, unusual pupils. Call poison control.',urgency:'critical',tags:['Ingestion / Poisoning','Altered Mental Status','Vomiting'],abuse:false},
+      {name:'Foreign Body Airway',clues:'Toddlers put everything in their mouths. Sudden choking, drooling, inability to speak — partial or complete obstruction.',urgency:'critical',tags:['Choking','Respiratory Distress'],abuse:false},
+      {name:'Febrile Seizure',clues:'Most common 6 mo–5 years. Generalized tonic-clonic with fever. Post-ictal period expected. Ensure airway patent.',urgency:'high',tags:['Fever','Seizure'],abuse:false},
+      {name:'Croup',clues:'Barky cough, inspiratory stridor, mild fever — typically night onset. Sit upright, cool mist air may relieve.',urgency:'moderate',tags:['Respiratory Distress','Fever'],abuse:false},
+      {name:'Non-Accidental Trauma',clues:'Bruising inconsistent with developmental stage. Multiple injuries in different stages of healing. Story changes.',urgency:'critical',tags:['Injury / Trauma','Altered Mental Status','Inconsolable'],abuse:true},
+    ]
+  },
+  preschool:{
+    symptoms:['Fever','Difficulty Breathing','Wheezing','Seizure','Trauma / Fall','Belly Pain','Vomiting','Altered Mental Status','Rash','Sore Throat / Drooling'],
+    conditions:[
+      {name:'Asthma / Reactive Airway',clues:'Wheezing, prolonged expiration, accessory muscle use, history of asthma. Albuterol (ALS). Sit upright.',urgency:'high',tags:['Wheezing','Difficulty Breathing'],abuse:false},
+      {name:'Epiglottitis',clues:'Sudden high fever, drooling, muffled voice, tripod position, very ill-appearing — DO NOT examine throat, do not agitate.',urgency:'critical',tags:['Fever','Sore Throat / Drooling','Difficulty Breathing'],abuse:false},
+      {name:'Febrile Seizure / Epilepsy',clues:'Seizure with or without fever — protect airway, lateral position, time the seizure, post-ictal assessment.',urgency:'high',tags:['Fever','Seizure'],abuse:false},
+      {name:'Appendicitis',clues:'Periumbilical pain migrating to RLQ, fever, vomiting, anorexia — can be subtle in this age group.',urgency:'high',tags:['Belly Pain','Fever','Vomiting'],abuse:false},
+      {name:'Trauma (Pedestrian / Fall)',clues:'Multi-system trauma risk — less muscle/fat to protect organs, pliable ribs can fracture without external sign.',urgency:'high',tags:['Trauma / Fall','Altered Mental Status'],abuse:false},
+    ]
+  },
+  school:{
+    symptoms:['Difficulty Breathing','Wheezing','Chest Pain','Seizure','Trauma','Belly Pain','Headache','Altered Mental Status','Diabetic Emergency','Syncope'],
+    conditions:[
+      {name:'Asthma Attack',clues:'Wheezing, prolonged expiration, tachypnea, anxiety, accessory muscle use. Sit upright, O₂, ALS for albuterol.',urgency:'high',tags:['Wheezing','Difficulty Breathing','Chest Pain'],abuse:false},
+      {name:'Diabetic Emergency',clues:'Altered mental status, diaphoresis, tachycardia — check blood glucose. Hypoglycemia is most likely and treatable.',urgency:'high',tags:['Altered Mental Status','Diabetic Emergency','Syncope'],abuse:false},
+      {name:'Sports Trauma / Head Injury',clues:'Concussion signs — confusion, amnesia, vomiting, headache after impact. Spinal precautions if mechanism warrants.',urgency:'high',tags:['Trauma','Headache','Altered Mental Status'],abuse:false},
+      {name:'Seizure',clues:'Known epilepsy or new onset — protect airway, lateral, time it. Post-ictal confusion is normal. Check glucose.',urgency:'high',tags:['Seizure','Altered Mental Status'],abuse:false},
+      {name:'Abdominal Emergency (Appendicitis)',clues:'RLQ pain, anorexia, nausea, low fever. Can be atypical in this age. Palpate carefully. Keep NPO.',urgency:'high',tags:['Belly Pain','Altered Mental Status'],abuse:false},
+    ]
+  },
+  teen:{
+    symptoms:['Difficulty Breathing','Chest Pain','Altered Mental Status','Trauma','Syncope','Abdominal Pain','Headache','Substance Ingestion','Pregnancy / Obstetric','Psychiatric / Self Harm'],
+    conditions:[
+      {name:'Asthma / Anaphylaxis',clues:'Wheezing, hives, angioedema, hypotension — distinguish asthma from anaphylaxis. Epi for anaphylaxis.',urgency:'critical',tags:['Difficulty Breathing','Chest Pain'],abuse:false},
+      {name:'Substance Intoxication / Overdose',clues:'Altered mental status, pupil changes, respiratory depression, odor. Naloxone for opioid OD (ALS/BLS varies).',urgency:'critical',tags:['Substance Ingestion','Altered Mental Status'],abuse:false},
+      {name:'Cardiac Arrhythmia / Syncope',clues:'Sudden LOC during exercise, chest pain or palpitations before syncope — consider dysrhythmia. 12-lead ECG.',urgency:'critical',tags:['Syncope','Chest Pain','Altered Mental Status'],abuse:false},
+      {name:'Ectopic Pregnancy',clues:'Female + missed period, LLQ/RLQ pain, vaginal bleeding, shock signs — treat as critical.',urgency:'critical',tags:['Abdominal Pain','Pregnancy / Obstetric'],abuse:false},
+      {name:'Psychiatric Emergency / Self Harm',clues:'Altered behavior, self-inflicted wounds, ingestion, suicidal ideation — keep calm, scene safety, involve parents carefully.',urgency:'high',tags:['Psychiatric / Self Harm','Altered Mental Status','Substance Ingestion'],abuse:false},
+      {name:'Trauma (High Mechanism)',clues:'MVA, penetrating trauma, fall from height — apply adult-level trauma assessment. Spinal precautions as warranted.',urgency:'high',tags:['Trauma','Chest Pain','Altered Mental Status'],abuse:false},
+    ]
+  }
+};
+
+const MGMT = {
+  critical:{
+    title:'&#x26A1; CRITICAL &mdash; Activate ALS + Immediate Transport',
+    cards:[
+      {cls:'mc-coral',title:'&#x1F6A8; Airway / Breathing',items:['Neutral airway position (pad under shoulders for infants)','Suction nasal passages first','BVM with age-appropriate mask if apneic','O&#x2082; for SpO&#x2082; &lt; 94% &mdash; NRB or nasal cannula','Avoid over-ventilation &mdash; watch chest rise']},
+      {cls:'mc-teal',title:'&#x1F4DF; Activate ALS Now',items:['IV/IO access &mdash; weight-based fluids (Broselow)','Advanced airway if BVM inadequate','12-lead ECG if cardiac cause suspected','Glucose check if AMS or lethargy','Age/weight-dosed medications']},
+      {cls:'mc-amber',title:'&#x1F691; Transport Priority',items:['Pediatric ER or trauma center','Pre-notify with age, weight, mechanism','Keep parent informed &mdash; front seat if critical','Approved transport device (PDMate/NeoMate)','Never transport prone']},
+      {cls:'mc-green',title:'&#x1F4CB; En Route',items:['Reassess ABCs every 5 min','Document all changes and times','Ongoing PAT reassessment','Communicate suspicion to hospital','Broselow for all weight-based decisions']},
+    ]
+  },
+  high:{
+    title:'&#x1F534; HIGH ACUITY &mdash; Expedite Transport, Consider ALS',
+    cards:[
+      {cls:'mc-coral',title:'&#x1F6A8; Immediate Actions',items:['O&#x2082; if SpO&#x2082; &lt; 94%','Suction airway if needed','Position of comfort &mdash; sit upright for resp distress','Monitor closely for rapid deterioration']},
+      {cls:'mc-teal',title:'&#x1F4DF; Consider ALS',items:['IV access if dehydrated or in pain','Albuterol for wheezing (ALS scope)','Glucose check if altered','Naloxone if suspected opioid']},
+      {cls:'mc-amber',title:'&#x1F691; Transport',items:['Consider pediatric facility','Parent in back if child stable','Reassess q10 min','Activate ALS if condition worsens']},
+      {cls:'mc-green',title:'&#x1F441;&#xFE0F; Watch For',items:['Worsening work of breathing','Declining mental status','Skin signs change (pale → mottled)','Children decomp fast &mdash; reassess often']},
+    ]
+  },
+  moderate:{
+    title:'&#x1F7E1; MODERATE &mdash; Supportive Care + Transport',
+    cards:[
+      {cls:'mc-teal',title:'&#x1F4CB; Supportive Care',items:['Position of comfort','O&#x2082; if needed','Parent at bedside &mdash; reduces child distress','Monitor vitals q15 min']},
+      {cls:'mc-green',title:'&#x1F441;&#xFE0F; Monitor For',items:['Fever spike triggering seizure','Respiratory decompensation','Behavioral change from baseline','Escalate ALS if any deterioration']},
+      {cls:'mc-coral',title:'&#x26A0;&#xFE0F; Escalation Triggers',items:['Lethargy or unresponsiveness','SpO&#x2082; dropping below 94%','Skin signs changing','Any new seizure activity']},
+      {cls:'mc-amber',title:'&#x1F691; Transport',items:['Involve parents in decisions','Appropriate facility for age','Document parent consent','Reassure child throughout']},
+    ]
+  }
+};
+
+let selAgeKey=null, selSyms=[];
+
+function selAge(key,btn){
+  selAgeKey=key; selSyms=[];
+  document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('findingsSection').style.display='none';
+  document.getElementById('mgmtSection').style.display='none';
+  document.getElementById('abuseFlag').style.display='none';
+  document.getElementById('resetBtn').style.display='inline-block';
+
+  const chips=document.getElementById('symChips');
+  chips.innerHTML='';
+  PEDS_DB[key].symptoms.forEach(s=>{
+    const c=document.createElement('button');
+    c.className='chip';c.textContent=s;
+    c.onclick=()=>toggleSym(s,c);
+    chips.appendChild(c);
+  });
+  const sa=document.createElement('button');
+  sa.className='chip showall';sa.textContent='Show All';
+  sa.onclick=()=>renderFindings();
+  chips.appendChild(sa);
+  document.getElementById('symSection').style.display='block';
+  renderFindings();
+}
+
+function toggleSym(s,chip){
+  if(selSyms.includes(s)){selSyms=selSyms.filter(x=>x!==s);chip.classList.remove('active');}
+  else{selSyms.push(s);chip.classList.add('active');}
+  renderFindings();
+}
+
+function renderFindings(){
+  if(!selAgeKey)return;
+  let conds=PEDS_DB[selAgeKey].conditions.map(c=>{
+    let score=selSyms.length>0?selSyms.filter(s=>c.tags.includes(s)).length:0;
+    return{...c,score};
+  });
+  if(selSyms.length>0){
+    conds=conds.filter(c=>c.score>0).sort((a,b)=>b.score-a.score);
+    if(conds.length===0)conds=PEDS_DB[selAgeKey].conditions.map(c=>({...c,score:0}));
+  }
+
+  document.getElementById('findingsHeader').textContent=selSyms.length>0
+    ?'▼ '+conds.length+' CONDITION'+(conds.length!==1?'S':'')+' MATCHED — Tap for management'
+    :'▼ ALL CONDITIONS FOR THIS AGE GROUP — Tap for management';
+
+  const cards=document.getElementById('findingsCards');
+  cards.innerHTML='';
+  const ul={critical:'fu-critical',high:'fu-high',moderate:'fu-moderate'};
+  const utxt={critical:'⚠ Critical',high:'High Acuity',moderate:'Moderate'};
+
+  let showAbuse=false;
+  conds.forEach(c=>{
+    if(c.score>0||selSyms.length===0){if(c.abuse)showAbuse=true;}
+    const d=document.createElement('div');
+    d.className='fcard'+(c.urgency==='critical'?' critical':'');
+    const mb=c.score>0?'<div class="match-badge">✓ '+c.score+' symptom match'+(c.score!==1?'es':'')+'</div>':'';
+    d.innerHTML=mb+'<div class="fcard-name">'+c.name+'</div><div class="fcard-clues">'+c.clues+'</div><span class="fcard-urgency '+ul[c.urgency]+'">'+utxt[c.urgency]+'</span>';
+    d.onclick=()=>{
+      document.querySelectorAll('.fcard').forEach(x=>x.classList.remove('selected'));
+      d.classList.add('selected');
+      showMgmt(c.urgency,c.name);
+    };
+    cards.appendChild(d);
+  });
+
+  document.getElementById('findingsSection').style.display='block';
+  document.getElementById('abuseFlag').style.display=showAbuse?'block':'none';
+}
+
+function showMgmt(level,name){
+  const m=MGMT[level];
+  const ch=m.cards.map(c=>'<div class="mc '+c.cls+'"><h4>'+c.title+'</h4><ul>'+c.items.map(i=>'<li>'+i+'</li>').join('')+'</ul></div>').join('');
+  document.getElementById('mgmtBox').innerHTML='<div class="mgmt-title">'+m.title+'</div><div class="mgmt-sub">Suspected: '+name+'</div><div class="mgmt-grid">'+ch+'</div>';
+  const ms=document.getElementById('mgmtSection');
+  ms.style.display='block';
+  ms.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function resetAll(){
+  selAgeKey=null;selSyms=[];
+  document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('symSection').style.display='none';
+  document.getElementById('findingsSection').style.display='none';
+  document.getElementById('mgmtSection').style.display='none';
+  document.getElementById('abuseFlag').style.display='none';
+  document.getElementById('resetBtn').style.display='none';
+  document.getElementById('symChips').innerHTML='';
+  document.getElementById('findingsCards').innerHTML='';
+}
+</script>
+</body>
+</html>

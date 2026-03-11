@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Chest Pain Protocol — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--red); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* STEP BOXES */
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-gray { background: white; border-left: 4px solid var(--gray-400); }
+  .step-gray .step-num { background: var(--gray-600); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  /* CONNECTOR */
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  /* DIAMOND DECISION */
+  .diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+  .diamond {
+    background: var(--red);
+    color: white;
+    padding: 20px 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    clip-path: polygon(28px 0%, calc(100% - 28px) 0%, 100% 50%, calc(100% - 28px) 100%, 28px 100%, 0% 50%);
+    min-width: 280px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+  }
+  .diamond-orange { background: var(--orange); }
+
+  /* BRANCH */
+  .branches { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .branch { flex: 1; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; }
+  .branch-yes { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .branch-no { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .branch-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 800; }
+  .branch-text { font-size: 13px; line-height: 1.3; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* TABLE */
+  .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin-top: 8px; }
+  .info-table th { background: var(--gray-800); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .info-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* INTERACTIVE DIFFERENTIAL */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); display: flex; align-items: center; gap: 6px; }
+
+  .selector-row { margin-bottom: 12px; }
+  .selector-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 8px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; color: var(--gray-800); transition: all 0.15s; }
+  .chip:active { transform: scale(0.96); }
+  .chip.selected { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .chip.selected-blue { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .chip.sel-orange { border-color: var(--orange); background: var(--orange-light); color: var(--orange); }
+
+  /* DIFFERENTIAL RESULTS */
+  .diff-results { margin-top: 12px; }
+  .diff-card { border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: none; }
+  .diff-card.show { display: block; animation: fadeIn 0.25s ease; }
+  .diff-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .diff-name { font-weight: 700; font-size: 15px; }
+  .diff-priority { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .diff-notes { font-size: 13px; line-height: 1.4; color: var(--gray-600); }
+  .diff-critical { background: var(--red-light); border-left: 4px solid var(--red); }
+  .diff-critical .diff-name { color: var(--red); }
+  .diff-critical .diff-priority { background: var(--red); color: white; }
+  .diff-high { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .diff-high .diff-name { color: var(--orange); }
+  .diff-high .diff-priority { background: var(--orange); color: white; }
+  .diff-moderate { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .diff-moderate .diff-name { color: var(--yellow); }
+  .diff-moderate .diff-priority { background: var(--yellow); color: white; }
+  .diff-low { background: var(--gray-50); border-left: 4px solid var(--gray-400); }
+  .diff-low .diff-name { color: var(--gray-800); }
+  .diff-low .diff-priority { background: var(--gray-400); color: white; }
+
+  /* ALERT BOX */
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-blue { background: var(--blue-light); border: 2px solid var(--blue); color: var(--blue); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* BADGE */
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  /* MANAGEMENT */
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ALS trigger */
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x2764;&#xFE0F; Chest Pain / ACS</div>
+      <div class="header-sub">Cardiac &bull; Vascular &bull; Pulmonary</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; BSI <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>Gloves, eye protection — BSI before patient contact</li>
+        <li>Scene safety: assess environment, hazards</li>
+        <li>Determine # patients, request ALS/additional resources if needed</li>
+        <li>Note MOI/NOI — cardiac vs other medical</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2 -->
+  <div class="step step-orange">
+    <div class="step-num">2</div>
+    <div class="step-title">Initial Assessment — ABCs</div>
+    <div class="step-content">
+      <ul>
+        <li>General impression — position of comfort, pallor, diaphoresis</li>
+        <li><strong>Airway:</strong> Open and patent?</li>
+        <li><strong>Breathing:</strong> Rate, depth, work of breathing, SpO2</li>
+        <li><strong>Circulation:</strong> Radial pulse — rate, rhythm, quality</li>
+        <li>Skin: Color, temperature, moisture (diaphoresis = high concern)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- DECISION 1 -->
+  <div class="diamond-wrap">
+    <div class="diamond">Immediate Life Threat?<br><small style="font-weight:400;font-size:12px">Shock, apnea, unresponsive, SpO2 &lt; 90%</small></div>
+  </div>
+  <div class="branches">
+    <div class="branch branch-yes">
+      <div class="branch-label">YES</div>
+      <div class="branch-text">Rapid intervention: Position, O2 NRB 15L, ALS NOW, prepare for CPR/AED</div>
+    </div>
+    <div class="branch branch-no">
+      <div class="branch-label">NO</div>
+      <div class="branch-text">Continue systematic assessment below</div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">3</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">SAMPLE History <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>S</strong>igns &amp; Symptoms — onset, radiation, associated Sx</li>
+        <li><strong>A</strong>llergies — especially ASA, NSAIDs</li>
+        <li><strong>M</strong>edications — nitrates, antiplatelets, anticoagulants, Viagra/Cialis (&#9888;PDE5 inhibitors = nitro CI)</li>
+        <li><strong>P</strong>ertinent hx — prior MI, stents, CABG, cardiac hx, cocaine use</li>
+        <li><strong>L</strong>ast oral intake</li>
+        <li><strong>E</strong>vents — activity at onset, emotional stress, exertion</li>
+        <li>&#9888; <strong>Females, elderly, diabetics:</strong> Atypical — jaw pain, nausea, fatigue, epigastric — no chest pain</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 4 -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">4</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">OPQRST Pain Assessment <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>O</strong>nset — sudden vs gradual; at rest vs exertion</li>
+        <li><strong>P</strong>rovocation/Palliation — worse with movement, breathing, palpation?</li>
+        <li><strong>Q</strong>uality — <em>see table below</em></li>
+        <li><strong>R</strong>adiation — left arm, jaw, back, shoulder, epigastric</li>
+        <li><strong>S</strong>everity — 1–10 scale</li>
+        <li><strong>T</strong>ime — duration; continuous vs intermittent</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Quality clue table -->
+  <table class="info-table" style="margin-bottom:8px;">
+    <tr><th>Pain Quality</th><th>Suggests</th></tr>
+    <tr><td><strong>Crushing / Pressure / Squeezing</strong></td><td>ACS / Cardiac ischemia</td></tr>
+    <tr><td><strong>Tearing / Ripping (worst ever)</strong></td><td>Aortic Dissection &#9888;</td></tr>
+    <tr><td><strong>Sharp, worse with breathing</strong></td><td>Pleuritic — PE, Pneumonia, Pericarditis</td></tr>
+    <tr><td><strong>Sharp, worse with palpation/movement</strong></td><td>Musculoskeletal, Costochondritis</td></tr>
+    <tr><td><strong>Burning, epigastric, worse lying flat</strong></td><td>GERD / GI</td></tr>
+    <tr><td><strong>Sudden severe unilateral</strong></td><td>Tension Pneumothorax</td></tr>
+  </table>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 5 -->
+  <div class="step step-blue">
+    <div class="step-num">5</div>
+    <div class="step-title">Physical Assessment</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Vitals:</strong> BP <em>both arms</em> (discrepancy &gt;20mmHg → dissection), HR, RR, SpO2, temp if febrile</li>
+        <li><strong>Lung sounds:</strong> Crackles (CHF/edema), wheeze, absent (pneumothorax)</li>
+        <li><strong>Neck:</strong> JVD (right heart failure, tamponade, tension PTX)</li>
+        <li><strong>Extremities:</strong> Pedal edema (CHF), calf tenderness (DVT/PE)</li>
+        <li><strong>Skin:</strong> Pale/cool/diaphoretic (poor perfusion), mottling</li>
+        <li><strong>Chest wall:</strong> Point tenderness (musculoskeletal), tracheal deviation</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 6: Interactive Differential -->
+  <div class="section-divider"><h2>&#x1F4CA; Step 6 — Interactive Differential</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F9ED; Build Your Differential</div>
+
+    <div class="selector-row">
+      <div class="selector-label">Pain Quality (select one)</div>
+      <div class="chip-group" id="quality-chips">
+        <button class="chip" data-quality="crushing">Crushing/Pressure</button>
+        <button class="chip" data-quality="tearing">Tearing/Ripping</button>
+        <button class="chip" data-quality="pleuritic">Sharp/Pleuritic</button>
+        <button class="chip" data-quality="burning">Burning/GI</button>
+        <button class="chip" data-quality="musculo">Reproducible</button>
+      </div>
+    </div>
+
+    <div class="selector-row">
+      <div class="selector-label">Associated Symptoms (select all)</div>
+      <div class="chip-group" id="symptom-chips">
+        <button class="chip" data-sym="diaphoresis">Diaphoresis</button>
+        <button class="chip" data-sym="radiation">Radiation L arm/jaw</button>
+        <button class="chip" data-sym="sob">Shortness of Breath</button>
+        <button class="chip" data-sym="syncope">Syncope/Near-syncope</button>
+        <button class="chip" data-sym="bpdiff">BP Arm Difference</button>
+        <button class="chip" data-sym="jvd">JVD</button>
+        <button class="chip" data-sym="crackles">Crackles</button>
+        <button class="chip" data-sym="fever">Fever/Viral illness</button>
+        <button class="chip" data-sym="positional">Positional relief</button>
+        <button class="chip" data-sym="palpation">Palpation tender</button>
+      </div>
+    </div>
+
+    <div class="diff-results" id="diff-results">
+      <div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select pain quality to see differential</div>
+    </div>
+  </div>
+
+  <!-- STEP 7: Management -->
+  <div class="section-divider"><h2>&#x1FA7A; Step 7 — Management</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">Position &amp; Oxygenation</div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1FA91;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Position:</strong> Sitting upright / position of comfort. Supine only if BP &lt; 90 systolic or unresponsive.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F4A8;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Oxygen:</strong> Titrate to SpO2 ≥ 94%. <em>Avoid hyperoxia</em> — do not apply O2 if SpO2 ≥ 94%. Use NC 2-4L → NRB 10-15L for severe hypoxia.</div>
+    </div>
+  </div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">Aspirin Decision Tree</div>
+    <div class="diamond-wrap" style="margin:8px 0;">
+      <div class="diamond diamond-orange" style="font-size:13px;min-width:180px;">Aspirin indicated?</div>
+    </div>
+    <div class="branches">
+      <div class="branch branch-yes">
+        <div class="branch-label">Give ASA 324mg</div>
+        <div class="branch-text">Suspected cardiac ischemia + no allergy + no active bleeding + not already taken today + not Aortic Dissection</div>
+      </div>
+      <div class="branch branch-no">
+        <div class="branch-label">Withhold ASA</div>
+        <div class="branch-text">Allergy to ASA, active GI bleed, suspected aortic dissection, already took ASA, no ischemia suspected</div>
+      </div>
+    </div>
+    <div class="alert-box alert-red">
+      <span class="alert-icon">&#9888;</span>
+      <div><strong>CONTRAINDICATED in suspected Aortic Dissection:</strong> ASA &amp; Nitroglycerin — both worsen outcomes. DO NOT give.</div>
+    </div>
+  </div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F6A8; ALS Intercept Criteria</div>
+    <div class="als-triggers">
+      <div class="als-triggers-title">&#x1F534; ALS Request / Intercept — Any of the following:</div>
+      <ul>
+        <li>Suspected STEMI / ACS with hemodynamic instability</li>
+        <li>Pulmonary edema / severe respiratory distress</li>
+        <li>Suspected aortic dissection</li>
+        <li>Tension pneumothorax (needle decompression needed)</li>
+        <li>Cardiac tamponade</li>
+        <li>SpO2 &lt; 90% unresponsive to O2</li>
+        <li>BP &lt; 90 systolic</li>
+        <li>Signs of shock (altered LOC, diaphoresis, poor perfusion)</li>
+        <li>Arrhythmia on monitor (ALS only: 12-lead ECG, IV, medications)</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  NREMT / AHA Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  const conditions = [
+    {
+      id: 'stemi',
+      name: 'ACS / STEMI',
+      level: 'critical',
+      triggerQualities: ['crushing'],
+      triggerSymptoms: ['diaphoresis','radiation','sob','syncope'],
+      triggerCount: 0,
+      notes: 'Crushing/pressure chest pain with radiation, diaphoresis. Time-sensitive. ALS intercept immediately. Aspirin 324mg if no contraindications. Target cath lab hospital.'
+    },
+    {
+      id: 'unstable-angina',
+      name: 'Unstable Angina',
+      level: 'high',
+      triggerQualities: ['crushing'],
+      triggerSymptoms: ['radiation','sob'],
+      triggerCount: 0,
+      notes: 'Cardiac ischemia at rest or with minimal exertion. Indistinguishable from STEMI pre-hospital. Treat as ACS.'
+    },
+    {
+      id: 'dissection',
+      name: 'Aortic Dissection',
+      level: 'critical',
+      triggerQualities: ['tearing'],
+      triggerSymptoms: ['bpdiff','radiation','syncope'],
+      triggerCount: 0,
+      notes: '⚠ ASPIRIN AND NITRO CONTRAINDICATED. Sudden tearing/ripping pain radiating to back. BP difference between arms. Immediate ALS/rapid transport to surgical center.'
+    },
+    {
+      id: 'pe',
+      name: 'Pulmonary Embolism (PE)',
+      level: 'high',
+      triggerQualities: ['pleuritic'],
+      triggerSymptoms: ['sob','syncope'],
+      triggerCount: 0,
+      notes: 'Sudden onset pleuritic chest pain, severe dyspnea, tachycardia. Risk: DVT, recent surgery, immobility, pregnancy. Tachycardia out of proportion to findings.'
+    },
+    {
+      id: 'tension-ptx',
+      name: 'Tension Pneumothorax',
+      level: 'critical',
+      triggerQualities: ['pleuritic'],
+      triggerSymptoms: ['jvd','sob'],
+      triggerCount: 0,
+      notes: 'CRITICAL — Absent unilateral breath sounds, JVD, tracheal deviation (late). Hypotension + respiratory distress. Needle decompression required (ALS).'
+    },
+    {
+      id: 'pericarditis',
+      name: 'Pericarditis',
+      level: 'moderate',
+      triggerQualities: ['pleuritic'],
+      triggerSymptoms: ['fever','positional'],
+      triggerCount: 0,
+      notes: 'Sharp chest pain worse with inspiration, improved leaning forward. Often post-viral. Friction rub on auscultation. Pericardial tamponade is a feared complication.'
+    },
+    {
+      id: 'chf',
+      name: 'Acute Pulmonary Edema / CHF',
+      level: 'high',
+      triggerQualities: ['crushing'],
+      triggerSymptoms: ['crackles','sob','jvd'],
+      triggerCount: 0,
+      notes: 'Bilateral crackles, orthopnea, severe dyspnea. May have pink frothy sputum. Cardiac hx, HTN. Sit upright, O2, ALS for CPAP/nitrates/furosemide.'
+    },
+    {
+      id: 'gerd',
+      name: 'GERD / Esophageal',
+      level: 'low',
+      triggerQualities: ['burning'],
+      triggerSymptoms: ['positional'],
+      triggerCount: 0,
+      notes: 'Burning, epigastric, worse after meals or lying flat. Improved with antacids. Diagnosis of exclusion — always rule out cardiac first.'
+    },
+    {
+      id: 'musculo',
+      name: 'Musculoskeletal / Costochondritis',
+      level: 'low',
+      triggerQualities: ['musculo'],
+      triggerSymptoms: ['palpation'],
+      triggerCount: 0,
+      notes: 'Reproduced by palpation or movement. Point tenderness over costal cartilage. Diagnosis of exclusion. Normal vitals, no diaphoresis.'
+    }
+  ];
+
+  let selectedQuality = null;
+  let selectedSymptoms = new Set();
+
+  document.querySelectorAll('[data-quality]').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('[data-quality]').forEach(c => c.classList.remove('selected'));
+      selectedQuality = this.dataset.quality;
+      this.classList.add('selected');
+      renderDiff();
+    });
+  });
+
+  document.querySelectorAll('[data-sym]').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const sym = this.dataset.sym;
+      if (selectedSymptoms.has(sym)) {
+        selectedSymptoms.delete(sym);
+        this.classList.remove('selected');
+      } else {
+        selectedSymptoms.add(sym);
+        this.classList.add('selected');
+      }
+      renderDiff();
+    });
+  });
+
+  function scoreCondition(cond) {
+    if (!selectedQuality) return 0;
+    let score = 0;
+    if (cond.triggerQualities.includes(selectedQuality)) score += 3;
+    selectedSymptoms.forEach(sym => {
+      if (cond.triggerSymptoms.includes(sym)) score += 1;
+    });
+    return score;
+  }
+
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  function renderDiff() {
+    const results = document.getElementById('diff-results');
+    if (!selectedQuality) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select pain quality to see differential</div>';
+      return;
+    }
+
+    const scored = conditions
+      .map(c => ({ ...c, score: scoreCondition(c) }))
+      .filter(c => c.score > 0)
+      .sort((a, b) => {
+        const levelOrder = { critical: 3, high: 2, moderate: 1, low: 0 };
+        if (b.score !== a.score) return b.score - a.score;
+        return levelOrder[b.level] - levelOrder[a.level];
+      });
+
+    if (scored.length === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">No strong matches — consider other causes</div>';
+      return;
+    }
+
+    results.innerHTML = '<div style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Ranked by likelihood &amp; severity:</div>';
+    scored.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'diff-card diff-' + c.level + ' show';
+      div.innerHTML = '<div class="diff-card-header"><span class="diff-name">' + c.name + '</span><span class="diff-priority">' + c.level.toUpperCase() + '</span></div><div class="diff-notes">' + c.notes + '</div>';
+      results.appendChild(div);
+    });
+  }
+</script>
+</body>
+</html>

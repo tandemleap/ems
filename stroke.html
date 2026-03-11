@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Stroke / CVA Protocol — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--purple); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .step-purple .step-num { background: var(--purple); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* STROKE ALERT */
+  .stroke-alert { background: var(--red); color: white; border-radius: 12px; padding: 16px; text-align: center; margin: 12px 0; animation: pulse 1.5s infinite; }
+  .stroke-alert-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; }
+  .stroke-alert-sub { font-size: 14px; opacity: 0.9; }
+  .stroke-clear { background: var(--green); color: white; border-radius: 12px; padding: 16px; text-align: center; margin: 12px 0; }
+  .stroke-clear-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.5); } 50% { box-shadow: 0 0 0 10px rgba(192,57,43,0); } }
+
+  /* CINCINNATI SCALE */
+  .cincinnati-item { background: white; border-radius: 10px; padding: 14px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .cinc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .cinc-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; color: var(--gray-800); }
+  .cinc-num { width: 32px; height: 32px; border-radius: 50%; background: var(--purple); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  .cinc-instruction { font-size: 13px; color: var(--gray-600); margin-bottom: 12px; font-style: italic; padding: 8px 10px; background: var(--gray-50); border-radius: 6px; }
+  .cinc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cinc-btn { padding: 12px 10px; border-radius: 8px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; transition: all 0.15s; color: var(--gray-800); }
+  .cinc-btn:active { transform: scale(0.97); }
+  .cinc-btn.normal { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .cinc-btn.abnormal { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .cinc-btn-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+  .cinc-btn-sub { font-size: 11px; font-weight: 400; opacity: 0.8; }
+
+  /* SCORE */
+  .score-display { background: var(--purple-light); border: 2px solid var(--purple); border-radius: 10px; padding: 14px; text-align: center; margin: 12px 0; }
+  .score-num { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 36px; font-weight: 700; color: var(--purple); }
+  .score-label { font-size: 13px; color: var(--purple); font-weight: 600; }
+
+  /* BE-FAST */
+  .befast-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
+  .befast-card { background: white; border-radius: 8px; padding: 10px; text-align: center; border-top: 4px solid var(--purple); box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+  .befast-letter { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 24px; font-weight: 700; color: var(--purple); }
+  .befast-word { font-size: 12px; font-weight: 700; color: var(--gray-800); }
+  .befast-desc { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+
+  /* LKW TIMER */
+  .lkw-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .lkw-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+  .lkw-inputs { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .lkw-field { flex: 1; min-width: 130px; }
+  .lkw-label { font-size: 12px; font-weight: 700; color: var(--gray-600); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .lkw-input { width: 100%; padding: 10px 12px; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 15px; font-family: inherit; min-height: 44px; outline: none; }
+  .lkw-input:focus { border-color: var(--purple); }
+  .lkw-btn { background: var(--purple); color: white; border: none; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 700; cursor: pointer; min-height: 44px; white-space: nowrap; }
+  .lkw-btn:active { opacity: 0.85; }
+  .lkw-result { margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 14px; display: none; }
+  .lkw-result.in-window { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .lkw-result.near-window { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .lkw-result.out-window { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .lkw-result-time { font-size: 22px; font-weight: 700; font-family: 'Arial Narrow','Arial',sans-serif; margin-bottom: 4px; }
+
+  /* MIMICS */
+  .mimics-grid { display: grid; gap: 8px; }
+  .mimic-item { display: flex; align-items: center; gap: 10px; background: white; border-radius: 8px; padding: 10px 12px; font-size: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .mimic-icon { font-size: 18px; flex-shrink: 0; }
+  .mimic-name { font-weight: 700; color: var(--gray-800); }
+  .mimic-clue { color: var(--gray-600); font-size: 12px; }
+
+  /* MANAGEMENT */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--gray-800); }
+
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-purple { background: var(--purple-light); border: 2px solid var(--purple); color: var(--purple); }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1F9E0; Stroke / CVA Protocol</div>
+      <div class="header-sub">Time-Critical &bull; Target Certified Stroke Center</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; Safety <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>BSI: Gloves (fall risk — possible blood)</li>
+        <li><strong>Fall hazard assessment:</strong> Patient on floor? C-spine consideration?</li>
+        <li>Note environment: alone, altered — how long down?</li>
+        <li>Gather medications — anticoagulants (Warfarin, Eliquis, Xarelto, Plavix)?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2: ABCs + GLUCOSE -->
+  <div class="step step-orange">
+    <div class="step-num">2</div>
+    <div class="step-title">ABCs + IMMEDIATE Glucose Check</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Airway:</strong> Protect — altered patients at risk for aspiration. Recovery position if unconscious.</li>
+        <li><strong>Breathing:</strong> Rate, depth, SpO2. O2 if SpO2 &lt; 94% only — avoid hyperoxia.</li>
+        <li><strong>Circulation:</strong> Pulse, BP (both arms). Note: hypertension is common and expected — do NOT aggressively treat in field unless directed.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="background:var(--red);color:white;border-radius:10px;padding:14px;margin:8px 0;display:flex;gap:12px;align-items:center;">
+    <div style="font-size:28px;">&#x1F4C9;</div>
+    <div>
+      <div style="font-family:'Arial Narrow','Arial',sans-serif;font-size:17px;font-weight:700;margin-bottom:4px;">GLUCOSE — CHECK IMMEDIATELY</div>
+      <div style="font-size:13px;opacity:0.95;">Hypoglycemia mimics stroke. BGL &lt; 60 mg/dL → treat NOW before continuing. Oral glucose if conscious, ALS for D50/D10 IV if altered.</div>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 3: CINCINNATI -->
+  <div class="section-divider"><h2>&#x1F3AF; Step 3 — Cincinnati Stroke Scale</h2></div>
+
+  <div class="score-display">
+    <div class="score-num" id="cinc-score">0 / 3</div>
+    <div class="score-label">Cincinnati Score — Tap items below to assess</div>
+  </div>
+
+  <div id="stroke-result-box" style="display:none;"></div>
+
+  <!-- Item 1: Facial Droop -->
+  <div class="cincinnati-item">
+    <div class="cinc-header">
+      <div class="cinc-title">1. Facial Droop</div>
+      <div class="cinc-num">1</div>
+    </div>
+    <div class="cinc-instruction">Ask patient to show teeth or smile. Observe both sides of face.</div>
+    <div class="cinc-options">
+      <button class="cinc-btn" id="face-normal" onclick="setCinc('face','normal')">
+        <span class="cinc-btn-label">Normal</span>
+        <span class="cinc-btn-sub">Both sides move equally</span>
+      </button>
+      <button class="cinc-btn" id="face-abnormal" onclick="setCinc('face','abnormal')">
+        <span class="cinc-btn-label">Abnormal</span>
+        <span class="cinc-btn-sub">One side doesn't move</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Item 2: Arm Drift -->
+  <div class="cincinnati-item">
+    <div class="cinc-header">
+      <div class="cinc-title">2. Arm Drift</div>
+      <div class="cinc-num">2</div>
+    </div>
+    <div class="cinc-instruction">Ask patient to close eyes, hold both arms out (palms up) for 10 seconds. Observe for drift.</div>
+    <div class="cinc-options">
+      <button class="cinc-btn" id="arm-normal" onclick="setCinc('arm','normal')">
+        <span class="cinc-btn-label">Normal</span>
+        <span class="cinc-btn-sub">Both arms hold equally</span>
+      </button>
+      <button class="cinc-btn" id="arm-abnormal" onclick="setCinc('arm','abnormal')">
+        <span class="cinc-btn-label">Abnormal</span>
+        <span class="cinc-btn-sub">One arm drifts/falls</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Item 3: Speech -->
+  <div class="cincinnati-item">
+    <div class="cinc-header">
+      <div class="cinc-title">3. Abnormal Speech</div>
+      <div class="cinc-num">3</div>
+    </div>
+    <div class="cinc-instruction">Ask patient to repeat: <strong>"The sky is blue in Cincinnati"</strong></div>
+    <div class="cinc-options">
+      <button class="cinc-btn" id="speech-normal" onclick="setCinc('speech','normal')">
+        <span class="cinc-btn-label">Normal</span>
+        <span class="cinc-btn-sub">Correct words, no slur</span>
+      </button>
+      <button class="cinc-btn" id="speech-abnormal" onclick="setCinc('speech','abnormal')">
+        <span class="cinc-btn-label">Abnormal</span>
+        <span class="cinc-btn-sub">Slurred, wrong words, none</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 4: BE-FAST -->
+  <div class="section-divider"><h2>&#x1F199; Step 4 — BE-FAST Reference</h2></div>
+
+  <div class="befast-grid">
+    <div class="befast-card">
+      <div class="befast-letter">B</div>
+      <div class="befast-word">Balance</div>
+      <div class="befast-desc">Sudden loss, ataxia</div>
+    </div>
+    <div class="befast-card">
+      <div class="befast-letter">E</div>
+      <div class="befast-word">Eyes</div>
+      <div class="befast-desc">Sudden vision change</div>
+    </div>
+    <div class="befast-card">
+      <div class="befast-letter">F</div>
+      <div class="befast-word">Face</div>
+      <div class="befast-desc">Droop, asymmetry</div>
+    </div>
+    <div class="befast-card">
+      <div class="befast-letter">A</div>
+      <div class="befast-word">Arms</div>
+      <div class="befast-desc">Drift, weakness</div>
+    </div>
+    <div class="befast-card">
+      <div class="befast-letter">S</div>
+      <div class="befast-word">Speech</div>
+      <div class="befast-desc">Slur, confusion</div>
+    </div>
+    <div class="befast-card" style="border-top-color:var(--red);">
+      <div class="befast-letter" style="color:var(--red);">T</div>
+      <div class="befast-word">Time</div>
+      <div class="befast-desc" style="color:var(--red);font-weight:700;">CALL 911 NOW</div>
+    </div>
+  </div>
+
+  <!-- STEP 5: LKW TIMER -->
+  <div class="section-divider"><h2>&#x23F1; Step 5 — Last Known Well Time</h2></div>
+
+  <div class="lkw-section">
+    <div class="lkw-title">tPA Window Calculator</div>
+    <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px;">tPA eligibility window: <strong>&lt; 3–4.5 hours</strong> from last known well. Earlier = better outcomes.</div>
+    <div class="lkw-inputs">
+      <div class="lkw-field">
+        <div class="lkw-label">Last Known Well Time</div>
+        <input type="time" id="lkw-time" class="lkw-input">
+      </div>
+      <button class="lkw-btn" onclick="calcLKW()">Calculate Window</button>
+    </div>
+    <div class="lkw-result" id="lkw-result">
+      <div class="lkw-result-time" id="lkw-elapsed"></div>
+      <div id="lkw-message"></div>
+    </div>
+  </div>
+
+  <!-- STEP 6: SAMPLE -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">6</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">SAMPLE History <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Anticoagulants?</strong> — Warfarin, Eliquis, Xarelto, Pradaxa, Plavix (affects tPA eligibility)</li>
+        <li><strong>Prior stroke or TIA?</strong> — when, residual deficits</li>
+        <li><strong>Atrial fibrillation?</strong> — major embolic stroke risk</li>
+        <li><strong>Hypertension, diabetes?</strong></li>
+        <li><strong>BP medications:</strong> Don't aggressively lower BP in field (neuroprotective hypertension)</li>
+        <li><strong>Recent surgery?</strong> (within 14 days — tPA contraindication)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 7: STROKE MIMICS -->
+  <div class="section-divider"><h2>&#x1F9E9; Step 7 — Stroke Mimics Checklist</h2></div>
+
+  <div class="mimics-grid">
+    <div class="mimic-item">
+      <div class="mimic-icon">&#x1F4C9;</div>
+      <div>
+        <div class="mimic-name">Hypoglycemia ✓ Checked</div>
+        <div class="mimic-clue">BGL &lt; 60 → treat first. Most important mimic to rule out.</div>
+      </div>
+    </div>
+    <div class="mimic-item">
+      <div class="mimic-icon">&#x26A1;</div>
+      <div>
+        <div class="mimic-name">Todd's Paralysis</div>
+        <div class="mimic-clue">Post-seizure focal weakness; witness seizure activity. Resolves in hours.</div>
+      </div>
+    </div>
+    <div class="mimic-item">
+      <div class="mimic-icon">&#x1F914;</div>
+      <div>
+        <div class="mimic-name">Bell's Palsy</div>
+        <div class="mimic-clue">Peripheral facial droop (entire face including forehead). Arm/speech normal.</div>
+      </div>
+    </div>
+    <div class="mimic-item">
+      <div class="mimic-icon">&#x1F915;</div>
+      <div>
+        <div class="mimic-name">Complex Migraine</div>
+        <div class="mimic-clue">Hemiplegic migraine with focal deficits. Severe headache history.</div>
+      </div>
+    </div>
+    <div class="mimic-item">
+      <div class="mimic-icon">&#x1F37A;</div>
+      <div>
+        <div class="mimic-name">Intoxication / Overdose</div>
+        <div class="mimic-clue">Slurred speech, confusion. ETOH breath, drug paraphernalia, pupils.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 8: STROKE ALERT MANAGEMENT -->
+  <div class="section-divider"><h2>&#x1F6A8; Step 8 — STROKE ALERT Management</h2></div>
+
+  <div class="alert-box alert-red">
+    <span class="alert-icon">&#x1F4DE;</span>
+    <div><strong>NOTIFY RECEIVING HOSPITAL:</strong> Code Stroke notification en route. Target certified stroke center (nearest, not closest). Give Cincinnati score, LKW time, current time.</div>
+  </div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">Management Checklist</div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F4A8;</div>
+      <div><span class="badge-bls">BLS</span> <strong>O2 only if SpO2 &lt; 94%.</strong> Avoid hyperoxia — excess O2 may worsen outcomes in stroke. NC 2-4L only as needed.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1FA91;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Position:</strong> HOB 30° (head of bed/stretcher). Airway management — recovery position if unresponsive to protect airway.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F37D;&#xFE0F;</div>
+      <div><span class="badge-bls">BLS</span> <strong>NPO</strong> — Nothing by mouth. Dysphagia risk. High aspiration risk in stroke.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F4C9;</div>
+      <div><span class="badge-bls">BLS</span> <strong>Glucose management:</strong> BGL &lt; 60 → oral glucose if conscious and can protect airway. BGL &gt; 200 → note but do not treat pre-hospital.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1FA78;</div>
+      <div><span class="badge-als">ALS</span> <strong>IV access:</strong> Large bore × 2 en route. D50 or D10 for hypoglycemia if altered. Saline lock only (no dextrose drips).</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x2764;&#xFE0F;</div>
+      <div><span class="badge-als">ALS</span> <strong>Monitor:</strong> 12-lead ECG (AF identification). Cardiac monitoring. Vitals every 5 min. BP: do NOT lower aggressively unless directed by medical control.</div>
+    </div>
+    <div class="mgmt-item">
+      <div class="mgmt-icon">&#x1F3C3;</div>
+      <div><span class="badge-bls">BLS</span> <strong>TRANSPORT:</strong> Load &amp; Go. Do not delay for IV attempts. Minimize on-scene time. Document all times (dispatch, arrival, LKW, departure).</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  NREMT / AHA Stroke Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  const cincState = { face: null, arm: null, speech: null };
+
+  function setCinc(item, value) {
+    cincState[item] = value;
+
+    // Update button styles
+    ['normal','abnormal'].forEach(v => {
+      const btn = document.getElementById(item + '-' + v);
+      btn.classList.remove('normal', 'abnormal');
+    });
+    document.getElementById(item + '-' + value).classList.add(value);
+
+    updateCincScore();
+  }
+
+  function updateCincScore() {
+    const score = Object.values(cincState).filter(v => v === 'abnormal').length;
+    const assessed = Object.values(cincState).filter(v => v !== null).length;
+    document.getElementById('cinc-score').textContent = score + ' / 3';
+
+    const box = document.getElementById('stroke-result-box');
+
+    if (assessed === 3) {
+      box.style.display = 'block';
+      if (score >= 1) {
+        box.innerHTML = '<div class="stroke-alert"><div class="stroke-alert-title">&#x1F6A8; STROKE ALERT</div><div class="stroke-alert-sub">Score ' + score + '/3 — High stroke probability. Activate Code Stroke. Transport to certified stroke center immediately. Document LKW time now.</div></div>';
+      } else {
+        box.innerHTML = '<div class="stroke-clear"><div class="stroke-clear-title">&#x2714; Cincinnati Scale Negative</div><div style="font-size:13px;margin-top:4px;">Score 0/3 — Low probability by Cincinnati criteria. Consider stroke mimics. Continue assessment. If clinical suspicion remains, treat as stroke alert.</div></div>';
+      }
+    } else if (assessed > 0 && score >= 1) {
+      box.style.display = 'block';
+      box.innerHTML = '<div class="alert-box alert-red" style="margin:8px 0;"><span class="alert-icon">&#x26A0;</span><div><strong>Abnormal finding detected (Score ' + score + '/3 so far).</strong> Continue assessing all 3 items.</div></div>';
+    } else {
+      box.style.display = 'none';
+    }
+  }
+
+  function calcLKW() {
+    const lkwInput = document.getElementById('lkw-time').value;
+    if (!lkwInput) { alert('Please enter the last known well time.'); return; }
+
+    const now = new Date();
+    const [lkwH, lkwM] = lkwInput.split(':').map(Number);
+    const lkwDate = new Date(now);
+    lkwDate.setHours(lkwH, lkwM, 0, 0);
+
+    // Handle cases where LKW was "yesterday" (if LKW time is after current time)
+    if (lkwDate > now) lkwDate.setDate(lkwDate.getDate() - 1);
+
+    const elapsedMs = now - lkwDate;
+    const elapsedMin = Math.floor(elapsedMs / 60000);
+    const elapsedH = Math.floor(elapsedMin / 60);
+    const elapsedMrem = elapsedMin % 60;
+
+    const resultEl = document.getElementById('lkw-result');
+    const elapsedEl = document.getElementById('lkw-elapsed');
+    const messageEl = document.getElementById('lkw-message');
+
+    elapsedEl.textContent = elapsedH + 'h ' + elapsedMrem + 'm since Last Known Well';
+    resultEl.style.display = 'block';
+    resultEl.className = 'lkw-result';
+
+    if (elapsedMin < 180) {
+      resultEl.classList.add('in-window');
+      messageEl.innerHTML = '<strong>&#x2714; Within tPA window (&lt; 3 hours)</strong> — ACTIVATE CODE STROKE. Notify receiving hospital immediately. Target certified stroke center.';
+    } else if (elapsedMin < 270) {
+      resultEl.classList.add('near-window');
+      messageEl.innerHTML = '<strong>&#x26A0; Extended window (3–4.5 hours)</strong> — May still be tPA eligible (selected patients). Contact medical control. Transport to stroke center, notify en route.';
+    } else {
+      resultEl.classList.add('out-window');
+      messageEl.innerHTML = '<strong>&#x274C; Outside standard tPA window (&gt; 4.5 hours)</strong> — tPA typically not indicated. Mechanical thrombectomy may still be option up to 24h for large vessel occlusion. Transport to stroke center. Notify hospital.';
+    }
+  }
+</script>
+</body>
+</html>
