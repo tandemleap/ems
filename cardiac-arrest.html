@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Cardiac Arrest / CPR Protocol — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--red); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* STEP BOXES */
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .step-purple .step-num { background: var(--purple); }
+  .step-gray { background: white; border-left: 4px solid var(--gray-400); }
+  .step-gray .step-num { background: var(--gray-600); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  /* CONNECTOR */
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  /* DIAMOND DECISION */
+  .diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+  .diamond {
+    background: var(--red);
+    color: white;
+    padding: 20px 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    clip-path: polygon(28px 0%, calc(100% - 28px) 0%, 100% 50%, calc(100% - 28px) 100%, 28px 100%, 0% 50%);
+    min-width: 280px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+  }
+  .diamond-orange { background: var(--orange); }
+  .diamond-green { background: var(--green); }
+
+  /* BRANCH */
+  .branches { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .branch { flex: 1; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; }
+  .branch-yes { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .branch-no { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .branch-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 800; }
+  .branch-text { font-size: 13px; line-height: 1.3; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* TABLE */
+  .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin-top: 8px; }
+  .info-table th { background: var(--gray-800); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .info-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* INTERACTIVE SECTION */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); display: flex; align-items: center; gap: 6px; }
+
+  .selector-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 8px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; color: var(--gray-800); transition: all 0.15s; }
+  .chip:active { transform: scale(0.96); }
+  .chip.selected { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* H&T CARDS */
+  .ht-result { border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: none; animation: fadeIn 0.25s ease; }
+  .ht-result.show { display: block; }
+  .ht-result-header { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .ht-result-notes { font-size: 13px; line-height: 1.4; color: var(--gray-600); }
+  .ht-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .ht-red .ht-result-header { color: var(--red); }
+  .ht-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .ht-blue .ht-result-header { color: var(--blue); }
+  .ht-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .ht-orange .ht-result-header { color: var(--orange); }
+  .ht-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .ht-purple .ht-result-header { color: var(--purple); }
+  .ht-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .ht-green .ht-result-header { color: var(--green); }
+  .ht-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .ht-yellow .ht-result-header { color: var(--yellow); }
+
+  /* ALERT BOX */
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-blue { background: var(--blue-light); border: 2px solid var(--blue); color: var(--blue); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* BADGE */
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  /* ALS TRIGGERS */
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* CPR PULSE BOX */
+  .cpr-pulse-box {
+    background: var(--red);
+    color: white;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 14px 0;
+    text-align: center;
+    font-family: 'Arial Narrow','Arial',sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+    box-shadow: 0 4px 14px rgba(192,57,43,0.45);
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  .cpr-pulse-box .cpr-headline {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .cpr-pulse-box .cpr-sub {
+    font-size: 13px;
+    font-weight: 400;
+    opacity: 0.9;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  @keyframes pulseGlow {
+    0%   { box-shadow: 0 4px 14px rgba(192,57,43,0.45); }
+    50%  { box-shadow: 0 4px 28px rgba(192,57,43,0.80); }
+    100% { box-shadow: 0 4px 14px rgba(192,57,43,0.45); }
+  }
+
+  /* CPR QUALITY METRICS */
+  .cpr-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .cpr-metric { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; text-align: center; }
+  .cpr-metric-value { font-size: 20px; font-weight: 700; display: block; }
+  .cpr-metric-label { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+
+  /* MANAGEMENT ITEM */
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* SPECIAL CIRCUMSTANCES TABLE */
+  .special-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin-top: 8px; }
+  .special-table th { background: var(--purple); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .special-table td { padding: 9px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; line-height: 1.4; }
+  .special-table tr:last-child td { border-bottom: none; }
+  .special-table tr:nth-child(even) td { background: var(--gray-50); }
+  .special-table .sc-label { font-weight: 700; color: var(--purple); white-space: nowrap; }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1F494; Cardiac Arrest / CPR</div>
+      <div class="header-sub">Resuscitation &bull; AED &bull; ROSC Management</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- CPR PULSE REMINDER -->
+  <div class="cpr-pulse-box">
+    <div class="cpr-headline">&#x1F534; COMPRESSIONS FIRST</div>
+    <div class="cpr-sub">COMPRESSIONS ARE THE MOST IMPORTANT INTERVENTION<br>Push hard, push fast, minimize interruptions</div>
+    <div class="cpr-metrics">
+      <div class="cpr-metric">
+        <span class="cpr-metric-value">100–120</span>
+        <span class="cpr-metric-label">Compressions / min</span>
+      </div>
+      <div class="cpr-metric">
+        <span class="cpr-metric-value">&#8805;2&#8243;</span>
+        <span class="cpr-metric-label">Depth (not &gt;2.4&#8243;)</span>
+      </div>
+      <div class="cpr-metric">
+        <span class="cpr-metric-value">&lt;10 sec</span>
+        <span class="cpr-metric-label">Max interruption</span>
+      </div>
+      <div class="cpr-metric">
+        <span class="cpr-metric-value">30:2</span>
+        <span class="cpr-metric-label">Ratio (no adv airway)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; BSI <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>Gloves + eye protection — BSI before patient contact</li>
+        <li>Scene safety: hazards, traffic, potential fentanyl/OD exposure (avoid skin contact)</li>
+        <li>Determine # of rescuers; assign roles (compressor, airway, AED operator, timer)</li>
+        <li>Locate AED immediately — every second without defibrillation costs survival</li>
+        <li>Request ALS intercept and additional resources now</li>
+        <li>Note time of dispatch, arrival, and witnessed arrest if known</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2 -->
+  <div class="step step-red">
+    <div class="step-num">2</div>
+    <div class="step-title">Recognition &amp; Initiation</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Unresponsive?</strong> — No response to voice or sternal rub</li>
+        <li><strong>No normal breathing?</strong> — Gasping = agonal breathing; treat as arrest — START CPR</li>
+        <li><strong>No pulse &gt;10 seconds?</strong> — Carotid pulse check; if uncertain, begin CPR</li>
+        <li>&#9888; <strong>Do not delay CPR</strong> to obtain history or full assessment</li>
+        <li>Note time CPR initiated — document witnessed vs. unwitnessed arrest</li>
+        <li>Activate dispatch notification; confirm ALS en route</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 3 — HIGH QUALITY CPR -->
+  <div class="step step-orange">
+    <div class="step-num">3</div>
+    <div class="step-title">&#x1F4AA; High-Quality CPR</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Rate:</strong> 100–120 compressions/min (use metronome if available)</li>
+        <li><strong>Depth:</strong> &#8805;2 inches (5 cm) — do not exceed 2.4 inches (6 cm)</li>
+        <li><strong>Full recoil:</strong> Allow complete chest recoil between compressions; do not lean</li>
+        <li><strong>Minimize interruptions:</strong> Any pause must be &lt;10 seconds</li>
+        <li><strong>Ventilation:</strong> 1 breath every 6 sec with advanced airway — do NOT hyperventilate</li>
+        <li><strong>Rotate compressors:</strong> Switch every 2 minutes or at each rhythm check to prevent fatigue</li>
+        <li><strong>Ratio:</strong> 30:2 compressions to ventilations without advanced airway</li>
+        <li>&#9888; Avoid excessive ventilation — increases intrathoracic pressure, worsens survival</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 4 — AED -->
+  <div class="step step-yellow">
+    <div class="step-num">4</div>
+    <div class="step-title">&#x26A1; AED — Defibrillation</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Power on</strong> the AED immediately — follow audio/visual prompts</li>
+        <li><strong>Pad placement:</strong> Right subclavicular (below collarbone, right sternal border) + Left lateral (mid-axillary line, 4th–5th intercostal space)</li>
+        <li>Dry chest, remove medication patches, use anterior-posterior if necessary</li>
+        <li><strong>Analyze rhythm:</strong> Stop CPR, ensure no one is touching patient — "I'm clear, you're clear, everybody clear"</li>
+        <li><strong>Shock if advised:</strong> Deliver shock, then immediately resume CPR — do NOT check pulse</li>
+        <li>Continue 2-minute CPR cycles between AED rhythm checks</li>
+        <li>&#9888; Every 1 minute without defibrillation in VF = ~10% decrease in survival</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 5 — Airway -->
+  <div class="step step-blue">
+    <div class="step-num">5</div>
+    <div class="step-title">Airway Management</div>
+    <div class="step-content">
+      <ul>
+        <li><span class="badge-bls">BLS</span> <strong>Head-tilt chin-lift</strong> (jaw thrust if trauma suspected)</li>
+        <li><span class="badge-bls">BLS</span> <strong>OPA sizing:</strong> Corner of mouth to earlobe; insert inverted and rotate 180°</li>
+        <li><span class="badge-bls">BLS</span> <strong>NPA sizing:</strong> Tip of nose to earlobe; contraindicated in suspected basilar skull fracture</li>
+        <li><span class="badge-bls">BLS</span> <strong>BVM:</strong> Two-person technique preferred — one holds mask seal (C-E clamp), one squeezes bag; deliver 1 breath every 6 sec</li>
+        <li><span class="badge-als">ALS</span> Advanced airway (supraglottic or ETT): confirm placement, secure device, 10 breaths/min</li>
+        <li>&#9888; Visible chest rise = adequate ventilation; do not squeeze too hard or fast</li>
+        <li>&#9888; <strong>Hyperventilation worsens cardiac arrest outcomes</strong> — 1 breath/6 seconds maximum</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 6 — H's and T's Interactive -->
+  <div class="section-divider"><h2>&#x1F9E0; Step 6 — Reversible Causes: H&#x2019;s &amp; T&#x2019;s</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F9ED; Select a potential reversible cause to see field management</div>
+    <div class="selector-label">H&#x2019;s — Select to review</div>
+    <div class="chip-group" id="h-chips">
+      <button class="chip" data-ht="hypovolemia">Hypovolemia</button>
+      <button class="chip" data-ht="hypoxia">Hypoxia</button>
+      <button class="chip" data-ht="acidosis">H&#x207A; (Acidosis)</button>
+      <button class="chip" data-ht="hypokalemia">Hypo/Hyperkalemia</button>
+      <button class="chip" data-ht="hypothermia-h">Hypothermia</button>
+    </div>
+    <div class="selector-label">T&#x2019;s — Select to review</div>
+    <div class="chip-group" id="t-chips">
+      <button class="chip" data-ht="tension">Tension PTX</button>
+      <button class="chip" data-ht="tamponade">Tamponade</button>
+      <button class="chip" data-ht="toxins">Toxins</button>
+      <button class="chip" data-ht="thrombosis-pe">Thrombosis — PE</button>
+      <button class="chip" data-ht="thrombosis-acs">Thrombosis — Coronary</button>
+    </div>
+
+    <div id="ht-results">
+      <div style="text-align:center;color:var(--gray-400);font-size:13px;padding:12px 0;">Tap a cause above to see field assessment &amp; management</div>
+    </div>
+  </div>
+
+  <!-- STEP 7 — ALS Interventions -->
+  <div class="step step-purple">
+    <div class="step-num">7</div>
+    <div class="step-title">ALS Interventions <span class="badge-als" style="margin-left:6px;">ALS</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Epinephrine 1mg IV/IO q3–5 min:</strong>
+          <ul style="margin-top:4px;">
+            <li>Non-shockable (PEA/Asystole): Give as early as possible</li>
+            <li>Shockable (VF/pVT): Give after 3rd shock</li>
+          </ul>
+        </li>
+        <li><strong>Amiodarone:</strong> 300mg IV/IO (1st dose) for refractory VF/pVT; 150mg IV/IO (2nd dose)</li>
+        <li><strong>IO access:</strong> If IV access fails after 2 attempts or &gt;90 sec, establish IO (tibia, humerus)</li>
+        <li><strong>Vasopressin 40 units IV/IO:</strong> May replace first or second dose of epinephrine (per protocol)</li>
+        <li>Sodium bicarbonate: Per protocol — tricyclic OD, hyperkalemia, prolonged arrest</li>
+        <li>Calcium chloride: Per protocol — hyperkalemia, calcium channel blocker OD</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- ROSC Decision -->
+  <div class="diamond-wrap">
+    <div class="diamond diamond-green">Signs of ROSC?<br><small style="font-weight:400;font-size:12px">Pulse, BP, purposeful movement, spontaneous breathing</small></div>
+  </div>
+  <div class="branches">
+    <div class="branch branch-yes">
+      <div class="branch-label">YES — ROSC</div>
+      <div class="branch-text">Post-resuscitation care below &#8595;</div>
+    </div>
+    <div class="branch branch-no">
+      <div class="branch-label">NO — Continue</div>
+      <div class="branch-text">Continue CPR cycles; re-analyze H's &amp; T's; consider termination criteria</div>
+    </div>
+  </div>
+
+  <!-- STEP 8 — ROSC Management -->
+  <div class="step step-green">
+    <div class="step-num">8</div>
+    <div class="step-title">ROSC Management — Post-Resuscitation Care</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Signs of ROSC:</strong> Palpable pulse, rise in end-tidal CO2, purposeful movement, spontaneous breathing, return of BP</li>
+        <li><strong>Position:</strong> 30° head of bed elevation (semi-Fowler's); recovery position if no spinal concern and unconscious</li>
+        <li><strong>Oxygen:</strong> Titrate SpO2 94–98% — <em>avoid hyperoxia</em> (hyperoxia worsens neurological outcomes post-ROSC)</li>
+        <li><strong>Ventilation:</strong> Target ETCO2 35–45 mmHg; avoid hypocapnia (ALS)</li>
+        <li><strong>Blood glucose:</strong> Check BGL — treat hypoglycemia; avoid hyperglycemia</li>
+        <li><strong>Temperature:</strong> Avoid hyperthermia; target normothermia (therapeutic hypothermia/TTM per ALS/ED)</li>
+        <li><strong>12-Lead ECG:</strong> Obtain as soon as possible — identify STEMI for cath lab activation</li>
+        <li><strong>Hemodynamics:</strong> Target systolic BP &gt;90 mmHg (ALS fluid/vasopressor management)</li>
+        <li><strong>Transport:</strong> Notify receiving facility early — resuscitation hospital with cath lab preferred</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 9 — Termination -->
+  <div class="step step-gray">
+    <div class="step-num">9</div>
+    <div class="step-title">Termination of Resuscitation</div>
+    <div class="step-content">
+      <ul>
+        <li>&#9888; <strong>Always follow local protocol</strong> — medical director authorization required in most jurisdictions</li>
+        <li>General considerations for termination:
+          <ul style="margin-top:4px;">
+            <li>Unwitnessed arrest with prolonged downtime</li>
+            <li>Non-shockable rhythm throughout</li>
+            <li>No ROSC after adequate resuscitation effort</li>
+            <li>No signs of life at any time during resuscitation</li>
+            <li>Obvious signs of death (rigor mortis, dependent lividity, decapitation, incineration)</li>
+          </ul>
+        </li>
+        <li>Contact ALS unit or medical director via radio/phone before terminating</li>
+        <li>Document all times, interventions, rhythm strips, and personnel present</li>
+        <li>Family notification: compassionate, clear, avoid jargon; offer chaplain/support resources</li>
+        <li>Scene preservation: if cardiac arrest has any suspicious circumstances, do not disturb scene</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SPECIAL CIRCUMSTANCES -->
+  <div class="section-divider"><h2>&#x26A0;&#xFE0F; Special Circumstances</h2></div>
+
+  <table class="special-table">
+    <tr>
+      <th>Situation</th>
+      <th>Key Considerations</th>
+    </tr>
+    <tr>
+      <td class="sc-label">&#x2744;&#xFE0F; Hypothermia</td>
+      <td><strong>"Not dead until warm and dead"</strong> — aggressive resuscitation and transport to hospital for active rewarming. Rewarm core before terminating. Cold CPR is effective.</td>
+    </tr>
+    <tr>
+      <td class="sc-label">&#x1F30A; Drowning</td>
+      <td>Extended resuscitation — oxygenation is the priority. 5 initial rescue breaths before compressions. Hypothermia common; see above. Good neurological outcomes reported after prolonged submersion in cold water.</td>
+    </tr>
+    <tr>
+      <td class="sc-label">&#x1FAC3; Pregnancy</td>
+      <td>Left lateral uterine displacement (manual) to relieve aortocaval compression. If &gt;20 weeks gestation, consider perimortem cesarean by hospital within 5 minutes of arrest. Call OB/GYN early.</td>
+    </tr>
+    <tr>
+      <td class="sc-label">&#x1F476; Pediatric</td>
+      <td>Compression depth: 1.5&#8243; infant, 2&#8243; child. Ratio: 30:2 single rescuer / 15:2 two rescuers. AED: use pediatric pads/attenuator for &lt;8 years or &lt;25 kg. Shockable rhythms less common — focus on airway and oxygenation.</td>
+    </tr>
+  </table>
+
+  <!-- ALS TRIGGERS -->
+  <div class="section-divider"><h2>&#x1F6A8; ALS Intercept — Always Request</h2></div>
+  <div class="interactive-section">
+    <div class="als-triggers">
+      <div class="als-triggers-title">&#x1F534; ALS Required for Cardiac Arrest</div>
+      <ul>
+        <li>All confirmed cardiac arrests — ALS should be en route on initial dispatch</li>
+        <li>ROSC achieved — advanced airway, 12-lead, vasopressors, TTM protocols</li>
+        <li>Suspected reversible cause requiring ALS intervention (tension PTX, tamponade)</li>
+        <li>Refractory VF/pVT requiring antiarrhythmics</li>
+        <li>Pediatric arrest — additional expertise and medications</li>
+        <li>Medical direction needed for termination of resuscitation</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  AHA 2020 Guidelines &bull; NREMT Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  const htData = {
+    hypovolemia: {
+      title: 'Hypovolemia',
+      color: 'ht-red',
+      notes: 'Cause: Hemorrhage, dehydration, fluid loss. Look for: Signs of trauma, GI bleed, pregnancy. Field: Control hemorrhage (tourniquets, pressure), IV fluid resuscitation (ALS), elevate legs if no spinal concern. Rapid transport.'
+    },
+    hypoxia: {
+      title: 'Hypoxia',
+      color: 'ht-blue',
+      notes: 'Cause: Airway obstruction, respiratory failure, drowning, PE. Look for: Cyanosis, airway obstruction. Field: Optimize airway positioning, OPA/NPA, BVM ventilation, 100% O2, suction secretions. This is the most treatable cause — ensure excellent ventilation.'
+    },
+    acidosis: {
+      title: 'H+ (Acidosis)',
+      color: 'ht-orange',
+      notes: 'Cause: DKA, prolonged arrest, renal failure, toxic ingestion. Look for: History of DM, renal failure, Kussmaul respirations pre-arrest. Field: Adequate ventilation (prevent respiratory acidosis), ALS for sodium bicarbonate if indicated. Correct underlying cause.'
+    },
+    hypokalemia: {
+      title: 'Hypo/Hyperkalemia',
+      color: 'ht-purple',
+      notes: 'Cause: Dialysis patients (hyperK), prolonged vomiting/diarrhea, diuretics (hypoK). Look for: History of renal disease, dialysis, medications. Field: Limited pre-hospital treatment. ALS: calcium chloride for hyperkalemia, sodium bicarbonate. Rapid transport.'
+    },
+    'hypothermia-h': {
+      title: 'Hypothermia',
+      color: 'ht-blue',
+      notes: 'Cause: Cold exposure, immersion, elderly/homeless in cold. Look for: Core temp &lt;35°C, exposure history, cold/stiff body. Field: Remove from cold environment, remove wet clothing, passive rewarming, warm blankets. Do NOT terminate in field — transport for active core rewarming. VF may not respond to defibrillation until core temp &gt;30°C.'
+    },
+    tension: {
+      title: 'Tension Pneumothorax',
+      color: 'ht-red',
+      notes: 'Cause: Trauma, mechanical ventilation, spontaneous PTX. Look for: Unilateral absent breath sounds, JVD, tracheal deviation (late sign), recent penetrating trauma. Field BLS: Occlusive dressing (3-sided) for open chest wounds. Field ALS: Needle decompression (2nd ICS, MCL or 4th-5th ICS, MAL). Immediate improvement after decompression = confirmation.'
+    },
+    tamponade: {
+      title: 'Cardiac Tamponade',
+      color: 'ht-red',
+      notes: 'Cause: Penetrating trauma, pericarditis, malignancy, aortic dissection. Look for: Beck\'s Triad — JVD + muffled heart sounds + hypotension. Narrowed pulse pressure, pulsus paradoxus. Field: ALS intercept, aggressive fluid (ALS), pericardiocentesis (ALS/ED). Rapid transport — no definitive pre-hospital treatment for BLS.'
+    },
+    toxins: {
+      title: 'Toxins',
+      color: 'ht-purple',
+      notes: 'Cause: Drug OD (opioids, TCAs, cocaine, beta-blockers, CCBs), carbon monoxide. Look for: Drug paraphernalia, pill bottles, suspicious scene, pinpoint/dilated pupils. Field: Naloxone 2mg IN/IV for suspected opioid (may need repeat doses). 100% O2 for CO. Sodium bicarb for TCA (ALS). Lipid emulsion for CCB/local anesthetic (ALS). Remove from toxic environment.'
+    },
+    'thrombosis-pe': {
+      title: 'Thrombosis — Pulmonary Embolism',
+      color: 'ht-orange',
+      notes: 'Cause: DVT, prolonged immobility, malignancy, recent surgery, pregnancy. Look for: Recent travel, surgery, DVT history, unilateral leg swelling, pleuritic chest pain before arrest. Field: No specific pre-hospital treatment. CPR and ALS supportive care. ALS: thrombolytics may be considered for confirmed massive PE in refractory arrest (per protocol/medical direction).'
+    },
+    'thrombosis-acs': {
+      title: 'Thrombosis — Coronary (ACS/STEMI)',
+      color: 'ht-red',
+      notes: 'Cause: Plaque rupture, coronary occlusion, vasospasm. Look for: Prior cardiac history, chest pain before arrest, STEMI on 12-lead post-ROSC. Field: High-quality CPR, early defibrillation for VF/pVT. Post-ROSC: 12-lead ECG immediately, aspirin 324mg if alert. Notify cath lab hospital — STEMI equivalents trigger activation even post-arrest.'
+    }
+  };
+
+  const selectedHT = new Set();
+
+  document.querySelectorAll('[data-ht]').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const key = this.dataset.ht;
+      if (selectedHT.has(key)) {
+        selectedHT.delete(key);
+        this.classList.remove('selected');
+      } else {
+        selectedHT.add(key);
+        this.classList.add('selected');
+      }
+      renderHT();
+    });
+  });
+
+  function renderHT() {
+    const container = document.getElementById('ht-results');
+    if (selectedHT.size === 0) {
+      container.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:12px 0;">Tap a cause above to see field assessment &amp; management</div>';
+      return;
+    }
+    container.innerHTML = '';
+    selectedHT.forEach(key => {
+      const d = htData[key];
+      if (!d) return;
+      const div = document.createElement('div');
+      div.className = 'ht-result ' + d.color + ' show';
+      div.innerHTML = '<div class="ht-result-header">' + d.title + '</div><div class="ht-result-notes">' + d.notes + '</div>';
+      container.appendChild(div);
+    });
+  }
+</script>
+</body>
+</html>

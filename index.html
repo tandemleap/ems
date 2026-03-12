@@ -391,9 +391,13 @@
   <!-- QUICK ACCESS ROW -->
   <div class="section-header">&#x26A1; Critical Protocols</div>
   <div class="quick-row">
-    <a href="chest-pain.html" class="quick-card cardiac">
+    <a href="cardiac-arrest.html" class="quick-card cardiac">
+      <span class="quick-icon">&#x1F494;</span>
+      <span class="quick-label">Cardiac Arrest</span>
+    </a>
+    <a href="chest-pain.html" class="quick-card cardiac" style="background:linear-gradient(135deg,#8B0000,var(--red));">
       <span class="quick-icon">&#x2764;&#xFE0F;</span>
-      <span class="quick-label">Cardiac Arrest / ACS</span>
+      <span class="quick-label">Chest Pain / ACS</span>
     </a>
     <a href="anaphylaxis.html" class="quick-card anaphylaxis">
       <span class="quick-icon">&#x1F48A;</span>
@@ -469,6 +473,46 @@
       </div>
     </a>
 
+    <a href="cardiac-arrest.html" class="protocol-card show" data-category="cardiac">
+      <div class="card-bar" style="background:#8B0000"></div>
+      <div class="card-body">
+        <div class="card-icon">&#x1F494;</div>
+        <div class="card-title">Cardiac Arrest / CPR</div>
+        <div class="card-subtitle">High-quality CPR, AED, H's &amp; T's, ROSC management</div>
+        <span class="card-priority priority-critical">Critical</span>
+      </div>
+    </a>
+
+    <a href="diabetic.html" class="protocol-card show" data-category="medical">
+      <div class="card-bar" style="background:var(--yellow)"></div>
+      <div class="card-body">
+        <div class="card-icon">&#x1F9EA;</div>
+        <div class="card-title">Diabetic Emergency</div>
+        <div class="card-subtitle">Hypoglycemia, DKA, HHS, glucose management</div>
+        <span class="card-priority priority-high">High</span>
+      </div>
+    </a>
+
+    <a href="overdose.html" class="protocol-card show" data-category="medical">
+      <div class="card-bar" style="background:#2d3561"></div>
+      <div class="card-body">
+        <div class="card-icon">&#x1F48A;</div>
+        <div class="card-title">Overdose / Toxicology</div>
+        <div class="card-subtitle">Opioid, Narcan dosing, toxidrome identification</div>
+        <span class="card-priority priority-critical">Critical</span>
+      </div>
+    </a>
+
+    <a href="seizure.html" class="protocol-card show" data-category="neuro">
+      <div class="card-bar" style="background:var(--purple)"></div>
+      <div class="card-body">
+        <div class="card-icon">&#x26A1;</div>
+        <div class="card-title">Seizure</div>
+        <div class="card-subtitle">Active seizure, status epilepticus, post-ictal assessment</div>
+        <span class="card-priority priority-high">High</span>
+      </div>
+    </a>
+
     <a href="anaphylaxis.html" class="protocol-card show" data-category="medical">
       <div class="card-bar" style="background:var(--purple)"></div>
       <div class="card-body">
@@ -520,6 +564,34 @@
 
   // Protocol keyword database
   const protocols = [
+    {
+      keywords: ['cardiac arrest','arrest','cpr','no pulse','pulseless','unresponsive','not breathing','agonal','code','resuscit','aed','defib','down','found down','rosc'],
+      label: 'Cardiac Arrest / CPR',
+      href: 'cardiac-arrest.html',
+      color: '',
+      icon: '💔'
+    },
+    {
+      keywords: ['diabetic','diabetes','glucose','sugar','hypoglyc','hyperglycemia','dka','hhs','insulin','low blood sugar','high blood sugar','glucagon','sweating shaking','diaphoretic confused'],
+      label: 'Diabetic Emergency',
+      href: 'diabetic.html',
+      color: 'yellow',
+      icon: '🧪'
+    },
+    {
+      keywords: ['overdose','od','narcotic','opioid','heroin','fentanyl','narcan','naloxone','not breathing','drug','pills','ingestion','poison','intoxic','meth','cocaine','substance'],
+      label: 'Overdose / Toxicology',
+      href: 'overdose.html',
+      color: '',
+      icon: '💊'
+    },
+    {
+      keywords: ['seizure','seizing','convuls','shaking','epilep','postictal','post-ictal','status epilep','gran mal','tonic','clonic','stiff','jerking','fit'],
+      label: 'Seizure',
+      href: 'seizure.html',
+      color: 'purple',
+      icon: '⚡'
+    },
     {
       keywords: ['chest','cardiac','heart','mi','stemi','acs','angina','diaphoresis','palpitation','infarct','coronary','nitro'],
       label: 'Chest Pain / ACS',

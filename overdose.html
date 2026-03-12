@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Overdose / Toxicology — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+    --header: #2d3561;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--header); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* STEP BOXES */
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .step-purple .step-num { background: var(--purple); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  /* CONNECTOR */
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  /* DIAMOND DECISION */
+  .diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+  .diamond {
+    background: var(--red);
+    color: white;
+    padding: 20px 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    clip-path: polygon(28px 0%, calc(100% - 28px) 0%, 100% 50%, calc(100% - 28px) 100%, 28px 100%, 0% 50%);
+    min-width: 280px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+  }
+  .diamond-orange { background: var(--orange); }
+  .diamond-blue { background: var(--blue); }
+
+  /* BRANCH */
+  .branches { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .branch { flex: 1; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; }
+  .branch-yes { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .branch-no { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .branch-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 800; }
+  .branch-text { font-size: 13px; line-height: 1.3; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* TABLE */
+  .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin-top: 8px; }
+  .info-table th { background: var(--gray-800); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .info-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* INTERACTIVE */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); display: flex; align-items: center; gap: 6px; }
+
+  .selector-row { margin-bottom: 12px; }
+  .selector-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 8px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; color: var(--gray-800); transition: all 0.15s; }
+  .chip:active { transform: scale(0.96); }
+  .chip.selected { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* TOXIDROME RESULT CARDS */
+  .tox-results { margin-top: 12px; }
+  .tox-card { border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: none; }
+  .tox-card.show { display: block; animation: fadeIn 0.25s ease; }
+  .tox-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .tox-name { font-weight: 700; font-size: 15px; }
+  .tox-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tox-notes { font-size: 13px; line-height: 1.4; color: var(--gray-600); }
+  .tox-key { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+
+  .tox-opioid { background: var(--red-light); border-left: 4px solid var(--red); }
+  .tox-opioid .tox-name { color: var(--red); }
+  .tox-opioid .tox-tag { background: var(--red); color: white; }
+  .tox-stimulant { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .tox-stimulant .tox-name { color: var(--orange); }
+  .tox-stimulant .tox-tag { background: var(--orange); color: white; }
+  .tox-depressant { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .tox-depressant .tox-name { color: var(--blue); }
+  .tox-depressant .tox-tag { background: var(--blue); color: white; }
+  .tox-anticholinergic { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .tox-anticholinergic .tox-name { color: var(--yellow); }
+  .tox-anticholinergic .tox-tag { background: var(--yellow); color: white; }
+  .tox-cholinergic { background: var(--green-light); border-left: 4px solid var(--green); }
+  .tox-cholinergic .tox-name { color: var(--green); }
+  .tox-cholinergic .tox-tag { background: var(--green); color: white; }
+  .tox-sympatho { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .tox-sympatho .tox-name { color: var(--purple); }
+  .tox-sympatho .tox-tag { background: var(--purple); color: white; }
+
+  /* ALERT BOX */
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-blue { background: var(--blue-light); border: 2px solid var(--blue); color: var(--blue); }
+  .alert-yellow { background: var(--yellow-light); border: 2px solid var(--yellow); color: var(--yellow); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* BADGES */
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  /* MANAGEMENT */
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ALS TRIGGERS */
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* POISON CONTROL BOX */
+  .poison-box { background: var(--header); color: white; border-radius: 12px; padding: 16px; margin: 12px 0; display: flex; align-items: center; gap: 14px; }
+  .poison-num { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+  .poison-sub { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+
+  /* NARCAN HIGHLIGHT */
+  .narcan-box { background: var(--red); color: white; border-radius: 12px; padding: 16px; margin: 10px 0; }
+  .narcan-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .narcan-dose-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .narcan-dose { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 12px; flex: 1; min-width: 130px; }
+  .narcan-dose-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; margin-bottom: 4px; }
+  .narcan-dose-val { font-size: 16px; font-weight: 700; }
+  .narcan-note { font-size: 13px; opacity: 0.9; line-height: 1.4; }
+
+  /* SCENE SAFETY BANNER */
+  .scene-safety-banner { background: var(--red); color: white; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; display: flex; gap: 10px; align-items: center; font-weight: 700; font-size: 14px; }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1F48A; Overdose / Toxicology</div>
+      <div class="header-sub">Opioid &bull; Stimulant &bull; Depressant &bull; Carbon Monoxide</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STEP 1: SCENE SAFETY — COLLAPSED, PROMINENT -->
+  <div class="scene-safety-banner">
+    <span style="font-size:22px;">&#9888;</span>
+    <div>SCENE SAFETY FIRST — Fentanyl/chemical exposure risk. Do not enter until scene is cleared. PPE before contact.</div>
+  </div>
+
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; SCENE SAFETY <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <div class="alert-box alert-red" style="margin-bottom:10px;">
+        <span class="alert-icon">&#9888;</span>
+        <div><strong>HIGHEST RISK SCENE TYPE.</strong> Fentanyl/carfentanil powder contact or inhalation can incapacitate responders. Do not rush in.</div>
+      </div>
+      <ul>
+        <li><strong>Fentanyl/Carfentanil:</strong> Do NOT touch powder residue — dermal/inhalation exposure risk. Ensure ventilation. If residue visible, consider HazMat.</li>
+        <li><strong>Needles/Sharps:</strong> Assume sharps present. Do not reach into bags, pockets, or under furniture blindly.</li>
+        <li><strong>Violence/Agitation:</strong> Post-Narcan patients can wake combative. Assess for weapons.</li>
+        <li><strong>Bystanders:</strong> May also be exposed — assess others at scene.</li>
+        <li><strong>PPE:</strong> Double gloves minimum. Consider N95 if powder/spray suspected. Avoid touching face.</li>
+        <li><strong>Law Enforcement:</strong> Request if situation unknown, combative patient possible, or clandestine lab suspected.</li>
+        <li>Note # of patients — poly-drug scenes may have multiple victims.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2: INITIAL ASSESSMENT -->
+  <div class="step step-orange">
+    <div class="step-num">2</div>
+    <div class="step-title">Initial Assessment — ABCs with Toxicology Focus</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Airway:</strong> Check for vomit, secretions, gurgling — suction immediately if obstructed</li>
+        <li><strong>Breathing:</strong> Rate AND depth — opioids suppress both rate and tidal volume; count 30 seconds</li>
+        <li><strong>Circulation:</strong> Pulse rate/quality; stimulants &#8679; HR/BP, depressants &#8681; HR/BP</li>
+        <li><strong>LOC:</strong> AVPU — note baseline and any changes over time</li>
+        <li><strong>Pupils:</strong> Miosis (pinpoint) = opioids/cholinergic; Mydriasis (dilated) = stimulants/anticholinergic</li>
+        <li><strong>Skin:</strong> Diaphoresis (wet), dry/flushed, pallor, cyanosis, temperature, track marks</li>
+        <li><strong>Odor Clues:</strong> Alcohol (EtOH), garlic/musty (organophosphate), bitter almond (cyanide), fruity/acetone (DKA)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 3: TOXIDROME IDENTIFIER — INTERACTIVE -->
+  <div class="section-divider"><h2>&#x1F9EA; Step 3 — Interactive Toxidrome Identifier</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F50D; Identify the Toxidrome</div>
+
+    <div class="selector-row">
+      <div class="selector-label">Select observed findings (tap all that apply)</div>
+      <div class="chip-group" id="finding-chips">
+        <button class="chip" data-finding="miosis">Pinpoint pupils</button>
+        <button class="chip" data-finding="mydriasis">Dilated pupils</button>
+        <button class="chip" data-finding="resp-depression">Respiratory depression</button>
+        <button class="chip" data-finding="tachycardia">Tachycardia</button>
+        <button class="chip" data-finding="bradycardia">Bradycardia</button>
+        <button class="chip" data-finding="hypertension">Hypertension</button>
+        <button class="chip" data-finding="hypotension">Hypotension</button>
+        <button class="chip" data-finding="diaphoresis">Diaphoresis</button>
+        <button class="chip" data-finding="dry-skin">Dry skin / flushing</button>
+        <button class="chip" data-finding="sedation">Altered LOC / sedation</button>
+        <button class="chip" data-finding="agitation">Agitation / psychosis</button>
+        <button class="chip" data-finding="hyperthermia">Hyperthermia</button>
+        <button class="chip" data-finding="hypothermia">Hypothermia</button>
+        <button class="chip" data-finding="seizure">Seizure</button>
+        <button class="chip" data-finding="sludge">SLUDGE signs</button>
+      </div>
+    </div>
+
+    <div class="tox-results" id="tox-results">
+      <div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select observed findings above to identify possible toxidrome</div>
+    </div>
+  </div>
+
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 4: OPIOID OD MANAGEMENT — PROMINENT -->
+  <div class="section-divider"><h2>&#x1F489; Step 4 — Opioid Overdose Management</h2></div>
+
+  <div class="narcan-box">
+    <div class="narcan-title">&#128276; NALOXONE (NARCAN) — Most Common OD</div>
+    <div class="narcan-dose-row">
+      <div class="narcan-dose">
+        <div class="narcan-dose-label">Intranasal (IN)</div>
+        <div class="narcan-dose-val">2–4 mg each nostril</div>
+      </div>
+      <div class="narcan-dose">
+        <div class="narcan-dose-label">IM / IV</div>
+        <div class="narcan-dose-val">0.4–2 mg</div>
+      </div>
+    </div>
+    <div class="narcan-note">&#9888; <strong>Fentanyl/Analogues:</strong> May require 4–8 mg+ IN. Repeat every 2–3 min if no response. Carfentanil may require even higher doses.<br><br>
+    <strong>Goal:</strong> Adequate breathing — NOT full awakening. Full reversal causes acute withdrawal and combativeness.<br><br>
+    &#9888; <strong>Re-Sedation Risk:</strong> Naloxone duration 30–90 min is often SHORTER than fentanyl — patient CAN re-sedate after you leave. Transport ALL patients.</div>
+  </div>
+
+  <div class="step step-red">
+    <div class="step-num">4</div>
+    <div class="step-title">Opioid OD — Step-by-Step</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Apneic / not breathing:</strong> BVM with O2 first — ventilate 2 breaths before Narcan</li>
+        <li><strong>Breathing but unconscious:</strong> Recovery position (left lateral), O2, administer Narcan IN</li>
+        <li><strong>After Narcan:</strong> Reassess breathing in 2–3 min; repeat dose if inadequate respiratory rate (&lt;12/min)</li>
+        <li><strong>Position:</strong> Recovery position if breathing; BVM if apneic; do NOT leave patient alone</li>
+        <li><strong>Classic Triad:</strong> Miosis + respiratory depression + LOC</li>
+        <li><span class="badge-bls">BLS</span> Naloxone IN — authorized in most state EMT protocols</li>
+        <li><span class="badge-als">ALS</span> IV naloxone, repeat dosing protocols, airway management</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 5: SAMPLE HISTORY — COLLAPSED -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">5</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">SAMPLE History <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Substance(s):</strong> What was taken? Route (injection, IN, oral, smoked)? Amount? Multi-drug use is common and complicates presentation.</li>
+        <li><strong>Time:</strong> When was it taken? How long have they been unresponsive?</li>
+        <li><strong>Bystander info:</strong> Friends/witnesses are critical — ask what was used</li>
+        <li><strong>Prescription bottles at scene:</strong> Collect and bring to hospital (opioids, benzos, TCAs, cardiac meds)</li>
+        <li><strong>Prior OD history:</strong> Tolerance, history of fentanyl use, prior Narcan use</li>
+        <li><strong>Mental health history:</strong> Intentional overdose vs accidental — safety concern post-resuscitation</li>
+        <li><strong>Allergies:</strong> Naloxone allergy (rare but ask)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 6: OTHER TOXIDROME MANAGEMENT -->
+  <div class="step step-blue">
+    <div class="step-num">6</div>
+    <div class="step-title">Other Toxidrome Management</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Stimulant (cocaine/meth/MDMA):</strong> Cool environment, calm reassurance, O2, monitor cardiac; <span class="badge-als">ALS</span> benzos for severe agitation or seizure</li>
+        <li><strong>Depressant/Alcohol/Benzo:</strong> Airway management priority, recovery position, O2/BVM as needed, monitor temperature (hypothermia risk), NO specific reversal agent at BLS level</li>
+        <li><strong>Carbon Monoxide:</strong> 100% O2 via NRB IMMEDIATELY. SpO2 is FALSELY NORMAL — pulse oximetry CANNOT detect CO poisoning. Evacuate all occupants including asymptomatic persons. Hyperbaric O2 at hospital.</li>
+        <li><strong>Anticholinergic (TCAs, antihistamines, Benadryl, Jimsonweed):</strong> Actively cool patient (hyperthermia is life-threatening), calm dark environment, O2; <span class="badge-als">ALS</span> physostigmine/benzos. Mnemonic: <em>"Mad as a hatter, dry as a bone, blind as a bat, red as a beet, hot as a hare"</em></li>
+        <li><strong>Organophosphate/Nerve Agent:</strong> Decontaminate FIRST — remove clothing, brush off powder, water flush skin. PPE is CRITICAL for responders. <span class="badge-als">ALS</span> for atropine and pralidoxime.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 7: POISON CONTROL -->
+  <div class="poison-box">
+    <div style="font-size:32px;">&#9742;</div>
+    <div>
+      <div class="poison-num">1-800-222-1222</div>
+      <div class="poison-sub">US Poison Control Center — 24/7 for provider guidance on unknown substances, dosing, decontamination, and hospital preparation</div>
+    </div>
+  </div>
+
+  <!-- STEP 8: TRANSPORT & ALS TRIGGERS -->
+  <div class="step step-green">
+    <div class="step-num">8</div>
+    <div class="step-title">Transport &amp; ALS Triggers</div>
+    <div class="step-content">
+      <div class="alert-box alert-orange" style="margin-bottom:10px;">
+        <span class="alert-icon">&#x1F691;</span>
+        <div><strong>ALL overdose patients must be transported</strong> regardless of Narcan response. Re-sedation risk, unknown substances, and poly-drug combinations require hospital evaluation.</div>
+      </div>
+
+      <div class="als-triggers">
+        <div class="als-triggers-title">&#x1F534; ALS Intercept — Any of the following:</div>
+        <ul>
+          <li>Respiratory depression not responding to repeated Narcan doses</li>
+          <li>Seizure activity</li>
+          <li>Hypotension (SBP &lt; 90)</li>
+          <li>Cardiac dysrhythmia suspected</li>
+          <li>Unknown substance (especially with multiple toxidromes)</li>
+          <li>Poly-drug use suspected</li>
+          <li>Altered LOC not improving after Narcan</li>
+          <li>Organophosphate / nerve agent exposure (atropine needed)</li>
+          <li>Carbon monoxide with symptoms (LOC, cardiac)</li>
+          <li>Suspected intentional overdose with psychiatric risk</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  NREMT Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  const toxidromes = [
+    {
+      id: 'opioid',
+      name: 'Opioid Toxidrome',
+      cls: 'tox-opioid',
+      tag: 'HIGH PRIORITY',
+      keyFindings: ['miosis', 'resp-depression', 'sedation'],
+      supportingFindings: ['hypotension', 'hypothermia', 'bradycardia'],
+      minMatch: 2,
+      keyLabel: 'Classic Triad: Pinpoint pupils + Respiratory depression + Sedation',
+      notes: 'Most common life-threatening OD. Administer Naloxone IN 2–4mg now. May need repeat dosing for fentanyl. Goal: adequate breathing, not full reversal. Re-sedation risk after Narcan wears off.'
+    },
+    {
+      id: 'stimulant',
+      name: 'Stimulant Toxidrome',
+      cls: 'tox-stimulant',
+      tag: 'STIMULANT',
+      keyFindings: ['mydriasis', 'tachycardia', 'agitation'],
+      supportingFindings: ['hypertension', 'hyperthermia', 'diaphoresis'],
+      minMatch: 2,
+      keyLabel: 'Cocaine / Meth / MDMA: Dilated pupils + Tachycardia + Agitation',
+      notes: 'Cool environment, calm approach. O2. Monitor cardiac — cocaine causes vasospasm and dysrhythmia. ALS for severe agitation/seizure (benzos). No specific reversal agent.'
+    },
+    {
+      id: 'depressant',
+      name: 'CNS Depressant Toxidrome',
+      cls: 'tox-depressant',
+      tag: 'DEPRESSANT',
+      keyFindings: ['sedation', 'resp-depression'],
+      supportingFindings: ['hypotension', 'hypothermia', 'bradycardia'],
+      minMatch: 2,
+      keyLabel: 'Benzo / Alcohol / GHB: Sedation + Respiratory depression (NO miosis)',
+      notes: 'Airway management is key. Recovery position. O2, BVM if apneic. Hypothermia common. No EMT-level reversal agent (flumazenil is ALS/ED only and rarely used). Transport all.'
+    },
+    {
+      id: 'anticholinergic',
+      name: 'Anticholinergic Toxidrome',
+      cls: 'tox-anticholinergic',
+      tag: 'ANTICHOLINERGIC',
+      keyFindings: ['mydriasis', 'dry-skin', 'tachycardia'],
+      supportingFindings: ['hyperthermia', 'agitation', 'sedation'],
+      minMatch: 2,
+      keyLabel: '"Mad as a hatter, dry as a bone, blind as a bat, red as a beet, hot as a hare"',
+      notes: 'Antihistamines, TCAs, Benadryl, scopolamine, Jimsonweed. Actively cool — hyperthermia is life-threatening. Calm, dark environment. ALS for physostigmine. Monitor for dysrhythmia (TCAs widen QRS).'
+    },
+    {
+      id: 'cholinergic',
+      name: 'Cholinergic / Organophosphate',
+      cls: 'tox-cholinergic',
+      tag: 'CHOLINERGIC',
+      keyFindings: ['sludge', 'bradycardia'],
+      supportingFindings: ['miosis', 'seizure', 'diaphoresis'],
+      minMatch: 2,
+      keyLabel: 'SLUDGE: Salivation, Lacrimation, Urination, Defecation, GI distress, Emesis + Bradycardia',
+      notes: 'Decontaminate FIRST — remove clothing, brush off powder, water flush. PPE critical for responders. ALS for atropine (large doses) and pralidoxime. "Wet everywhere." Pesticides, nerve agents.'
+    },
+    {
+      id: 'sympatho',
+      name: 'Sympathomimetic Toxidrome',
+      cls: 'tox-sympatho',
+      tag: 'SYMPATHOMIMETIC',
+      keyFindings: ['mydriasis', 'tachycardia', 'hypertension'],
+      supportingFindings: ['hyperthermia', 'agitation', 'diaphoresis'],
+      minMatch: 2,
+      keyLabel: 'Amphetamines, ephedrine, decongestants: Dilated pupils + Tachycardia + Hypertension',
+      notes: 'Similar to stimulant toxidrome. Elevated BP + HR + body temp. Calm environment, O2. Risk of hypertensive emergency, stroke, cardiac events. ALS for severe cases.'
+    }
+  ];
+
+  const selectedFindings = new Set();
+
+  document.querySelectorAll('[data-finding]').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const f = this.dataset.finding;
+      if (selectedFindings.has(f)) {
+        selectedFindings.delete(f);
+        this.classList.remove('selected');
+      } else {
+        selectedFindings.add(f);
+        this.classList.add('selected');
+      }
+      renderTox();
+    });
+  });
+
+  function scoreTox(tox) {
+    let score = 0;
+    tox.keyFindings.forEach(f => { if (selectedFindings.has(f)) score += 3; });
+    tox.supportingFindings.forEach(f => { if (selectedFindings.has(f)) score += 1; });
+    const keyMatches = tox.keyFindings.filter(f => selectedFindings.has(f)).length;
+    return { score, keyMatches };
+  }
+
+  function renderTox() {
+    const results = document.getElementById('tox-results');
+    if (selectedFindings.size === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select observed findings above to identify possible toxidrome</div>';
+      return;
+    }
+
+    const scored = toxidromes
+      .map(t => ({ ...t, ...scoreTox(t) }))
+      .filter(t => t.keyMatches >= 1 && t.score >= t.minMatch)
+      .sort((a, b) => b.score - a.score);
+
+    if (scored.length === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">No strong toxidrome match — mixed presentation possible. Consider poly-drug or unusual substance. Contact Poison Control 1-800-222-1222.</div>';
+      return;
+    }
+
+    results.innerHTML = '<div style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Matching toxidrome(s) — most likely first:</div>';
+    scored.forEach(t => {
+      const div = document.createElement('div');
+      div.className = 'tox-card ' + t.cls + ' show';
+      div.innerHTML =
+        '<div class="tox-card-header"><span class="tox-name">' + t.name + '</span><span class="tox-tag">' + t.tag + '</span></div>' +
+        '<div class="tox-key" style="margin-bottom:4px;">' + t.keyLabel + '</div>' +
+        '<div class="tox-notes">' + t.notes + '</div>';
+      results.appendChild(div);
+    });
+  }
+</script>
+</body>
+</html>

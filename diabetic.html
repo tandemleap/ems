@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Diabetic Emergency Protocol — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+    --header-yellow: #a0770a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--header-yellow); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* STEP BOXES */
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .step-purple .step-num { background: var(--purple); }
+  .step-gray { background: white; border-left: 4px solid var(--gray-400); }
+  .step-gray .step-num { background: var(--gray-600); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  /* CONNECTOR */
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  /* DIAMOND DECISION */
+  .diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+  .diamond {
+    background: var(--red);
+    color: white;
+    padding: 20px 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    clip-path: polygon(28px 0%, calc(100% - 28px) 0%, 100% 50%, calc(100% - 28px) 100%, 28px 100%, 0% 50%);
+    min-width: 280px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+  }
+  .diamond-orange { background: var(--orange); }
+  .diamond-yellow { background: var(--header-yellow); }
+
+  /* BRANCH */
+  .branches { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .branch { flex: 1; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; }
+  .branch-yes { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .branch-no { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .branch-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 800; }
+  .branch-text { font-size: 13px; line-height: 1.3; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* TABLE */
+  .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin-top: 8px; }
+  .info-table th { background: var(--gray-800); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .info-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; line-height: 1.4; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--gray-50); }
+  .info-table .row-label { font-weight: 700; color: var(--gray-800); white-space: nowrap; }
+
+  /* BGL DISPLAY */
+  .bgl-banner {
+    background: var(--header-yellow);
+    color: white;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(160,119,10,0.30);
+    animation: fadeIn 0.3s ease;
+  }
+  .bgl-icon { font-size: 28px; flex-shrink: 0; }
+  .bgl-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.85; }
+  .bgl-range { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 17px; font-weight: 700; }
+  .bgl-note { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+
+  /* INTERACTIVE SECTION */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); display: flex; align-items: center; gap: 6px; }
+
+  .selector-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 8px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; color: var(--gray-800); transition: all 0.15s; }
+  .chip:active { transform: scale(0.96); }
+  .chip.selected-red { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .chip.selected-orange { border-color: var(--orange); background: var(--orange-light); color: var(--orange); }
+  .chip.selected-yellow { border-color: var(--header-yellow); background: var(--yellow-light); color: var(--header-yellow); }
+  .chip.selected-blue { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .chip.selected-green { border-color: var(--green); background: var(--green-light); color: var(--green); }
+
+  /* DIFF RESULTS */
+  .diff-results { margin-top: 12px; }
+  .diff-card { border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: none; }
+  .diff-card.show { display: block; animation: fadeIn 0.25s ease; }
+  .diff-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .diff-name { font-weight: 700; font-size: 15px; }
+  .diff-priority { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .diff-notes { font-size: 13px; line-height: 1.4; color: var(--gray-600); }
+  .diff-critical { background: var(--red-light); border-left: 4px solid var(--red); }
+  .diff-critical .diff-name { color: var(--red); }
+  .diff-critical .diff-priority { background: var(--red); color: white; }
+  .diff-high { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .diff-high .diff-name { color: var(--orange); }
+  .diff-high .diff-priority { background: var(--orange); color: white; }
+  .diff-moderate { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .diff-moderate .diff-name { color: var(--yellow); }
+  .diff-moderate .diff-priority { background: var(--yellow); color: white; }
+  .diff-low { background: var(--gray-50); border-left: 4px solid var(--gray-400); }
+  .diff-low .diff-name { color: var(--gray-800); }
+  .diff-low .diff-priority { background: var(--gray-400); color: white; }
+
+  /* MANAGEMENT BOXES */
+  .mgmt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  @media (max-width: 420px) { .mgmt-grid { grid-template-columns: 1fr; } }
+  .mgmt-box { border-radius: 10px; padding: 12px 14px; }
+  .mgmt-box-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .mgmt-box-content { font-size: 13px; line-height: 1.5; }
+  .mgmt-box-content ul { padding-left: 16px; }
+  .mgmt-box-content li { margin-bottom: 3px; }
+  .mgmt-hypo-c { background: var(--yellow-light); border: 2px solid var(--yellow); }
+  .mgmt-hypo-c .mgmt-box-title { color: var(--yellow); }
+  .mgmt-hypo-u { background: var(--red-light); border: 2px solid var(--red); }
+  .mgmt-hypo-u .mgmt-box-title { color: var(--red); }
+  .mgmt-dka { background: var(--orange-light); border: 2px solid var(--orange); }
+  .mgmt-dka .mgmt-box-title { color: var(--orange); }
+  .mgmt-hhs { background: var(--purple-light); border: 2px solid var(--purple); }
+  .mgmt-hhs .mgmt-box-title { color: var(--purple); }
+
+  /* ALERT BOX */
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-yellow { background: var(--yellow-light); border: 2px solid var(--header-yellow); color: var(--header-yellow); }
+  .alert-blue { background: var(--blue-light); border: 2px solid var(--blue); color: var(--blue); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* BADGE */
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  /* ALS TRIGGERS */
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* COMPARISON TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 12px; margin-top: 8px; }
+  .compare-table th { padding: 8px 8px; text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 0.4px; }
+  .compare-table th:first-child { text-align: left; background: var(--gray-800); color: white; }
+  .compare-table th.th-hypo { background: var(--yellow); color: white; }
+  .compare-table th.th-dka { background: var(--orange); color: white; }
+  .compare-table th.th-hhs { background: var(--purple); color: white; }
+  .compare-table td { padding: 8px 8px; border-bottom: 1px solid var(--gray-200); vertical-align: top; line-height: 1.4; text-align: center; }
+  .compare-table td:first-child { text-align: left; font-weight: 700; color: var(--gray-800); background: var(--gray-50); }
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--header-yellow); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x1FA78; Diabetic Emergency</div>
+      <div class="header-sub">Hypoglycemia &bull; DKA &bull; HHS &bull; Glucose Management</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- BGL REFERENCE BANNER -->
+  <div class="bgl-banner">
+    <div class="bgl-icon">&#x1F4CA;</div>
+    <div>
+      <div class="bgl-label">Normal Blood Glucose Level</div>
+      <div class="bgl-range">70 – 110 mg/dL</div>
+      <div class="bgl-note">Critical low: &lt;60 mg/dL &nbsp;|&nbsp; Critical high: &gt;400 mg/dL</div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step step-yellow collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; BSI <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li>Gloves, eye protection — BSI before patient contact</li>
+        <li><strong>Look for medical alert bracelet or ID</strong> — diabetic identification is critical for unconscious patients</li>
+        <li>Note environment: insulin pen/vials, glucagon emergency kit, glucose tablets, food wrappers, alcohol</li>
+        <li>Check for medication bottles: insulin, metformin, sulfonylureas, SGLT-2 inhibitors</li>
+        <li>Determine # of patients; note if patient is alone and unable to care for themselves</li>
+        <li><strong>Request ALS immediately if patient is unconscious or unresponsive</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2 -->
+  <div class="step step-orange">
+    <div class="step-num">2</div>
+    <div class="step-title">Initial Assessment + Blood Glucose Level</div>
+    <div class="step-content">
+      <ul>
+        <li><strong>ABCs:</strong> Airway (patent?), Breathing (rate/depth), Circulation (pulse quality, skin)</li>
+        <li><strong>AVPU:</strong> Alert / Verbal / Pain / Unresponsive — determine LOC quickly</li>
+        <li>&#9888; <strong>CHECK BLOOD GLUCOSE IMMEDIATELY</strong> — this is the single most important diagnostic step for any altered LOC patient with possible DM history</li>
+        <li>Skin assessment: Diaphoresis + pallor = hypoglycemia classic triad; dry/flushed = hyperglycemia</li>
+        <li>Vital signs: HR, RR, BP, SpO2 — tachycardia present in both hypo- and hyperglycemia</li>
+        <li>Check breath: Fruity/acetone odor = ketoacidosis (DKA)</li>
+        <li>Respiratory pattern: Kussmaul respirations (deep/rapid) = metabolic acidosis (DKA)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- DECISION DIAMOND -->
+  <div class="diamond-wrap">
+    <div class="diamond diamond-yellow">BGL &lt; 60 mg/dL?<br><small style="font-weight:400;font-size:12px">Critical hypoglycemia threshold</small></div>
+  </div>
+  <div class="branches">
+    <div class="branch branch-yes">
+      <div class="branch-label">YES — Hypoglycemia</div>
+      <div class="branch-text">Treat immediately. Assess LOC — conscious vs. unconscious determines route of treatment</div>
+    </div>
+    <div class="branch branch-no">
+      <div class="branch-label">NO — Continue Assessment</div>
+      <div class="branch-text">Could be DKA, HHS, hyperglycemia, or other cause. Continue SAMPLE history and condition classifier below.</div>
+    </div>
+  </div>
+
+  <!-- STEP 3 — SAMPLE History -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">3</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">SAMPLE History <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Type 1 vs Type 2 DM</strong> — important for DKA (T1DM) vs HHS (T2DM) likelihood</li>
+        <li><strong>Insulin type, dose, and timing</strong> — when was last injection? Correct dose? New insulin?</li>
+        <li><strong>Last meal</strong> — did patient take insulin without eating? Missed a meal?</li>
+        <li><strong>Last BGL check</strong> — was it already out of range before symptoms?</li>
+        <li><strong>Recent illness, stress, or exercise</strong> — all increase glucose demand; illness often triggers DKA</li>
+        <li><strong>Alcohol use</strong> — masks hypoglycemia symptoms; causes hypoglycemia via gluconeogenesis inhibition</li>
+        <li><strong>Missed medications</strong> — omitted insulin dose is the #1 precipitant of DKA</li>
+        <li>Allergies (especially to glucagon or latex in some medical devices)</li>
+        <li>Events: new illness, recent infection, increased stress, dietary changes, new medications</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 4 — Condition Classifier -->
+  <div class="section-divider"><h2>&#x1F9E0; Step 4 — Interactive Condition Classifier</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F9ED; Select presenting features to identify likely condition</div>
+    <div class="selector-label">Blood Glucose Level</div>
+    <div class="chip-group" id="bgl-chips">
+      <button class="chip" data-feat="bgl-low">BGL &lt; 60 mg/dL</button>
+      <button class="chip" data-feat="bgl-mid">BGL 250–600 mg/dL</button>
+      <button class="chip" data-feat="bgl-high">BGL &gt; 600 mg/dL</button>
+    </div>
+
+    <div class="selector-label">Onset &amp; Duration</div>
+    <div class="chip-group" id="onset-chips">
+      <button class="chip" data-feat="rapid-onset">Rapid onset (minutes)</button>
+      <button class="chip" data-feat="gradual-onset">Gradual onset (hours–days)</button>
+    </div>
+
+    <div class="selector-label">Clinical Signs (select all that apply)</div>
+    <div class="chip-group" id="signs-chips">
+      <button class="chip" data-feat="diaphoresis">Diaphoresis / Shakiness</button>
+      <button class="chip" data-feat="fruity-breath">Fruity breath / Kussmaul respirations</button>
+      <button class="chip" data-feat="extreme-dehydration">Extreme dehydration</button>
+      <button class="chip" data-feat="altered-loc">Altered LOC</button>
+      <button class="chip" data-feat="no-ketones">No fruity breath / No ketones</button>
+      <button class="chip" data-feat="nausea">Nausea / Vomiting / Abd pain</button>
+    </div>
+
+    <div class="selector-label">Patient Profile</div>
+    <div class="chip-group" id="profile-chips">
+      <button class="chip" data-feat="young-t1">Young / Type 1 patient</button>
+      <button class="chip" data-feat="elderly-t2">Elderly / Type 2 patient</button>
+    </div>
+
+    <div class="diff-results" id="diff-results">
+      <div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select features above to classify the condition</div>
+    </div>
+  </div>
+
+  <!-- STEP 5 — Management by Condition -->
+  <div class="section-divider"><h2>&#x1FA7A; Step 5 — Management by Condition</h2></div>
+
+  <div class="mgmt-grid">
+    <div class="mgmt-box mgmt-hypo-c">
+      <div class="mgmt-box-title">&#x1F36C; Hypoglycemia — Conscious</div>
+      <div class="mgmt-box-content">
+        <div style="margin-bottom:6px;font-size:12px;color:var(--yellow);font-weight:700;">BGL &lt;70 mg/dL + Alert + Can swallow safely</div>
+        <ul>
+          <li><span class="badge-bls">BLS</span> Oral glucose 15–24g:
+            <ul style="margin-top:3px;">
+              <li>Glucose gel (1 tube = 15g)</li>
+              <li>Orange juice 4oz (15g)</li>
+              <li>Glucose tablets x4 (16g)</li>
+              <li>Regular soda 6oz (~15g)</li>
+            </ul>
+          </li>
+          <li>Reassess BGL in 15 minutes</li>
+          <li>Repeat if still &lt;70 mg/dL</li>
+          <li>Give complex carbs after initial treatment (crackers, peanut butter)</li>
+          <li>Transport even if symptom resolution — determine underlying cause</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mgmt-box mgmt-hypo-u">
+      <div class="mgmt-box-title">&#x1F6A8; Hypoglycemia — Unconscious</div>
+      <div class="mgmt-box-content">
+        <div style="margin-bottom:6px;font-size:12px;color:var(--red);font-weight:700;">BGL &lt;60 mg/dL + Unconscious / Cannot protect airway</div>
+        <ul>
+          <li>&#9888; <strong>NOTHING by mouth</strong> — aspiration risk</li>
+          <li><span class="badge-als">ALS</span> D50W (25g dextrose) IV push — definitive treatment</li>
+          <li><span class="badge-bls">BLS*</span> Glucagon 1mg IM (deltoid or thigh) — if per local protocol &amp; available</li>
+          <li>Recovery position if no spinal concern</li>
+          <li>O2 via NRB if SpO2 &lt;94%</li>
+          <li>ALS intercept — immediate</li>
+          <li>*Glucagon BLS authorization varies by state</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mgmt-box mgmt-dka">
+      <div class="mgmt-box-title">&#x1F321;&#xFE0F; DKA Management</div>
+      <div class="mgmt-box-content">
+        <div style="margin-bottom:6px;font-size:12px;color:var(--orange);font-weight:700;">BGL 250–600 mg/dL, Type 1, Kussmaul, Fruity breath</div>
+        <ul>
+          <li>O2 titrate to SpO2 &#8805;94%</li>
+          <li><span class="badge-als">ALS</span> IV fluid resuscitation (NS 1L/hr initial)</li>
+          <li>Monitor vitals &amp; cardiac rhythm</li>
+          <li>&#9888; <strong>Do NOT give insulin in field</strong></li>
+          <li>Anticipate electrolyte imbalances (K+)</li>
+          <li>Transport to ED — definitive care requires insulin drip</li>
+          <li>Note: Electrolyte monitoring critical before/during insulin</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mgmt-box mgmt-hhs">
+      <div class="mgmt-box-title">&#x1F4A7; HHS Management</div>
+      <div class="mgmt-box-content">
+        <div style="margin-bottom:6px;font-size:12px;color:var(--purple);font-weight:700;">BGL &gt;600 mg/dL, Elderly T2DM, Extreme dehydration, No ketones</div>
+        <ul>
+          <li>O2 titrate to SpO2 &#8805;94%</li>
+          <li><span class="badge-als">ALS</span> Cautious IV fluid rehydration — these patients are severely dehydrated (10–12L deficit) but rapid correction causes cerebral edema</li>
+          <li>Close neurological monitoring</li>
+          <li>Cardiac monitoring — electrolyte shifts</li>
+          <li>Transport — ICU level care required</li>
+          <li>&#9888; Do NOT aggressively rehydrate in field</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERT: No insulin in field -->
+  <div class="alert-box alert-red" style="margin-top:12px;">
+    <span class="alert-icon">&#9888;</span>
+    <div><strong>NEVER ADMINISTER INSULIN IN THE FIELD:</strong> Administering insulin without continuous glucose monitoring and electrolyte management risks fatal hypoglycemia. DKA and HHS require hospital-based insulin protocols.</div>
+  </div>
+
+  <!-- ALS INTERCEPT TRIGGERS -->
+  <div class="section-divider"><h2>&#x1F6A8; ALS Intercept Triggers</h2></div>
+  <div class="interactive-section">
+    <div class="als-triggers">
+      <div class="als-triggers-title">&#x1F534; Request ALS for Any of the Following:</div>
+      <ul>
+        <li>Unconscious or unable to protect airway — cannot give oral glucose safely</li>
+        <li>Persistent hypoglycemia after 2 rounds of oral glucose treatment</li>
+        <li>BGL &gt; 400 mg/dL — likely DKA or HHS requiring IV management</li>
+        <li>Altered LOC with any blood glucose reading</li>
+        <li>Signs of DKA: fruity breath, Kussmaul respirations, severe dehydration, abdominal pain</li>
+        <li>Signs of HHS: extreme dehydration, BGL &gt;600, elderly patient, very gradual onset</li>
+        <li>Hypotension (systolic &lt;90 mmHg) — indicates severe volume depletion</li>
+        <li>Seizure activity — hypoglycemia-induced seizure</li>
+        <li>Suspected alcohol-related hypoglycemia — complex physiology</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="section-divider"><h2>&#x1F4CB; Clinical Reference: Condition Comparison</h2></div>
+
+  <table class="compare-table">
+    <tr>
+      <th>Feature</th>
+      <th class="th-hypo">Hypoglycemia</th>
+      <th class="th-dka">DKA</th>
+      <th class="th-hhs">HHS</th>
+    </tr>
+    <tr>
+      <td class="row-label">BGL</td>
+      <td>&lt;70 mg/dL (critical &lt;60)</td>
+      <td>250–600 mg/dL</td>
+      <td>&gt;600 mg/dL (often 900–1200)</td>
+    </tr>
+    <tr>
+      <td class="row-label">Onset Speed</td>
+      <td>Minutes</td>
+      <td>Hours to 1–2 days</td>
+      <td>Days to 1–2 weeks</td>
+    </tr>
+    <tr>
+      <td class="row-label">Skin</td>
+      <td>Diaphoretic, pale, cool, clammy</td>
+      <td>Warm, dry, flushed</td>
+      <td>Markedly dry, poor turgor</td>
+    </tr>
+    <tr>
+      <td class="row-label">Breath Odor</td>
+      <td>Normal</td>
+      <td>Fruity / acetone</td>
+      <td>Normal (no ketones)</td>
+    </tr>
+    <tr>
+      <td class="row-label">Breathing</td>
+      <td>Normal or slightly fast</td>
+      <td>Kussmaul (deep, rapid)</td>
+      <td>Variable; may be rapid</td>
+    </tr>
+    <tr>
+      <td class="row-label">Mental Status</td>
+      <td>Anxious, confused, combative, or unconscious</td>
+      <td>Drowsy to confused; rarely unconscious</td>
+      <td>Drowsy to coma; often profoundly altered</td>
+    </tr>
+    <tr>
+      <td class="row-label">Patient Type</td>
+      <td>Any diabetic; any age</td>
+      <td>Type 1 DM; younger</td>
+      <td>Type 2 DM; elderly</td>
+    </tr>
+    <tr>
+      <td class="row-label">Dehydration</td>
+      <td>None</td>
+      <td>Moderate (2–4L deficit)</td>
+      <td>Severe (10–12L deficit)</td>
+    </tr>
+    <tr>
+      <td class="row-label">Treatment Priority</td>
+      <td style="color:var(--red);font-weight:700;">IMMEDIATE — glucose</td>
+      <td style="color:var(--orange);font-weight:700;">Urgent — fluids, then insulin (hospital)</td>
+      <td style="color:var(--purple);font-weight:700;">Urgent — cautious rehydration (hospital)</td>
+    </tr>
+  </table>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  ADA Standards &bull; NREMT Guidelines &bull; Version 2025.1
+</footer>
+
+<script>
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  const conditions = [
+    {
+      id: 'hypoglycemia',
+      name: 'Hypoglycemia',
+      level: 'critical',
+      features: ['bgl-low', 'rapid-onset', 'diaphoresis', 'altered-loc'],
+      notes: 'BGL &lt;60 mg/dL. Rapid onset (minutes). Classic presentation: diaphoresis, shakiness, pallor, tachycardia, anxiety, confusion. May progress to seizure or unconsciousness. TREAT IMMEDIATELY. Conscious: oral glucose 15–24g. Unconscious: ALS for D50 IV, glucagon IM per protocol.'
+    },
+    {
+      id: 'dka',
+      name: 'Diabetic Ketoacidosis (DKA)',
+      level: 'high',
+      features: ['bgl-mid', 'gradual-onset', 'fruity-breath', 'nausea', 'young-t1'],
+      notes: 'BGL 250–600 mg/dL. Gradual onset hours to days. Type 1 DM most common. Fruity/acetone breath from ketone production, Kussmaul respirations (deep/rapid compensatory breathing), nausea/vomiting/abdominal pain. Moderate dehydration. Do NOT give insulin in field. ALS fluids, transport to ED.'
+    },
+    {
+      id: 'hhs',
+      name: 'Hyperosmolar Hyperglycemic State (HHS)',
+      level: 'high',
+      features: ['bgl-high', 'gradual-onset', 'extreme-dehydration', 'no-ketones', 'elderly-t2', 'altered-loc'],
+      notes: 'BGL &gt;600 mg/dL (often 900–1200). Very gradual onset days to weeks. Elderly Type 2 DM. Extreme dehydration (10–12L deficit), no fruity breath, no Kussmaul respirations. Severely altered LOC. Mortality higher than DKA. Cautious fluid resuscitation — rapid rehydration causes cerebral edema. ICU care required.'
+    },
+    {
+      id: 'hyperglycemia',
+      name: 'Hyperglycemia (Non-Critical)',
+      level: 'moderate',
+      features: ['bgl-mid', 'gradual-onset'],
+      notes: 'Mildly-moderately elevated BGL without signs of DKA or HHS. Patient may be symptomatic (polyuria, polydipsia, fatigue, blurred vision) but hemodynamically stable. Monitor closely. Transport for evaluation and medication adjustment. BGL &gt;400 warrants ALS.'
+    }
+  ];
+
+  const selectedFeatures = new Set();
+
+  document.querySelectorAll('[data-feat]').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const feat = this.dataset.feat;
+      // BGL chips are mutually exclusive
+      if (feat.startsWith('bgl-')) {
+        document.querySelectorAll('[data-feat^="bgl-"]').forEach(c => {
+          const k = c.dataset.feat;
+          selectedFeatures.delete(k);
+          c.className = 'chip';
+        });
+      }
+      // Onset chips are mutually exclusive
+      if (feat.startsWith('rapid-onset') || feat.startsWith('gradual-onset')) {
+        ['rapid-onset', 'gradual-onset'].forEach(k => {
+          selectedFeatures.delete(k);
+          const c = document.querySelector('[data-feat="' + k + '"]');
+          if (c) c.className = 'chip';
+        });
+      }
+
+      if (selectedFeatures.has(feat)) {
+        selectedFeatures.delete(feat);
+        this.className = 'chip';
+      } else {
+        selectedFeatures.add(feat);
+        // Color the chip based on category
+        if (feat === 'bgl-low' || feat === 'diaphoresis') {
+          this.className = 'chip selected-red';
+        } else if (feat === 'bgl-mid' || feat === 'fruity-breath' || feat === 'nausea') {
+          this.className = 'chip selected-orange';
+        } else if (feat === 'bgl-high' || feat === 'extreme-dehydration' || feat === 'no-ketones' || feat === 'elderly-t2') {
+          this.className = 'chip selected-yellow';
+        } else if (feat === 'young-t1' || feat === 'rapid-onset') {
+          this.className = 'chip selected-blue';
+        } else {
+          this.className = 'chip selected-green';
+        }
+      }
+      renderDiff();
+    });
+  });
+
+  function scoreCondition(cond) {
+    if (selectedFeatures.size === 0) return 0;
+    let score = 0;
+    selectedFeatures.forEach(feat => {
+      if (cond.features.includes(feat)) score += 1;
+    });
+    return score;
+  }
+
+  function renderDiff() {
+    const results = document.getElementById('diff-results');
+    if (selectedFeatures.size === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select features above to classify the condition</div>';
+      return;
+    }
+
+    const scored = conditions
+      .map(c => ({ ...c, score: scoreCondition(c) }))
+      .filter(c => c.score > 0)
+      .sort((a, b) => {
+        const levelOrder = { critical: 3, high: 2, moderate: 1, low: 0 };
+        if (b.score !== a.score) return b.score - a.score;
+        return levelOrder[b.level] - levelOrder[a.level];
+      });
+
+    if (scored.length === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">No strong matches — consider non-diabetic causes of altered LOC</div>';
+      return;
+    }
+
+    results.innerHTML = '<div style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Ranked by likelihood &amp; severity:</div>';
+    scored.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'diff-card diff-' + c.level + ' show';
+      div.innerHTML =
+        '<div class="diff-card-header">' +
+          '<span class="diff-name">' + c.name + '</span>' +
+          '<span class="diff-priority">' + c.level.toUpperCase() + '</span>' +
+        '</div>' +
+        '<div class="diff-notes">' + c.notes + '</div>';
+      results.appendChild(div);
+    });
+  }
+</script>
+</body>
+</html>

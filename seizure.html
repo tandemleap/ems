@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Seizure Protocol — EMT Field Protocols</title>
+<style>
+  :root {
+    --red: #c0392b; --red-light: #fadbd8;
+    --orange: #d35400; --orange-light: #fdebd0;
+    --blue: #1a6da8; --blue-light: #d6eaf8;
+    --green: #1e8449; --green-light: #d5f5e3;
+    --yellow: #b7950b; --yellow-light: #fef9e7;
+    --purple: #7d3c98; --purple-light: #e8daef;
+    --gray-50: #f8f9fa; --gray-100: #f1f3f4;
+    --gray-200: #e0e0e0; --gray-400: #9e9e9e;
+    --gray-600: #616161; --gray-800: #212121;
+    --dark: #1a1a2e; --dark-nav: #16213e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-100); color: var(--gray-800); font-size: 15px; line-height: 1.4; }
+
+  header { background: var(--purple); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; white-space: nowrap; }
+  .back-btn:active { background: rgba(255,255,255,0.3); }
+  .header-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* STEP BOXES */
+  .step { border-radius: 10px; padding: 14px 14px 14px 48px; position: relative; margin-bottom: 6px; }
+  .step-num { position: absolute; left: 10px; top: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+  .step-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .step-red .step-num { background: var(--red); }
+  .step-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .step-orange .step-num { background: var(--orange); }
+  .step-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .step-blue .step-num { background: var(--blue); }
+  .step-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .step-green .step-num { background: var(--green); }
+  .step-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .step-yellow .step-num { background: var(--yellow); }
+  .step-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .step-purple .step-num { background: var(--purple); }
+
+  .step-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content { font-size: 14px; }
+  .step-content ul { padding-left: 18px; margin-top: 4px; }
+  .step-content li { margin-bottom: 3px; }
+
+  /* COLLAPSIBLE STEPS */
+  .step-toggle { cursor: pointer; user-select: none; -webkit-user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .step-chevron { font-size: 11px; flex-shrink: 0; margin-left: 8px; transition: transform 0.2s; opacity: 0.6; }
+  .step.collapsed .step-content { display: none; }
+  .step.collapsed .step-chevron { transform: rotate(-90deg); }
+
+  /* CONNECTOR */
+  .connector { text-align: center; font-size: 20px; color: var(--gray-400); margin: 2px 0; line-height: 1; }
+
+  /* DIAMOND DECISION */
+  .diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+  .diamond {
+    background: var(--red);
+    color: white;
+    padding: 20px 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    clip-path: polygon(28px 0%, calc(100% - 28px) 0%, 100% 50%, calc(100% - 28px) 100%, 28px 100%, 0% 50%);
+    min-width: 280px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+  }
+  .diamond-purple { background: var(--purple); }
+
+  /* BRANCH */
+  .branches { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .branch { flex: 1; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; }
+  .branch-yes { background: var(--red-light); border: 2px solid var(--red); color: var(--red); }
+  .branch-no { background: var(--green-light); border: 2px solid var(--green); color: var(--green); }
+  .branch-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 800; }
+  .branch-text { font-size: 13px; line-height: 1.3; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 20px 0 12px; }
+  .section-divider h2 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-600); padding-bottom: 6px; border-bottom: 2px solid var(--gray-200); }
+
+  /* TABLE */
+  .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 13px; margin-top: 8px; }
+  .info-table th { background: var(--gray-800); color: white; padding: 8px 10px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .info-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* INTERACTIVE */
+  .interactive-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .interactive-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); display: flex; align-items: center; gap: 6px; }
+
+  .selector-row { margin-bottom: 12px; }
+  .selector-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 8px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 2px solid var(--gray-200); background: white; font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; color: var(--gray-800); transition: all 0.15s; }
+  .chip:active { transform: scale(0.96); }
+  .chip.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple); }
+
+  /* SEIZURE TYPE RESULT CARDS */
+  .sz-results { margin-top: 12px; }
+  .sz-card { border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: none; }
+  .sz-card.show { display: block; animation: fadeIn 0.25s ease; }
+  .sz-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .sz-name { font-weight: 700; font-size: 15px; }
+  .sz-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .sz-notes { font-size: 13px; line-height: 1.4; color: var(--gray-600); }
+
+  .sz-gtc { background: var(--red-light); border-left: 4px solid var(--red); }
+  .sz-gtc .sz-name { color: var(--red); }
+  .sz-gtc .sz-tag { background: var(--red); color: white; }
+  .sz-focal { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .sz-focal .sz-name { color: var(--orange); }
+  .sz-focal .sz-tag { background: var(--orange); color: white; }
+  .sz-absence { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .sz-absence .sz-name { color: var(--blue); }
+  .sz-absence .sz-tag { background: var(--blue); color: white; }
+  .sz-febrile { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .sz-febrile .sz-name { color: var(--yellow); }
+  .sz-febrile .sz-tag { background: var(--yellow); color: white; }
+  .sz-status { background: var(--red-light); border-left: 4px solid var(--red); }
+  .sz-status .sz-name { color: var(--red); }
+  .sz-status .sz-tag { background: var(--red); color: white; }
+  .sz-first { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .sz-first .sz-name { color: var(--purple); }
+  .sz-first .sz-tag { background: var(--purple); color: white; }
+
+  /* ALERT BOX */
+  .alert-box { border-radius: 8px; padding: 12px 14px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; }
+  .alert-red { background: var(--red); color: white; }
+  .alert-orange { background: var(--orange-light); border: 2px solid var(--orange); color: var(--orange); }
+  .alert-purple { background: var(--purple-light); border: 2px solid var(--purple); color: var(--purple); }
+  .alert-yellow { background: var(--yellow-light); border: 2px solid var(--yellow); color: var(--yellow); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* BADGES */
+  .badge-bls { background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-als { background: var(--red-light); color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  /* MANAGEMENT */
+  .mgmt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .mgmt-item:last-child { border-bottom: none; }
+  .mgmt-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ALS TRIGGERS */
+  .als-triggers { background: var(--red-light); border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .als-triggers-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .als-triggers ul { padding-left: 18px; }
+  .als-triggers li { font-size: 13px; color: var(--gray-800); margin-bottom: 3px; }
+
+  /* STATUS EPILEPTICUS BANNER */
+  .status-banner { background: var(--red); color: white; border-radius: 12px; padding: 16px; text-align: center; margin: 10px 0; animation: pulse 1.5s infinite; }
+  .status-banner-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; }
+  .status-banner-sub { font-size: 13px; opacity: 0.9; }
+
+  /* GLUCOSE BANNER */
+  .glucose-banner { background: var(--red); color: white; border-radius: 10px; padding: 14px; margin: 10px 0; display: flex; gap: 12px; align-items: center; }
+  .glucose-icon { font-size: 28px; flex-shrink: 0; }
+  .glucose-text h3 { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .glucose-text p { font-size: 13px; opacity: 0.95; line-height: 1.4; }
+
+  /* SEIZURE TIMER */
+  .timer-section { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .timer-title { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--gray-800); }
+  .timer-display { font-family: 'Arial Narrow','Arial',sans-serif; font-size: 48px; font-weight: 700; text-align: center; color: var(--purple); margin: 10px 0; letter-spacing: 2px; }
+  .timer-display.warning { color: var(--orange); }
+  .timer-display.danger { color: var(--red); animation: pulse 1s infinite; }
+  .timer-btns { display: flex; gap: 10px; }
+  .timer-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; min-height: 44px; }
+  .timer-start { background: var(--purple); color: white; }
+  .timer-stop { background: var(--red); color: white; }
+  .timer-reset { background: var(--gray-200); color: var(--gray-800); }
+  .timer-btn:active { opacity: 0.85; }
+  .timer-status { text-align: center; font-size: 13px; color: var(--gray-600); margin-top: 8px; min-height: 20px; }
+  .timer-status.alert-active { color: var(--red); font-weight: 700; }
+
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); } 50% { box-shadow: 0 0 0 10px rgba(192,57,43,0); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  footer { padding: 20px 16px; text-align: center; font-size: 11px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 16px; }
+  footer strong { color: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&#8592; PROTOCOLS</a>
+    <div>
+      <div class="header-title">&#x26A1; Seizure</div>
+      <div class="header-sub">Active Seizure &bull; Status Epilepticus &bull; Post-Ictal Assessment</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- SEIZURE TIMER -->
+  <div class="timer-section">
+    <div class="timer-title">&#x23F1; Seizure Timer — Start Immediately on Arrival</div>
+    <div class="timer-display" id="timer-display">00:00</div>
+    <div class="timer-btns">
+      <button class="timer-btn timer-start" onclick="startTimer()">START</button>
+      <button class="timer-btn timer-stop" onclick="stopTimer()">STOP</button>
+      <button class="timer-btn timer-reset" onclick="resetTimer()">RESET</button>
+    </div>
+    <div class="timer-status" id="timer-status">Tap START when seizure activity is observed</div>
+  </div>
+
+  <!-- STEP 1: SCENE SIZE-UP — COLLAPSED -->
+  <div class="step step-red collapsed">
+    <div class="step-num">1</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">Scene Size-Up &amp; BSI <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>BSI:</strong> Gloves — fall injuries may involve blood</li>
+        <li><strong>Medication bottles:</strong> Anti-epileptics (Keppra, Dilantin, Depakote, Tegretol) — missed dose common trigger. Note any medications.</li>
+        <li><strong>Clues at scene:</strong> Alcohol containers, drug paraphernalia, medical alert bracelet</li>
+        <li><strong>Trauma:</strong> Note MOI — did the patient fall and hit head during seizure? C-spine consideration if trauma occurred.</li>
+        <li><strong>Bystanders:</strong> Ask "how long has it been going?" — critical for duration assessment</li>
+        <li><strong>Scene safety:</strong> Agitated post-ictal patients can be combative — position yourself accordingly</li>
+        <li>Determine # of patients — carbon monoxide, toxic exposure can cause multiple victims seizing</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 2: DURING ACTIVE SEIZURE — PROMINENT -->
+  <div class="step step-red">
+    <div class="step-num">2</div>
+    <div class="step-title">During Active Seizure — What to Do NOW</div>
+    <div class="step-content">
+      <div class="alert-box alert-red" style="margin-bottom:10px;">
+        <span class="alert-icon">&#9888;</span>
+        <div><strong>Do NOT restrain. Do NOT put anything in the mouth.</strong> Restraint worsens injury. Teeth clenching prevents airway access — you cannot place an oral airway during active seizure.</div>
+      </div>
+      <ul>
+        <li>&#x23F1; <strong>TIME THE SEIZURE</strong> — start timer above NOW. Duration drives every decision.</li>
+        <li><strong>Protect the head:</strong> Place jacket, blanket, or padding under the head</li>
+        <li><strong>Clear area:</strong> Move furniture, hard objects away from patient</li>
+        <li><strong>Position:</strong> Gently roll to lateral (side) position if possible — reduces aspiration risk</li>
+        <li><strong>Suction:</strong> Ready and available — use after seizure ends if secretions present</li>
+        <li><strong>Oxygen:</strong> Have ready — defer application until seizure activity stops</li>
+        <li><strong>Observe and document:</strong> Type of movements (focal vs. generalized?), eye deviation, incontinence, tongue biting, duration, any aura reported</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- DECISION DIAMOND: DURATION > 5 MIN? -->
+  <div class="diamond-wrap">
+    <div class="diamond diamond-purple">Seizure Duration &gt; 5 Minutes?<br><small style="font-weight:400;font-size:12px">Or: no recovery between back-to-back seizures?</small></div>
+  </div>
+  <div class="branches">
+    <div class="branch branch-yes">
+      <div class="branch-label">YES — Status Epilepticus</div>
+      <div class="branch-text">ALS IMMEDIATELY. Prepare BVM. High-flow O2. Maintain airway. Do not delay transport. Benzodiazepines required (ALS).</div>
+    </div>
+    <div class="branch branch-no">
+      <div class="branch-label">NO — Continue Assessment</div>
+      <div class="branch-text">Allow seizure to terminate. Prepare for post-ictal care. Monitor duration and document. Maintain safe position.</div>
+    </div>
+  </div>
+
+  <!-- STEP 3: STATUS EPILEPTICUS CALLOUT -->
+  <div id="status-warning" style="display:none;">
+    <div class="status-banner">
+      <div class="status-banner-title">&#x26A0; STATUS EPILEPTICUS</div>
+      <div class="status-banner-sub">Timer exceeds 5 minutes. ALS INTERCEPT NOW. Prepare BVM. High-flow O2. Rapid transport.</div>
+    </div>
+  </div>
+
+  <!-- STEP 4: POST-ICTAL ASSESSMENT -->
+  <div class="step step-orange">
+    <div class="step-num">4</div>
+    <div class="step-title">Post-Ictal Assessment</div>
+    <div class="step-content">
+      <div style="font-size:13px;color:var(--gray-600);margin-bottom:8px;font-style:italic;">Normal post-ictal state: confusion, fatigue, sleepiness lasting minutes to hours; headache; muscle soreness.</div>
+      <ul>
+        <li><strong>AVPU:</strong> Track LOC — should progressively improve toward baseline</li>
+        <li><strong>Glucose:</strong> Check BGL ALWAYS — hypoglycemia causes seizures AND can masquerade as post-ictal state</li>
+        <li><strong>Pupils:</strong> Equality, reactivity, size</li>
+        <li><strong>Injury survey:</strong> Head trauma, tongue lacerations, shoulder dislocation, back/limb injuries from fall</li>
+      </ul>
+      <div class="alert-box alert-orange" style="margin-top:8px;">
+        <span class="alert-icon">&#9888;</span>
+        <div><strong>Red Flags — Not routine post-ictal:</strong> Focal neuro deficit lasting &gt;30 min (Todd's paralysis vs. stroke), not returning to baseline within expected time, first-time seizure in adult, fever + seizure, head trauma, pregnancy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLUCOSE BANNER -->
+  <div class="glucose-banner">
+    <div class="glucose-icon">&#x1F4C9;</div>
+    <div class="glucose-text">
+      <h3>CHECK BLOOD GLUCOSE — EVERY SEIZURE</h3>
+      <p>Hypoglycemia is a direct cause of seizures AND mimics post-ictal AMS. BGL &lt; 60 mg/dL → treat NOW. Oral glucose if conscious and can protect airway. <span style="background:rgba(255,255,255,0.2);padding:1px 5px;border-radius:3px;">ALS</span> for D10/D50 IV if unconscious.</p>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 5: SAMPLE HISTORY — COLLAPSED -->
+  <div class="step step-blue collapsed">
+    <div class="step-num">5</div>
+    <div class="step-title step-toggle" onclick="toggleStep(this)">SAMPLE History <span class="step-chevron">&#9660;</span></div>
+    <div class="step-content">
+      <ul>
+        <li><strong>Known seizure disorder?</strong> What type? How frequent?</li>
+        <li><strong>Last seizure:</strong> When was the last episode? Same as usual?</li>
+        <li><strong>Anti-epileptic medications:</strong> Keppra, Dilantin, Depakote, Tegretol, Lamictal — <strong>missed doses?</strong> This is the most common cause of breakthrough seizure.</li>
+        <li><strong>Alcohol/drug use:</strong> Alcohol withdrawal seizures — last drink? Illicit drug use?</li>
+        <li><strong>Fever/infection:</strong> Febrile seizure in children; CNS infection in adults</li>
+        <li><strong>Head trauma:</strong> Recent or current — intracranial bleed?</li>
+        <li><strong>Pregnancy:</strong> Eclampsia — critical diagnosis. BP elevated?</li>
+        <li><strong>Prior stroke:</strong> Scar-related seizure focus</li>
+        <li><strong>Diabetes:</strong> Last BGL, last meal, insulin taken?</li>
+        <li><strong>Sleep deprivation:</strong> Common seizure trigger in epileptics</li>
+      </ul>
+    </div>
+  </div>
+  <div class="connector">&#8595;</div>
+
+  <!-- STEP 6: SEIZURE TYPE CLASSIFIER — INTERACTIVE -->
+  <div class="section-divider"><h2>&#x26A1; Step 6 — Interactive Seizure Type Classifier</h2></div>
+
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F4CB; Classify the Seizure Type</div>
+
+    <div class="selector-row">
+      <div class="selector-label">Select observed features (tap all that apply)</div>
+      <div class="chip-group" id="sz-chips">
+        <button class="chip" data-sz="gtc">Full body convulsions (tonic-clonic)</button>
+        <button class="chip" data-sz="focal">One side of body only</button>
+        <button class="chip" data-sz="stare">Staring spell / blank</button>
+        <button class="chip" data-sz="automatisms">Lip smacking / automatisms</button>
+        <button class="chip" data-sz="aura">Aura before seizure</button>
+        <button class="chip" data-sz="incontinent">Incontinence</button>
+        <button class="chip" data-sz="tongue">Tongue biting</button>
+        <button class="chip" data-sz="fever">Fever present</button>
+        <button class="chip" data-sz="pediatric">Child age 6 mo–5 yr</button>
+        <button class="chip" data-sz="firsttime">First-time seizure</button>
+        <button class="chip" data-sz="known">Known epileptic</button>
+        <button class="chip" data-sz="prolonged">Duration &gt; 5 min</button>
+        <button class="chip" data-sz="norecovery">No recovery between seizures</button>
+      </div>
+    </div>
+
+    <div class="sz-results" id="sz-results">
+      <div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select observed features above to classify seizure type</div>
+    </div>
+  </div>
+
+  <!-- STEP 7: SEIZURE CAUSES REFERENCE -->
+  <div class="section-divider"><h2>&#x1F4D6; Step 7 — Seizure Causes Reference</h2></div>
+
+  <table class="info-table" style="margin-bottom:12px;">
+    <tr><th>Cause</th><th>Key Clues / Action</th></tr>
+    <tr><td><strong>Epilepsy / Missed Meds</strong> <span style="font-size:11px;color:var(--green);font-weight:700;">Most Common</span></td><td>Known seizure disorder, anti-epileptic Rx present, missed dose history</td></tr>
+    <tr><td><strong>Hypoglycemia</strong></td><td>&#9888; Check BGL every patient — direct cause and mimic. Treat if &lt; 60</td></tr>
+    <tr><td><strong>Stroke / ICH</strong></td><td>Focal seizure, new onset, age &gt;50, anticoagulants, headache "worst ever"</td></tr>
+    <tr><td><strong>Febrile Seizure</strong></td><td>Child 6 mo–5 yr with fever — usually brief and benign, but rule out meningitis</td></tr>
+    <tr><td><strong>Toxic / Drug-Related</strong></td><td>Cocaine, stimulants, alcohol withdrawal, drug paraphernalia at scene</td></tr>
+    <tr><td><strong>Eclampsia</strong></td><td>&#9888; Pregnant patient + seizure + hypertension = obstetric emergency</td></tr>
+    <tr><td><strong>Trauma / Head Injury</strong></td><td>Post-traumatic seizure — assume intracranial injury until proven otherwise</td></tr>
+    <tr><td><strong>Hyponatremia / Metabolic</strong></td><td>Marathon runners, psychiatric patients (water intoxication), dialysis patients</td></tr>
+    <tr><td><strong>CNS Infection</strong></td><td>Fever + headache + seizure + stiff neck = meningitis/encephalitis until ruled out</td></tr>
+  </table>
+
+  <!-- STEP 8: MANAGEMENT -->
+  <div class="step step-green">
+    <div class="step-num">8</div>
+    <div class="step-title">Management</div>
+    <div class="step-content">
+      <div class="interactive-section" style="margin:-2px -2px 10px; box-shadow:none; border:1px solid var(--green-light);">
+        <div class="interactive-title" style="font-size:13px;margin-bottom:8px;">Post-Seizure Care (All Patients)</div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1FA91;</div>
+          <div><span class="badge-bls">BLS</span> <strong>Position:</strong> Recovery (lateral) position — reduces aspiration risk. Do not leave patient supine if unresponsive.</div>
+        </div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1F4A8;</div>
+          <div><span class="badge-bls">BLS</span> <strong>O2:</strong> 15L NRB after seizure stops. Titrate to SpO2 &#8805; 94% once patient cooperative.</div>
+        </div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1F9BC;</div>
+          <div><span class="badge-bls">BLS</span> <strong>Suction:</strong> Clear airway of secretions, blood, vomit. Have suction ready immediately.</div>
+        </div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1F4C9;</div>
+          <div><span class="badge-bls">BLS</span> <strong>BGL check:</strong> Every seizure patient. Oral glucose if BGL &lt; 60 and patient conscious and can swallow.</div>
+        </div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1FA79;</div>
+          <div><span class="badge-bls">BLS</span> <strong>Vitals:</strong> BP (eclampsia?), HR, RR, temp, SpO2, pupils.</div>
+        </div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1F321;&#xFE0F;</div>
+          <div><span class="badge-bls">BLS</span> <strong>Febrile seizure — cooling:</strong> Remove excess clothing, cool environment. Reassure parents — usually brief and benign. Transport and evaluate for meningitis.</div>
+        </div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1FA78;</div>
+          <div><span class="badge-als">ALS</span> <strong>Status epilepticus:</strong> Midazolam 10 mg IM or 5 mg IN / Diazepam 5–10 mg IV / Lorazepam 2–4 mg IV. IV access × 2. Continuous monitoring.</div>
+        </div>
+        <div class="mgmt-item">
+          <div class="mgmt-icon">&#x1F691;</div>
+          <div><span class="badge-bls">BLS</span> <strong>Transport:</strong> First-time seizure — transport ALL. Known epileptic with typical seizure — strongly recommend transport, patient may refuse with proper refusal. Status epilepticus — immediate ALS and transport.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 9: ALS TRIGGERS -->
+  <div class="interactive-section">
+    <div class="interactive-title">&#x1F6A8; ALS Intercept Criteria</div>
+    <div class="als-triggers">
+      <div class="als-triggers-title">&#x1F534; ALS Request — Any of the following:</div>
+      <ul>
+        <li>Status epilepticus — seizure &gt; 5 minutes or no recovery between seizures</li>
+        <li>First-time seizure with no clear cause</li>
+        <li>Seizure + fever (possible meningitis/encephalitis)</li>
+        <li>Seizure + pregnancy (eclampsia — obstetric emergency)</li>
+        <li>Post-ictal LOC not improving after 30 minutes</li>
+        <li>Focal neurological deficit persisting (stroke? Todd's paralysis?)</li>
+        <li>Traumatic head injury + seizure (intracranial bleed)</li>
+        <li>BGL &lt; 60 not correcting with oral glucose (IV dextrose needed)</li>
+        <li>Suspected alcohol withdrawal seizure (risk of recurrence and delirium tremens)</li>
+        <li>Respiratory distress or SpO2 not improving with O2</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>&#9888; Clinical Decision Support Only</strong><br>
+  Always follow local medical direction and agency protocols.<br>
+  NREMT Standards &bull; Version 2025.1
+</footer>
+
+<script>
+  function toggleStep(el) {
+    el.closest('.step').classList.toggle('collapsed');
+  }
+
+  // ---- SEIZURE TIMER ----
+  let timerInterval = null;
+  let timerStart = null;
+  let timerRunning = false;
+  let timerElapsedBase = 0;
+
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    return String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+  }
+
+  function startTimer() {
+    if (timerRunning) return;
+    timerRunning = true;
+    timerStart = Date.now();
+    timerInterval = setInterval(updateTimer, 500);
+    document.getElementById('timer-status').textContent = 'Seizure in progress — timing active';
+    document.getElementById('timer-status').className = 'timer-status';
+  }
+
+  function stopTimer() {
+    if (!timerRunning) return;
+    timerRunning = false;
+    timerElapsedBase += Date.now() - timerStart;
+    clearInterval(timerInterval);
+    const statusEl = document.getElementById('timer-status');
+    statusEl.textContent = 'Seizure stopped — post-ictal phase. Elapsed: ' + formatTime(timerElapsedBase);
+    statusEl.className = 'timer-status';
+    document.getElementById('status-warning').style.display = 'none';
+  }
+
+  function resetTimer() {
+    timerRunning = false;
+    timerElapsedBase = 0;
+    timerStart = null;
+    clearInterval(timerInterval);
+    document.getElementById('timer-display').textContent = '00:00';
+    document.getElementById('timer-display').className = 'timer-display';
+    document.getElementById('timer-status').textContent = 'Tap START when seizure activity is observed';
+    document.getElementById('timer-status').className = 'timer-status';
+    document.getElementById('status-warning').style.display = 'none';
+  }
+
+  function updateTimer() {
+    const elapsed = timerElapsedBase + (Date.now() - timerStart);
+    const displayEl = document.getElementById('timer-display');
+    const statusEl = document.getElementById('timer-status');
+    displayEl.textContent = formatTime(elapsed);
+
+    const seconds = Math.floor(elapsed / 1000);
+
+    if (seconds >= 300) {
+      displayEl.className = 'timer-display danger';
+      statusEl.textContent = '&#9888; STATUS EPILEPTICUS — ALS NOW. Duration > 5 minutes.';
+      statusEl.className = 'timer-status alert-active';
+      statusEl.innerHTML = '&#9888; STATUS EPILEPTICUS &mdash; ALS NOW. Duration &gt; 5 minutes.';
+      document.getElementById('status-warning').style.display = 'block';
+    } else if (seconds >= 180) {
+      displayEl.className = 'timer-display warning';
+      statusEl.textContent = 'Approaching 5-minute threshold — prepare for possible ALS';
+      statusEl.className = 'timer-status';
+      document.getElementById('status-warning').style.display = 'none';
+    } else {
+      displayEl.className = 'timer-display';
+      statusEl.textContent = 'Seizure in progress — timing active';
+      statusEl.className = 'timer-status';
+      document.getElementById('status-warning').style.display = 'none';
+    }
+  }
+
+  // ---- SEIZURE TYPE CLASSIFIER ----
+  const seizureTypes = [
+    {
+      id: 'gtc',
+      name: 'Generalized Tonic-Clonic (Grand Mal)',
+      cls: 'sz-gtc',
+      tag: 'GENERALIZED',
+      keyFeatures: ['gtc'],
+      supportingFeatures: ['incontinent', 'tongue', 'aura'],
+      minKey: 1,
+      notes: 'Classic seizure with LOC, rhythmic full-body convulsions, often incontinence and tongue biting. Tonic (stiffening) followed by clonic (jerking) phases. Post-ictal confusion expected. Common in epilepsy and many systemic causes.'
+    },
+    {
+      id: 'focal',
+      name: 'Focal (Partial) Seizure',
+      cls: 'sz-focal',
+      tag: 'FOCAL',
+      keyFeatures: ['focal'],
+      supportingFeatures: ['aura', 'automatisms'],
+      minKey: 1,
+      notes: 'Involves one hemisphere — limb jerking, face twitching, or sensory symptoms on one side. Patient may remain conscious (simple focal) or have altered awareness (complex focal). Can evolve to generalized. Consider stroke or structural lesion as cause.'
+    },
+    {
+      id: 'absence',
+      name: 'Absence Seizure (Petit Mal)',
+      cls: 'sz-absence',
+      tag: 'ABSENCE',
+      keyFeatures: ['stare'],
+      supportingFeatures: ['automatisms'],
+      minKey: 1,
+      notes: 'Brief staring spell, usually <30 seconds, no convulsions, no post-ictal phase. Common in school-age children. Patient may appear to "zone out" briefly and resume normal activity. Easy to miss — bystanders may not recognize it as a seizure.'
+    },
+    {
+      id: 'febrile',
+      name: 'Febrile Seizure',
+      cls: 'sz-febrile',
+      tag: 'FEBRILE',
+      keyFeatures: ['fever', 'pediatric'],
+      supportingFeatures: ['gtc'],
+      minKey: 2,
+      notes: 'Child age 6 months–5 years with fever. Usually brief (<15 min) and self-limiting — prognosis generally good. However: must rule out meningitis (fever + seizure + stiff neck = transport immediately). Cooling measures, reassure parents, transport for evaluation.'
+    },
+    {
+      id: 'status',
+      name: 'Status Epilepticus',
+      cls: 'sz-status',
+      tag: 'EMERGENCY',
+      keyFeatures: ['prolonged'],
+      supportingFeatures: ['norecovery', 'gtc'],
+      minKey: 1,
+      notes: 'LIFE THREATENING. Seizure >5 minutes OR no recovery between back-to-back seizures. Requires immediate ALS intervention — benzodiazepines (Midazolam 10mg IM or 5mg IN, Diazepam 5-10mg IV, or Lorazepam 2-4mg IV). Airway management priority. Mortality increases with duration.'
+    },
+    {
+      id: 'firsttime',
+      name: 'Possible First-Time Seizure',
+      cls: 'sz-first',
+      tag: 'INVESTIGATE CAUSE',
+      keyFeatures: ['firsttime'],
+      supportingFeatures: ['gtc', 'focal'],
+      minKey: 1,
+      notes: 'First seizure in an adult requires thorough investigation — stroke, tumor, metabolic, infection, trauma, toxic. Transport ALL first-time seizure patients regardless of recovery. Check BGL immediately. Do not assume idiopathic epilepsy.'
+    }
+  ];
+
+  const selectedSz = new Set();
+
+  document.querySelectorAll('[data-sz]').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const f = this.dataset.sz;
+      if (selectedSz.has(f)) {
+        selectedSz.delete(f);
+        this.classList.remove('selected');
+      } else {
+        selectedSz.add(f);
+        this.classList.add('selected');
+      }
+      renderSz();
+    });
+  });
+
+  function scoreSz(type) {
+    const keyMatches = type.keyFeatures.filter(f => selectedSz.has(f)).length;
+    const supMatches = type.supportingFeatures.filter(f => selectedSz.has(f)).length;
+    return { keyMatches, score: keyMatches * 3 + supMatches };
+  }
+
+  function renderSz() {
+    const results = document.getElementById('sz-results');
+    if (selectedSz.size === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">Select observed features above to classify seizure type</div>';
+      return;
+    }
+
+    const scored = seizureTypes
+      .map(t => ({ ...t, ...scoreSz(t) }))
+      .filter(t => t.keyMatches >= t.minKey)
+      .sort((a, b) => b.score - a.score);
+
+    if (scored.length === 0) {
+      results.innerHTML = '<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0;">No strong type match with selected features. Continue assessment. Consider atypical or mixed presentation.</div>';
+      return;
+    }
+
+    results.innerHTML = '<div style="font-size:12px;color:var(--gray-600);margin-bottom:8px;">Possible seizure type(s) — highest match first:</div>';
+    scored.forEach(t => {
+      const div = document.createElement('div');
+      div.className = 'sz-card ' + t.cls + ' show';
+      div.innerHTML =
+        '<div class="sz-card-header"><span class="sz-name">' + t.name + '</span><span class="sz-tag">' + t.tag + '</span></div>' +
+        '<div class="sz-notes">' + t.notes + '</div>';
+      results.appendChild(div);
+    });
+  }
+</script>
+</body>
+</html>
